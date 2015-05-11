@@ -58,7 +58,7 @@ namespace TankWars3000
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (Keyboard.GetState().IsKeyDown(Keys.E)) //type your name if you dare
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
             while (true)
