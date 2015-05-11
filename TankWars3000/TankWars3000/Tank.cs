@@ -14,11 +14,12 @@ namespace TankWars3000
         #region Atributes
 
         int health = 3;
-        int damage = 1;
 
-        float degrees;
+        float degrees = 0;
 
         Vector2 speed, position, spawnPos, direction, textureOrigin;
+
+        Color color = new Color();
 
         TimeSpan reloadTime = new TimeSpan(0, 0, 4);
 
@@ -39,7 +40,8 @@ namespace TankWars3000
         public void Update(KeyboardState key)
         {
             if (key.IsKeyDown(Keys.W))
-            {
+        {
+            texture = content.Load<Texture2D>("Tank/TankTest");
                 position += direction * speed;
             }
 
@@ -52,14 +54,18 @@ namespace TankWars3000
                 degrees += 6f;
                 direction.X = (float)Math.Cos(degrees);
                 direction.Y = (float)Math.Sin(degrees);
-            }
+        }
             if (key.IsKeyDown(Keys.A)/* && old.IsKeyUp(Keys.A)*/)
-            {
+        {
                 degrees -= 6f;
                 direction.X = (float)Math.Cos(degrees);
                 direction.Y = (float)Math.Sin(degrees);
             }
             
+            if (key.IsKeyDown(Keys.Space))
+            {
+                // shoot
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -72,6 +78,7 @@ namespace TankWars3000
             direction = new Vector2(1, 0);
             textureOrigin.X = texture.Width / 2;
             textureOrigin.Y = texture.Height / 2;
+            LoadContent(content);
         }
         #endregion
     }

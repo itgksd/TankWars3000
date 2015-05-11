@@ -25,9 +25,18 @@ namespace TankWars3000
 
         GameStates gameState;
 
+        // The Player
         Tank tank;
+        KeyboardState newKey;
+        KeyboardState preKey;
 
         Lobby lobby;
+
+        Rectangle screenRec;
+        static public Rectangle ScreenRec
+        {
+            get { return ScreenRec; }
+        }
 
         public Game1()
         {
@@ -40,7 +49,7 @@ namespace TankWars3000
         {
             // TODO: Add your initialization logic here
 
-            tank =new Tank();
+            tank =new Tank(Content);
 
             gameState = GameStates.Lobby;
 
@@ -52,14 +61,12 @@ namespace TankWars3000
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            tank.LoadContent(Content);
-
             lobby = new Lobby(Content);
         }
 
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
 
         protected override void Update(GameTime gameTime)
@@ -68,18 +75,22 @@ namespace TankWars3000
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
-                if (gameState == GameStates.Lobby)
-                {
-                    // lobby code here Dirkjan
-                }
-                if (gameState == GameStates.Ingame)
-                {
-                    tank.Update();
-                }
-                if (gameState == GameStates.Scoreboard)
-                {
+            newKey = Keyboard.GetState();
 
-                }
+            if (gameState == GameStates.Lobby)
+            {
+                // lobby code here Dirkjan
+            }
+            if (gameState == GameStates.Ingame)
+            {
+                // The player
+                tank.Update(newKey);
+                newKey = preKey;
+            }
+            if (gameState == GameStates.Scoreboard)
+            {
+
+            }
 
             base.Update(gameTime);
         }
@@ -90,7 +101,7 @@ namespace TankWars3000
              if (gameState == GameStates.Lobby)
                 {
                     spriteBatch.Begin();
-
+                    lobby.Draw(spriteBatch);
                     spriteBatch.End();
                 }
                 if (gameState == GameStates.Ingame)
