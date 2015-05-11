@@ -33,6 +33,7 @@ namespace TankWars3000
         Rectangle collisionRect = new Rectangle();
 
         #endregion
+
         #region Methods
 
         public void LoadContent(ContentManager content)
