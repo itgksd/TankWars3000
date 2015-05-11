@@ -14,15 +14,25 @@ namespace TankWars3000
     /// <summary>
     /// This is the main type for your gamej
     /// </summary>
+
+    enum GameStates
+    {
+        Lobby,
+        Ingame,
+        Scoreboard
+    }
+
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        GameStates gameState;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
         }
 
         /// <summary>
@@ -34,7 +44,7 @@ namespace TankWars3000
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            gameState = GameStates.Lobby;
             base.Initialize();
         }
 
@@ -71,7 +81,21 @@ namespace TankWars3000
                 this.Exit();
 
             // TODO: Add your update logic here
+            while (true)
+            {
+                if (gameState == GameStates.Lobby)
+                {
+                    // lobby code here Dirkjan
+                }
+                if (gameState == GameStates.Ingame)
+                {
 
+                }
+                if (gameState == GameStates.Scoreboard)
+                {
+
+                }
+            }
             base.Update(gameTime);
         }
 
