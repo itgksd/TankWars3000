@@ -24,6 +24,10 @@ namespace TankWars3000
         bool alive;
         bool fired;
 
+        public Tank()
+        {
+
+        }
         public void Update()
         {
 
