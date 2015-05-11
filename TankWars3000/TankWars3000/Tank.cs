@@ -21,7 +21,7 @@ namespace TankWars3000
         Vector2 position;
         Vector2 spawnPos;
 
-        Color color = new Color;
+        Color color = new Color();
 
         TimeSpan reloadTime = new TimeSpan(0, 0, 4);
 
