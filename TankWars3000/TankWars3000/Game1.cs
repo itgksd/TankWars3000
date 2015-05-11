@@ -103,7 +103,7 @@ namespace TankWars3000
              if (gameState == GameStates.Lobby)
                 {
                     spriteBatch.Begin();
-
+                    lobby.Draw(spriteBatch);
                     spriteBatch.End();
                 }
                 if (gameState == GameStates.Ingame)
