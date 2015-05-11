@@ -31,13 +31,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="video\smoke.wmv">
-      <Name>smoke</Name>
-      <Importer>WmvImporter</Importer>
-      <Processor>VideoProcessor</Processor>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Tank\TankTest.jpg">
       <Name>TankTest</Name>
       <Importer>TextureImporter</Importer>

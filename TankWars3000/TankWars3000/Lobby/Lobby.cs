@@ -23,7 +23,7 @@ namespace TankWars3000
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //background.Draw();
+            background.Draw(spriteBatch);
         }
     }
 }
