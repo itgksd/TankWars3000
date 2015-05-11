@@ -71,7 +71,7 @@ namespace TankWars3000
                 }
                 if (gameState == GameStates.Ingame)
                 {
-
+                    tank.Update();
                 }
                 if (gameState == GameStates.Scoreboard)
                 {
@@ -84,7 +84,30 @@ namespace TankWars3000
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            
+             if (gameState == GameStates.Lobby)
+                {
+                    spriteBatch.Begin();
+
+                    
+
+                    spriteBatch.End();
+                }
+                if (gameState == GameStates.Ingame)
+                {
+                    spriteBatch.Begin();
+
+                    tank.Draw(spriteBatch);
+
+                    spriteBatch.End();
+                }
+                if (gameState == GameStates.Scoreboard)
+                {
+                    spriteBatch.Begin();
+
+                    spriteBatch.End();
+                }
+
+          
 
             base.Draw(gameTime);
         }
