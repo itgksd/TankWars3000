@@ -47,9 +47,9 @@ namespace TankWars3000
         {
             texture = content.Load<Texture2D>("Tank/Bullet");
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
-            degrees = newdegree;
-            speed = new Vector2(15, 15);
-            position = newposition;
+            degrees       = newdegree;
+            speed         = new Vector2(15, 15);
+            position      = newposition;
         }
         #endregion
     }
