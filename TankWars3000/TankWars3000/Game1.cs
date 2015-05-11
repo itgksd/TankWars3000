@@ -49,7 +49,7 @@ namespace TankWars3000
         {
             // TODO: Add your initialization logic here
 
-            tank =new Tank();
+            tank =new Tank(Content);
 
             gameState = GameStates.Lobby;
 
@@ -62,8 +62,6 @@ namespace TankWars3000
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            tank.LoadContent(Content); // The player
 
             lobby = new Lobby(Content);
         }

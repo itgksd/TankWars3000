@@ -17,9 +17,7 @@ namespace TankWars3000
 
         float degrees = 0;
 
-        Vector2 speed;
-        Vector2 position;
-        Vector2 spawnPos;
+        Vector2 speed, position, spawnPos, direction, textureOrigin;
 
         Color color = new Color();
 
@@ -38,24 +36,49 @@ namespace TankWars3000
 
         #region Methods
 
-        public void LoadContent(ContentManager content)
-        {
-            texture = content.Load<Texture2D>("Tank/TankTest");
-        }
 
         public void Update(KeyboardState key)
         {
+            if (key.IsKeyDown(Keys.W))
+        {
+            texture = content.Load<Texture2D>("Tank/TankTest");
+                position += direction * speed;
+            }
+
+            if (key.IsKeyDown(Keys.S))
+            {
+                position -= direction * speed;
+            }
+            if (key.IsKeyDown(Keys.D)/* && old.IsKeyUp(Keys.D)*/)
+            {
+                degrees += 6f;
+                direction.X = (float)Math.Cos(degrees);
+                direction.Y = (float)Math.Sin(degrees);
+        }
+            if (key.IsKeyDown(Keys.A)/* && old.IsKeyUp(Keys.A)*/)
+        {
+                degrees -= 6f;
+                direction.X = (float)Math.Cos(degrees);
+                direction.Y = (float)Math.Sin(degrees);
+            }
             
+            if (key.IsKeyDown(Keys.Space))
+            {
+                // shoot
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, collisionRect,Color.White);
+            spriteBatch.Draw(texture, position, collisionRect,Color.White, degrees, textureOrigin, 1.0f,SpriteEffects.None, 0f);
         }
 
-        public Tank()
+        public Tank(ContentManager content)
         {
-            
+            direction = new Vector2(1, 0);
+            textureOrigin.X = texture.Width / 2;
+            textureOrigin.Y = texture.Height / 2;
+            LoadContent(content);
         }
         #endregion
     }
