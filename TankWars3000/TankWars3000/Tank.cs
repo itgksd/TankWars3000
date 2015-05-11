@@ -38,7 +38,7 @@ namespace TankWars3000
 
         public void LoadContent(ContentManager content)
         {
-
+            texture = content.Load<Texture2D>("Tank/TankTest");
         }
 
         public void Update(KeyboardState key)
