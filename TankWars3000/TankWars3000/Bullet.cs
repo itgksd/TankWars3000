@@ -14,6 +14,7 @@ namespace TankWars3000
 
         Vector2 position;
         Vector2 speed;
+        Vector2 direction;
 
         Texture2D texture;
 
@@ -30,7 +31,11 @@ namespace TankWars3000
 
         public void Update()
         {
-            
+            direction.X = (float)Math.Cos(degrees);
+            direction.Y = (float)Math.Sin(degrees);
+
+            position.X  += direction.X;
+            position.Y  += direction.Y;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -38,10 +43,13 @@ namespace TankWars3000
             spriteBatch.Draw(texture, position, collisionRect, Color.White, degrees, textureOrigin, 1.0f, SpriteEffects.None, 0f);
         }
 
-        public Bullet(ContentManager content)
+        public Bullet(ContentManager content, float newdegree, Vector2 newposition)
         {
             texture = content.Load<Texture2D>("Tank/Bullet");
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
+            degrees = newdegree;
+            speed = new Vector2(15, 15);
+            position = newposition;
         }
         #endregion
     }

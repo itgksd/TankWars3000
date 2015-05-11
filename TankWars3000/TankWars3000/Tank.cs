@@ -62,13 +62,13 @@ namespace TankWars3000
             
             if (key.IsKeyDown(Keys.Space))
             {
-                bullets.Add(new Bullet(content));
+                bullets.Add(new Bullet(content, degrees, position));
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, collisionRect,Color.White, degrees, textureOrigin, 1.0f,SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, position, collisionRect, Color.White, degrees, textureOrigin, 1.0f,SpriteEffects.None, 0f);
         }
 
         public Tank(ContentManager content)
