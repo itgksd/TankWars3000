@@ -25,6 +25,8 @@ namespace TankWars3000
         SpriteBatch spriteBatch;
         GameStates gameState;
 
+        Tank tank;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -36,6 +38,9 @@ namespace TankWars3000
         {
             // TODO: Add your initialization logic here
             gameState = GameStates.Lobby;
+
+            tank =new Tank();
+
             base.Initialize();
         }
 
@@ -44,7 +49,7 @@ namespace TankWars3000
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            
+            tank.LoadContent(Content);
         }
 >
         protected override void UnloadContent()
