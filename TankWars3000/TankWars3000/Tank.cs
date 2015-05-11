@@ -84,7 +84,6 @@ namespace TankWars3000
             direction = new Vector2(1, 0);
             textureOrigin.X = texture.Width / 2;
             textureOrigin.Y = texture.Height / 2;
-            LoadContent(content);
         }
         #endregion
     }
