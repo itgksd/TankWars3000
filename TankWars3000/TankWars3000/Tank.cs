@@ -36,12 +36,16 @@ namespace TankWars3000
 
         #region Methods
 
+        public void LoadContent(ContentManager content)
+        {
+            texture = content.Load<Texture2D>("Tank/TankTest");
+        }
+
 
         public void Update(KeyboardState key)
         {
             if (key.IsKeyDown(Keys.W))
         {
-            texture = content.Load<Texture2D>("Tank/TankTest");
                 position += direction * speed;
             }
 
