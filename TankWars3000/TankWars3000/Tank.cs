@@ -42,7 +42,7 @@ namespace TankWars3000
 
         public void Update()
         {
-
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)
