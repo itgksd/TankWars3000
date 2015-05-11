@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,7 @@ namespace TankWars3000
 
         float degrees;
 
-        Vector2 speed;
-        Vector2 position;
-        Vector2 spawnPos;
+        Vector2 speed, position, spawnPos, direction, textureOrigin;
 
         TimeSpan reloadTime = new TimeSpan(0, 0, 4);
 
@@ -36,24 +35,43 @@ namespace TankWars3000
 
         #region Methods
 
-        public void LoadContent(ContentManager content)
-        {
 
-        }
-
-        public void Update()
+        public void Update(KeyboardState key)
         {
+            if (key.IsKeyDown(Keys.W))
+            {
+                position += direction * speed;
+            }
+
+            if (key.IsKeyDown(Keys.S))
+            {
+                position -= direction * speed;
+            }
+            if (key.IsKeyDown(Keys.D)/* && old.IsKeyUp(Keys.D)*/)
+            {
+                degrees += 6f;
+                direction.X = (float)Math.Cos(degrees);
+                direction.Y = (float)Math.Sin(degrees);
+            }
+            if (key.IsKeyDown(Keys.A)/* && old.IsKeyUp(Keys.A)*/)
+            {
+                degrees -= 6f;
+                direction.X = (float)Math.Cos(degrees);
+                direction.Y = (float)Math.Sin(degrees);
+            }
             
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, collisionRect,Color.White);
+            spriteBatch.Draw(texture, position, collisionRect,Color.White, degrees, textureOrigin, 1.0f,SpriteEffects.None, 0f);
         }
 
-        public Tank()
+        public Tank(ContentManager content)
         {
-
+            direction = new Vector2(1, 0);
+            textureOrigin.X = texture.Width / 2;
+            textureOrigin.Y = texture.Height / 2;
         }
         #endregion
     }
