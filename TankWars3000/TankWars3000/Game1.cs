@@ -68,8 +68,6 @@ namespace TankWars3000
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
-            while (true)
-            {
                 if (gameState == GameStates.Lobby)
                 {
                     // lobby code here Dirkjan
@@ -82,7 +80,7 @@ namespace TankWars3000
                 {
 
                 }
-            }
+
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
