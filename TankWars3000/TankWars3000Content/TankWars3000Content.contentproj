@@ -44,11 +44,22 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Enviroment\" />
+    <Compile Include="Tank\Bullet.png">
+      <Name>Bullet</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="images\smokee.png">
       <Name>smokee</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="images\backGlow.png">
+      <Name>backGlow</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

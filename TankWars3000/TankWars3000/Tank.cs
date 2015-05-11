@@ -18,7 +18,7 @@ namespace TankWars3000
         float degrees = 0;
 
         Vector2 speed, position, spawnPos, direction;
-        Vector2 textureOrigin = new Vector2();
+        Vector2 textureOrigin;
 
         Color color = new Color();
 
@@ -33,27 +33,20 @@ namespace TankWars3000
 
         Rectangle collisionRect = new Rectangle();
 
+        List<Bullet> bullets = new List<Bullet>();
+
         #endregion
 
         #region Methods
 
-        /*public void LoadContent(ContentManager content)
-        {
-            texture = content.Load<Texture2D>("Tank/TankTest");
-        }*/
-
-
-        public void Update(KeyboardState key)
+        public void Update(KeyboardState key, ContentManager content)
         {
             if (key.IsKeyDown(Keys.W))
-            {
                 position += direction * speed;
-            }
 
             if (key.IsKeyDown(Keys.S))
-            {
                 position -= direction * speed;
-            }
+
             if (key.IsKeyDown(Keys.D)/* && old.IsKeyUp(Keys.D)*/)
             {
                 degrees += 6f;
@@ -69,7 +62,7 @@ namespace TankWars3000
             
             if (key.IsKeyDown(Keys.Space))
             {
-                // shoot
+                bullets.Add(new Bullet(content));
             }
         }
 
@@ -82,8 +75,7 @@ namespace TankWars3000
         {
             texture = content.Load<Texture2D>("Tank/TankTest");
             direction = new Vector2(1, 0);
-            textureOrigin.X = texture.Width / 2;
-            textureOrigin.Y = texture.Height / 2;
+            textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
         }
         #endregion
     }
