@@ -38,8 +38,8 @@ namespace TankWars3000
 
             f1.X += 1;
             f2.X += 1;
-            r1.X -= 1;
-            r2.X -= 1;
+            r1.X -= 2;
+            r2.X -= 2;
         }
 
         public void Draw(SpriteBatch spriteBatch)
