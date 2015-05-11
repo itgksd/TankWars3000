@@ -17,7 +17,8 @@ namespace TankWars3000
 
         float degrees = 0;
 
-        Vector2 speed, position, spawnPos, direction, textureOrigin;
+        Vector2 speed, position, spawnPos, direction;
+        Vector2 textureOrigin = new Vector2();
 
         Color color = new Color();
 
@@ -45,7 +46,7 @@ namespace TankWars3000
         public void Update(KeyboardState key)
         {
             if (key.IsKeyDown(Keys.W))
-        {
+            {
                 position += direction * speed;
             }
 
@@ -58,9 +59,9 @@ namespace TankWars3000
                 degrees += 6f;
                 direction.X = (float)Math.Cos(degrees);
                 direction.Y = (float)Math.Sin(degrees);
-        }
+            }
             if (key.IsKeyDown(Keys.A)/* && old.IsKeyUp(Keys.A)*/)
-        {
+            {
                 degrees -= 6f;
                 direction.X = (float)Math.Cos(degrees);
                 direction.Y = (float)Math.Sin(degrees);
