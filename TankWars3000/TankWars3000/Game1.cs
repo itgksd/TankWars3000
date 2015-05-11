@@ -102,9 +102,6 @@ namespace TankWars3000
 
                     spriteBatch.End();
                 }
-
-            
-
             base.Draw(gameTime);
         }
     }
