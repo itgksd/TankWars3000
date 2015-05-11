@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 namespace TankWars3000
 {
     /// <summary>
-    /// This is the main type for your gamej
+    /// This is the main type for your gamejj
     /// </summary>
 
     enum GameStates
