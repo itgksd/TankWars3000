@@ -16,7 +16,6 @@ namespace TankWars3000
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        GameStates gameState;
 
         Tank tank;
 
