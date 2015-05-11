@@ -45,7 +45,12 @@ namespace TankWars3000
 
         public void Update(KeyboardState key)
         {
-            
+            position += speed;
+
+            if (key.IsKeyDown(Keys.Space))
+            {
+                // shoot
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
