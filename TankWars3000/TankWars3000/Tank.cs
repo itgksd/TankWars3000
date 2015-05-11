@@ -58,9 +58,9 @@ namespace TankWars3000
             spriteBatch.Draw(texture, position, collisionRect,Color.White);
         }
 
-        public Tank()
+        public Tank(ContentManager content)
         {
-            
+            LoadContent(content);
         }
         #endregion
     }
