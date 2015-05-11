@@ -12,18 +12,10 @@ using Microsoft.Xna.Framework.Media;
 namespace TankWars3000
 {
 
-    enum GameStates
-    {
-        Lobby,
-        Ingame,
-        Scoreboard
-    }
-
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        GameStates gameState;
 
         Tank tank;
 
@@ -37,7 +29,6 @@ namespace TankWars3000
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            gameState = GameStates.Lobby;
 
             tank =new Tank();
 
@@ -63,21 +54,6 @@ namespace TankWars3000
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            while (true)
-            {
-                if (gameState == GameStates.Lobby)
-                {
-                    // lobby code here Dirkjan
-                }
-                if (gameState == GameStates.Ingame)
-                {
-
-                }
-                if (gameState == GameStates.Scoreboard)
-                {
-
-                }
-            }
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
