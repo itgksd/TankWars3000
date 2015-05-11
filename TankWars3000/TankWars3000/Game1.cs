@@ -32,10 +32,10 @@ namespace TankWars3000
 
         Lobby lobby;
 
-        Rectangle screenRec;
+        static Rectangle screenRec;
         static public Rectangle ScreenRec
         {
-            get { return ScreenRec; }
+            get { return screenRec; }
         }
 
         public Game1()
@@ -52,6 +52,8 @@ namespace TankWars3000
             tank =new Tank(Content);
 
             gameState = GameStates.Lobby;
+
+            screenRec = new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height);
 
             base.Initialize();
         }
@@ -79,7 +81,7 @@ namespace TankWars3000
 
             if (gameState == GameStates.Lobby)
             {
-                // lobby code here Dirkjan
+                lobby.Update();
             }
             if (gameState == GameStates.Ingame)
             {
@@ -96,7 +98,7 @@ namespace TankWars3000
         }
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
              if (gameState == GameStates.Lobby)
                 {
