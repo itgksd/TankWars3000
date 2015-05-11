@@ -30,7 +30,7 @@ namespace TankWars3000
 
         public void Update()
         {
-            textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -41,6 +41,7 @@ namespace TankWars3000
         public Bullet(ContentManager content)
         {
             texture = content.Load<Texture2D>("Tank/Bullet");
+            textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
         }
         #endregion
     }
