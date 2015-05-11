@@ -24,7 +24,10 @@ namespace TankWars3000
 
         GameStates gameState;
 
+        // The Player
         Tank tank;
+        KeyboardState newKey;
+        KeyboardState preKey;
 
         public Game1()
         {
@@ -61,25 +64,28 @@ namespace TankWars3000
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            while (true)
-            {
-                if (gameState == GameStates.Lobby)
-                {
-                    // lobby code here Dirkjan
-                }
-                if (gameState == GameStates.Ingame)
-                {
-                    tank.Update();
-                }
-                if (gameState == GameStates.Scoreboard)
-                {
+            newKey = Keyboard.GetState();
 
-                }
+            if (gameState == GameStates.Lobby)
+            {
+                // lobby code here Dirkjan
+            }
+            if (gameState == GameStates.Ingame)
+            {
+                    
+
+                tank.Update(newKey);
+
+                newKey = preKey;
+            }
+            if (gameState == GameStates.Scoreboard)
+            {
+
             }
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
-        {
+        {  
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
              if (gameState == GameStates.Lobby)
