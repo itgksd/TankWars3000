@@ -17,6 +17,7 @@ namespace TankWars3000
         Ingame,
         Scoreboard
     }
+
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
@@ -25,6 +26,8 @@ namespace TankWars3000
         GameStates gameState;
 
         Tank tank;
+
+        Lobby lobby;
 
         public Game1()
         {
@@ -39,6 +42,8 @@ namespace TankWars3000
 
             tank =new Tank();
 
+            gameState = GameStates.Lobby;
+
             base.Initialize();
         }
 
@@ -48,6 +53,8 @@ namespace TankWars3000
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             tank.LoadContent(Content);
+
+            lobby = new Lobby(Content);
         }
 
         protected override void UnloadContent()

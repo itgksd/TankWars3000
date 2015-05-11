@@ -6,13 +6,11 @@ using System.Text;
 
 namespace TankWars3000
 {
-    class Lobby
+    class LobbyBackground
     {
-        LobbyBackground background;
-
-        public Lobby(ContentManager content)
+        public LobbyBackground(ContentManager content)
         {
-            background = new LobbyBackground(content);
+
         }
 
         public void Update()
