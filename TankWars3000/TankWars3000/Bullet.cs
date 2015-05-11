@@ -19,18 +19,18 @@ namespace TankWars3000
 
         Rectangle collisionRect = new Rectangle();
 
-        Vector2 textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
-
         float degrees;
 
         int damage = 1;
+
+        Vector2 textureOrigin;
 
         #endregion
         #region Methods
 
         public void Update()
         {
-
+            textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
         }
 
         public void Draw(SpriteBatch spriteBatch)
