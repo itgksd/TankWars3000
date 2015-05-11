@@ -22,7 +22,7 @@ namespace TankWars3000
 
         float degrees;
 
-        int damage = 1;
+        int damage              = 1;
 
         Vector2 textureOrigin;
 
@@ -31,11 +31,11 @@ namespace TankWars3000
 
         public void Update()
         {
-            direction.X = (float)Math.Cos(degrees);
-            direction.Y = (float)Math.Sin(degrees);
+            direction.X         = (float)Math.Cos(degrees);
+            direction.Y         = (float)Math.Sin(degrees);
 
-            position.X  += direction.X;
-            position.Y  += direction.Y;
+            position.X          += direction.X;
+            position.Y          += direction.Y;
         }
 
         public void Draw(SpriteBatch spriteBatch)
