@@ -17,7 +17,8 @@ namespace TankWars3000
 
         float degrees = 0;
 
-        Vector2 speed, position, spawnPos, direction, textureOrigin;
+        Vector2 speed, position, spawnPos, direction;
+        Vector2 textureOrigin = new Vector2();
 
         Color color = new Color();
 
