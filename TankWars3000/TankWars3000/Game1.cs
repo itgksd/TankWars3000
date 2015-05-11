@@ -25,7 +25,10 @@ namespace TankWars3000
 
         GameStates gameState;
 
+        // The Player
         Tank tank;
+        KeyboardState newKey;
+        KeyboardState preKey;
 
         Lobby lobby;
 
@@ -58,37 +61,39 @@ namespace TankWars3000
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            tank.LoadContent(Content);
+            tank.LoadContent(Content); // The player
 
             lobby = new Lobby(Content);
         }
 
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
 
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (Keyboard.GetState().IsKeyDown(Keys.E)) //type your name if you dare
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
-            while (true)
-            {
-                if (gameState == GameStates.Lobby)
-                {
-                    // lobby code here Dirkjan
-                }
-                if (gameState == GameStates.Ingame)
-                {
-                    tank.Update();
-                }
-                if (gameState == GameStates.Scoreboard)
-                {
+            newKey = Keyboard.GetState();
 
-                }
+            if (gameState == GameStates.Lobby)
+            {
+                // lobby code here Dirkjan
             }
+            if (gameState == GameStates.Ingame)
+            {
+                // The player
+                tank.Update(newKey);
+                newKey = preKey;
+            }
+            if (gameState == GameStates.Scoreboard)
+            {
+
+            }
+
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)

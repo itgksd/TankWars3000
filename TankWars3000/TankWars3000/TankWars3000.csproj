@@ -74,6 +74,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bullet.cs" />
     <Compile Include="Lobby\Lobby.cs" />
     <Compile Include="Lobby\LobbyBackground.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
