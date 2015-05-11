@@ -8,6 +8,7 @@ namespace TankWars3000
 {
     class Tank
     {
+        #region attributes
         int health;
         int damage;
 
@@ -23,7 +24,7 @@ namespace TankWars3000
 
         bool alive;
         bool fired;
-
+        #endregion
         public void Update()
         {
             
