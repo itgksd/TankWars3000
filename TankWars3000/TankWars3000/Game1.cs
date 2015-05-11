@@ -17,6 +17,7 @@ namespace TankWars3000
         Ingame,
         Scoreboard
     }
+
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
@@ -28,6 +29,8 @@ namespace TankWars3000
         Tank tank;
         KeyboardState newKey;
         KeyboardState preKey;
+
+        Lobby lobby;
 
         public Game1()
         {
@@ -42,6 +45,8 @@ namespace TankWars3000
 
             tank =new Tank();
 
+            gameState = GameStates.Lobby;
+
             base.Initialize();
         }
 
@@ -51,6 +56,8 @@ namespace TankWars3000
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             tank.LoadContent(Content);
+
+            lobby = new Lobby(Content);
         }
 
         protected override void UnloadContent()
@@ -61,7 +68,7 @@ namespace TankWars3000
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
             newKey = Keyboard.GetState();
@@ -72,20 +79,19 @@ namespace TankWars3000
             }
             if (gameState == GameStates.Ingame)
             {
-                    
-
+                // The player
                 tank.Update(newKey);
-
                 newKey = preKey;
             }
             if (gameState == GameStates.Scoreboard)
             {
 
             }
+
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
-        {  
+        {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
              if (gameState == GameStates.Lobby)

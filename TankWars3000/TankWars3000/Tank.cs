@@ -14,7 +14,6 @@ namespace TankWars3000
         #region Atributes
 
         int health = 3;
-        int damage = 1;
 
         float degrees;
 
