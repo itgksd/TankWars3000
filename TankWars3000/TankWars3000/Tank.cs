@@ -47,7 +47,7 @@ namespace TankWars3000
 
         public void Draw(SpriteBatch spriteBatch)
         {
-
+            spriteBatch.Draw(texture, position, collisionRect,Color.White);
         }
 
         public Tank()
