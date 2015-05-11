@@ -86,7 +86,7 @@ namespace TankWars3000
             if (gameState == GameStates.Ingame)
             {
                 // The player
-                tank.Update(newKey);
+                tank.Update(newKey, Content);
                 newKey = preKey;
             }
             if (gameState == GameStates.Scoreboard)

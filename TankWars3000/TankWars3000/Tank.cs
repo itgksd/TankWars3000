@@ -33,21 +33,20 @@ namespace TankWars3000
 
         Rectangle collisionRect = new Rectangle();
 
+        List<Bullet> bullets = new List<Bullet>();
+
         #endregion
 
         #region Methods
 
-        public void Update(KeyboardState key)
+        public void Update(KeyboardState key, ContentManager content)
         {
             if (key.IsKeyDown(Keys.W))
-            {
                 position += direction * speed;
-            }
 
             if (key.IsKeyDown(Keys.S))
-            {
                 position -= direction * speed;
-            }
+
             if (key.IsKeyDown(Keys.D)/* && old.IsKeyUp(Keys.D)*/)
             {
                 degrees += 6f;
@@ -63,7 +62,7 @@ namespace TankWars3000
             
             if (key.IsKeyDown(Keys.Space))
             {
-                // shoot
+                bullets.Add(new Bullet(content));
             }
         }
 
