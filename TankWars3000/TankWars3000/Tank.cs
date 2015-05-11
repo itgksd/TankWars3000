@@ -37,10 +37,10 @@ namespace TankWars3000
 
         #region Methods
 
-        public void LoadContent(ContentManager content)
+        /*public void LoadContent(ContentManager content)
         {
             texture = content.Load<Texture2D>("Tank/TankTest");
-        }
+        }*/
 
 
         public void Update(KeyboardState key)
@@ -80,6 +80,7 @@ namespace TankWars3000
 
         public Tank(ContentManager content)
         {
+            texture = content.Load<Texture2D>("Tank/TankTest");
             direction = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
             LoadContent(content);
