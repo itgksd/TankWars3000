@@ -18,7 +18,7 @@ namespace TankWars3000
         float degrees = 0;
 
         Vector2 speed, position, spawnPos, direction;
-        Vector2 textureOrigin = new Vector2();
+        Vector2 textureOrigin;
 
         Color color = new Color();
 
@@ -81,8 +81,7 @@ namespace TankWars3000
         public Tank(ContentManager content)
         {
             direction = new Vector2(1, 0);
-            textureOrigin.X = texture.Width / 2;
-            textureOrigin.Y = texture.Height / 2;
+            textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
             LoadContent(content);
         }
         #endregion
