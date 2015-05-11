@@ -11,11 +11,18 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TankWars3000
 {
-
+    enum GameStates
+    {
+        Lobby,
+        Ingame,
+        Scoreboard
+    }
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        GameStates gameState;
 
         Tank tank;
 
@@ -78,8 +85,6 @@ namespace TankWars3000
              if (gameState == GameStates.Lobby)
                 {
                     spriteBatch.Begin();
-
-                    
 
                     spriteBatch.End();
                 }
