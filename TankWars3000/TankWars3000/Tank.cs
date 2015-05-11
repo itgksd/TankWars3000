@@ -15,7 +15,7 @@ namespace TankWars3000
 
         int health = 3;
 
-        float degrees;
+        float degrees = 0;
 
         Vector2 speed;
         Vector2 position;

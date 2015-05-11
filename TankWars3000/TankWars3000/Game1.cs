@@ -55,14 +55,14 @@ namespace TankWars3000
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            tank.LoadContent(Content);
+            tank.LoadContent(Content); // The player
 
             lobby = new Lobby(Content);
         }
 
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
 
         protected override void Update(GameTime gameTime)
