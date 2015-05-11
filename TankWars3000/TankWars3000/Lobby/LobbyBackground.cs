@@ -11,12 +11,13 @@ namespace TankWars3000
 {
     class LobbyBackground
     {
-        Texture2D smoketx;
+        Texture2D smoketx, backGlow;
         Rectangle f1, f2, r1, r2;
 
         public LobbyBackground(ContentManager content)
         {
             smoketx = content.Load<Texture2D>("images/smokee");
+            backGlow = content.Load<Texture2D>("images/backGlow");
 
             f1 = new Rectangle(0, 0, Game1.ScreenRec.Width, Game1.ScreenRec.Height);
             f2 = new Rectangle(-Game1.ScreenRec.Width, 0, Game1.ScreenRec.Width, Game1.ScreenRec.Height);
@@ -46,8 +47,10 @@ namespace TankWars3000
         {
             spriteBatch.Draw(smoketx, f1, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 1);
             spriteBatch.Draw(smoketx, f2, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 1);
-            spriteBatch.Draw(smoketx, r1, null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 1);
-            spriteBatch.Draw(smoketx, r2, null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipHorizontally, 1);
+            spriteBatch.Draw(smoketx, r1, null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipVertically, 1);
+            spriteBatch.Draw(smoketx, r2, null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipVertically, 1);
+
+            spriteBatch.Draw(backGlow, Game1.ScreenRec, Color.White);
         }
     }
 }
