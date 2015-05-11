@@ -83,7 +83,6 @@ namespace TankWars3000
             texture = content.Load<Texture2D>("Tank/TankTest");
             direction = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
-            LoadContent(content);
         }
         #endregion
     }
