@@ -12,18 +12,10 @@ using Microsoft.Xna.Framework.Media;
 namespace TankWars3000
 {
 
-    enum GameStates
-    {
-        Lobby,
-        Ingame,
-        Scoreboard
-    }
-
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        GameStates gameState;
 
         Tank tank;
 
@@ -37,7 +29,6 @@ namespace TankWars3000
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            gameState = GameStates.Lobby;
 
             tank =new Tank();
 
@@ -51,7 +42,7 @@ namespace TankWars3000
 
             tank.LoadContent(Content);
         }
->
+
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
@@ -107,7 +98,7 @@ namespace TankWars3000
                     spriteBatch.End();
                 }
 
-          
+            
 
             base.Draw(gameTime);
         }
