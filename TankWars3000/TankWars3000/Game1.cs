@@ -32,6 +32,12 @@ namespace TankWars3000
 
         Lobby lobby;
 
+        Rectangle screenRec;
+        static public Rectangle ScreenRec
+        {
+            get { return ScreenRec; }
+        }
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);

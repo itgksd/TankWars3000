@@ -29,6 +29,14 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.AudioImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="video\smoke.wmv">
+      <Name>smoke</Name>
+      <Importer>WmvImporter</Importer>
+      <Processor>VideoProcessor</Processor>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Tank\TankTest.jpg">
       <Name>TankTest</Name>
