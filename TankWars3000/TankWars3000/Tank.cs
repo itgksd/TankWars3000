@@ -17,8 +17,7 @@ namespace TankWars3000
 
         float degrees = 0;
 
-        Vector2 speed, position, spawnPos, direction;
-        Vector2 textureOrigin;
+        Vector2 speed, position, spawnPos, direction, textureOrigin;
 
         Color color = new Color();
 
@@ -62,7 +61,7 @@ namespace TankWars3000
             
             if (key.IsKeyDown(Keys.Space))
             {
-                bullets.Add(new Bullet(content, degrees, position));
+                bullets.Add(new Bullet(content, degrees, direction, position));
             }
         }
 
