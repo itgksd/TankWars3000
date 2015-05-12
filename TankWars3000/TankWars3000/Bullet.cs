@@ -21,6 +21,7 @@ namespace TankWars3000
         int damage              = 1;
 
         float degrees;
+
         #endregion
 
         #region Methods
