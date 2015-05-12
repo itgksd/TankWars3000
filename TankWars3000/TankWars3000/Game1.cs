@@ -47,8 +47,6 @@ namespace TankWars3000
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             tank =new Tank(Content);
 
             gameState = GameStates.Lobby;
