@@ -15,7 +15,7 @@ namespace TankWars3000
 
         int health = 3;
 
-        float degrees = 0;
+        float radians;//will be using radians not degrees so this name makes more sense
 
         Vector2 speed, position, spawnPos, direction, textureOrigin;
 
@@ -48,20 +48,28 @@ namespace TankWars3000
 
             if (key.IsKeyDown(Keys.D)/* && old.IsKeyUp(Keys.D)*/)
             {
-                degrees += 6f;
-                direction.X = (float)Math.Cos(degrees);
-                direction.Y = (float)Math.Sin(degrees);
+                radians += MathHelper.Pi / 20; 
+                //MathHelper.Pi * 2 is a full turn
+                // / 2 is 90 degrees
+                // divide to smaller pieces for less turn each button press
+
+                direction.X = (float)Math.Cos(radians);
+                direction.Y = (float)Math.Sin(radians);
             }
             if (key.IsKeyDown(Keys.A)/* && old.IsKeyUp(Keys.A)*/)
             {
-                degrees -= 6f;
-                direction.X = (float)Math.Cos(degrees);
-                direction.Y = (float)Math.Sin(degrees);
+                radians -= MathHelper.Pi / 20;
+                //MathHelper.Pi * 2 is a full turn
+                // / 2 is 90 degrees
+                // divide to smaller pieces for less turn each button press
+
+                direction.X = (float)Math.Cos(radians);
+                direction.Y = (float)Math.Sin(radians);
             }
             
             if (key.IsKeyDown(Keys.Space))
             {
-                bullets.Add(new Bullet(content, degrees, direction, position));
+                bullets.Add(new Bullet(content, radians, direction, position));
             }
 
             foreach (Bullet bullet in bullets)
@@ -70,7 +78,7 @@ namespace TankWars3000
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, collisionRect, Color.White, degrees, textureOrigin, 1.0f,SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, position, collisionRect, Color.White, radians, textureOrigin, 1.0f,SpriteEffects.None, 0f);
             foreach (Bullet bullet in bullets)
                 bullet.Draw(spriteBatch);
         }
