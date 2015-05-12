@@ -63,11 +63,16 @@ namespace TankWars3000
             {
                 bullets.Add(new Bullet(content, degrees, direction, position));
             }
+
+            foreach (Bullet bullet in bullets)
+                bullet.Update();
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, collisionRect, Color.White, degrees, textureOrigin, 1.0f,SpriteEffects.None, 0f);
+            foreach (Bullet bullet in bullets)
+                bullet.Draw(spriteBatch);
         }
 
         public Tank(ContentManager content)
