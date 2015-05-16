@@ -77,7 +77,7 @@ namespace TankWars3000
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            spriteBatch.DrawString(font, active ? text + "_" : text, new Vector2(insideRec.X + 10, insideRec.Y), Color.Black);
+            spriteBatch.DrawString(font, active ? text + "_" : text, new Vector2(insideRec.X + 10, insideRec.Y), Color.White);
         }
     }
 }

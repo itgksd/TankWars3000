@@ -16,12 +16,13 @@ namespace TankWars3000
 
         protected Rectangle outsideRec;
         protected Rectangle insideRec;
+        protected bool useInsideRec = true;
 
         Color outSideColor, orgOutSideColor, insideColor;
 
         string title;
         Vector2 titlePos;
-        Color titleColor;
+        protected Color titleColor;
 
         protected bool active;
         public bool Active
@@ -37,19 +38,19 @@ namespace TankWars3000
             outsideRec = new Rectangle((int)position.X, (int)position.Y, 500, 50);
             insideRec = new Rectangle((int)(position.X + 250), (int)(position.Y + 10), 240, 30);
 
-            outSideColor = orgOutSideColor = Color.LightGray;
+            outSideColor = orgOutSideColor = new Color(50, 50, 50, 0);//Color.LightGray;
             insideColor = Color.Gray;
 
             this.title = title;
             titlePos = new Vector2(position.X + 10, position.Y + 10);
-            titleColor = Color.Black;
+            titleColor = Color.White;
         }
 
         virtual public void Update(OldNewInput input)
         {
             if (new Rectangle(input.newMouse.X, input.newMouse.Y, 1, 1).Intersects(outsideRec) || active)
             {
-                outSideColor = Color.WhiteSmoke;
+                outSideColor = Color.DarkGray;
             }
             else
             {
@@ -60,7 +61,8 @@ namespace TankWars3000
         virtual public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(pixel, outsideRec, outSideColor);
-            spriteBatch.Draw(pixel, insideRec, insideColor);
+            if (useInsideRec)
+                spriteBatch.Draw(pixel, insideRec, insideColor);
             spriteBatch.DrawString(font, title, titlePos, titleColor);
         }
     }

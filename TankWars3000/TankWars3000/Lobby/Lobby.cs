@@ -15,16 +15,19 @@ namespace TankWars3000
 
         TextButton ipBtn, nameBtn;
         ColorButton colorBtn;
-        BoolButton boolBtn;
+        BoolButton readyBtn;
+        NormalButton exitBtn;
 
         public Lobby(ContentManager content)
         {
             background = new LobbyBackground(content);
 
-            ipBtn = new TextButton(content, new Vector2(100, 100), "IP", TextButtonType.IP, "192.168.10.10");
-            nameBtn = new TextButton(content, new Vector2(100, 160), "UserName", TextButtonType.UserName, "Player");
-            colorBtn = new ColorButton(content, new Vector2(100, 220), "Tank Color");
-            boolBtn = new BoolButton(content, new Vector2(100, 280), "Ready?", false);
+            ipBtn    = new TextButton  (content, new Vector2(50, 50),  "IP",       TextButtonType.IP,       "192.168.10.10");
+            nameBtn  = new TextButton  (content, new Vector2(50, 110), "UserName", TextButtonType.UserName, "Player");
+            colorBtn = new ColorButton (content, new Vector2(50, 170), "Tank Color");
+            readyBtn = new BoolButton  (content, new Vector2(50, 230), "Ready?", false);
+            exitBtn  = new NormalButton(content, new Vector2(50, 290), "Exit");
+            exitBtn.TitleColor = Color.Red;
         }
 
         public void Update(OldNewInput input)
@@ -34,7 +37,11 @@ namespace TankWars3000
             ipBtn.Update(input);
             nameBtn.Update(input);
             colorBtn.Update(input);
-            boolBtn.Update(input);
+            readyBtn.Update(input);
+            exitBtn.Update(input);
+
+            if (exitBtn.Pressed) // If somebody pressed the exit button
+                Environment.Exit(0);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -44,7 +51,8 @@ namespace TankWars3000
             ipBtn.Draw(spriteBatch);
             nameBtn.Draw(spriteBatch);
             colorBtn.Draw(spriteBatch);
-            boolBtn.Draw(spriteBatch);
+            readyBtn.Draw(spriteBatch);
+            exitBtn.Draw(spriteBatch);
         }
     }
 }
