@@ -37,11 +37,6 @@ namespace TankWars3000
 
 
 
-        /// <summary>
-        /// Tries to convert keyboard input to characters and prevents repeatedly returning the 
-        /// same character if a key was pressed last frame, but not yet unpressed this frame.
-        /// </summary>
-        /// <returns>True if conversion was successful</returns>
         public bool TryConvertKeyboardInput(out char key)
         {
             Keys[] keys = newKey.GetPressedKeys();
