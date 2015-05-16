@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework;
+using System.Media;
 
 namespace TankWars3000
 {
@@ -18,40 +19,24 @@ namespace TankWars3000
         VideoPlayer player;
         Texture2D videoTexture;
 
+        Song song;
+
         public LobbyBackground(ContentManager content)
         {
-            //smoketx = content.Load<Texture2D>("images/smokee");
             backGlow = content.Load<Texture2D>("images/backGlow");
             leftGlow = content.Load<Texture2D>("images/leftGlow");
             leftGlowX = -leftGlow.Width + 560;
 
-            //f1 = new Rectangle(0, 0, Game1.ScreenRec.Width, Game1.ScreenRec.Height);
-            //f2 = new Rectangle(-Game1.ScreenRec.Width, 0, Game1.ScreenRec.Width, Game1.ScreenRec.Height);
-            //r1 = new Rectangle(0, 0, Game1.ScreenRec.Width, Game1.ScreenRec.Height);
-            //r2 = new Rectangle(Game1.ScreenRec.Width, 0, Game1.ScreenRec.Width, Game1.ScreenRec.Height);
-
             video = content.Load<Video>("smoke_1_1");
             player = new VideoPlayer();
+
+            song = content.Load<Song>("Sound/menuMusic");
+            MediaPlayer.Play(song);
+            MediaPlayer.IsRepeating = true;
         }
 
         public void Update()
         {
-            //if (f1.X > Game1.ScreenRec.Width)
-            //    f1.X = -Game1.ScreenRec.Width;
-            //if (f2.X > Game1.ScreenRec.Width)
-            //    f2.X = -Game1.ScreenRec.Width;
-
-            //if (r1.X < -Game1.ScreenRec.Width)
-            //    r1.X = Game1.ScreenRec.Width;
-            //if (r2.X < -Game1.ScreenRec.Width)
-            //    r2.X = Game1.ScreenRec.Width;
-
-            //f1.X += 1;
-            //f2.X += 1;
-            //r1.X -= 1;
-            //r2.X -= 1;
-
-
             if (player.State == MediaState.Stopped)
             {
                 player.IsLooped = true;
@@ -61,11 +46,6 @@ namespace TankWars3000
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(smoketx, f1, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 1);
-            //spriteBatch.Draw(smoketx, f2, null, Color.White, 0, Vector2.Zero, SpriteEffects.None, 1);
-            //spriteBatch.Draw(smoketx, r1, null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipVertically, 1);
-            //spriteBatch.Draw(smoketx, r2, null, Color.White, 0, Vector2.Zero, SpriteEffects.FlipVertically, 1);
-
             // Only call GetTexture if a video is playing or paused
             if (player.State != MediaState.Stopped)
                 videoTexture = player.GetTexture();
