@@ -27,8 +27,7 @@ namespace TankWars3000
 
         // The Player
         Tank tank;
-        KeyboardState newKey;
-        KeyboardState preKey;
+        OldNewInput input = new OldNewInput();
 
         Lobby lobby;
 
@@ -53,8 +52,9 @@ namespace TankWars3000
 
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+            IsMouseVisible = true;
 
             screenRec = new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height);
 
@@ -76,26 +76,29 @@ namespace TankWars3000
 
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                this.Exit();
+            //// Allows the game to exit
+            //if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            //    this.Exit();
 
-            newKey = Keyboard.GetState();
+            input.newKey = Keyboard.GetState();
+            input.newMouse = Mouse.GetState();
 
             if (gameState == GameStates.Lobby)
             {
-                lobby.Update();
+                lobby.Update(input);
             }
             if (gameState == GameStates.Ingame)
             {
                 // The player
-                tank.Update(newKey, Content);
-                newKey = preKey;
+                tank.Update(input.newKey, Content);
             }
             if (gameState == GameStates.Scoreboard)
             {
 
             }
+
+            input.SetOldKey();
+            input.SetOldMouse();
 
             base.Update(gameTime);
         }
