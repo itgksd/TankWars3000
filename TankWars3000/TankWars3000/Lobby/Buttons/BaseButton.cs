@@ -14,7 +14,7 @@ namespace TankWars3000
         protected Texture2D pixel;
         protected SpriteFont font;
 
-        protected Rectangle rectangle;
+        protected Rectangle outsideRec;
         protected Rectangle insideRec;
 
         Color outSideColor, orgOutSideColor, insideColor;
@@ -34,7 +34,7 @@ namespace TankWars3000
             pixel = content.Load<Texture2D>("pixel");
             font = content.Load<SpriteFont>("DefFont");
 
-            rectangle = new Rectangle((int)position.X, (int)position.Y, 500, 50);
+            outsideRec = new Rectangle((int)position.X, (int)position.Y, 500, 50);
             insideRec = new Rectangle((int)(position.X + 250), (int)(position.Y + 10), 240, 30);
 
             outSideColor = orgOutSideColor = Color.LightGray;
@@ -47,7 +47,7 @@ namespace TankWars3000
 
         virtual public void Update(OldNewInput input)
         {
-            if (new Rectangle(input.newMouse.X, input.newMouse.Y, 1, 1).Intersects(rectangle))
+            if (new Rectangle(input.newMouse.X, input.newMouse.Y, 1, 1).Intersects(outsideRec) || active)
             {
                 outSideColor = Color.WhiteSmoke;
             }
@@ -59,7 +59,7 @@ namespace TankWars3000
 
         virtual public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(pixel, rectangle, outSideColor);
+            spriteBatch.Draw(pixel, outsideRec, outSideColor);
             spriteBatch.Draw(pixel, insideRec, insideColor);
             spriteBatch.DrawString(font, title, titlePos, titleColor);
         }

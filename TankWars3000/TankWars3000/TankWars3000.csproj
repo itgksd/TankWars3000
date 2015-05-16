@@ -79,6 +79,8 @@
   <ItemGroup>
     <Compile Include="Bullet.cs" />
     <Compile Include="Lobby\Buttons\BaseButton.cs" />
+    <Compile Include="Lobby\Buttons\BoolButton.cs" />
+    <Compile Include="Lobby\Buttons\ColorButton.cs" />
     <Compile Include="Lobby\Buttons\TextButton.cs" />
     <Compile Include="Lobby\Lobby.cs" />
     <Compile Include="Lobby\LobbyBackground.cs" />

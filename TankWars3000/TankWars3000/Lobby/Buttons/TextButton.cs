@@ -19,19 +19,23 @@ namespace TankWars3000
     {
         TextButtonType type;
 
-        string text, prvText;
+        string text, finalText;
+        public string Text
+        {
+            get { return finalText; }
+        }
 
         public TextButton(ContentManager content, Vector2 position, string title, TextButtonType type, string defText) : base(content, position, title)
         {
             this.type = type;
-            text = prvText = defText;
+            text = finalText = defText;
         }
 
         public override void Update(OldNewInput input)
         {
             base.Update(input);
 
-            if (input.newMouse.LeftButton == ButtonState.Pressed && input.MouseRec.Intersects(rectangle))
+            if (input.newMouse.LeftButton == ButtonState.Pressed && input.MouseRec.Intersects(outsideRec))
             {
                 active = true;
                 text = "";
@@ -51,11 +55,21 @@ namespace TankWars3000
                 if (input.SingleKey(Keys.Escape))
                 {
                     active = false;
-                    text = prvText;
+                    text = finalText;
                 }
-                else if (input.SingleKey(Keys.Enter))
+                else if (input.SingleKey(Keys.Enter) && text.Length > 1 && text.Length < 20)
                 {
-                    throw new NotImplementedException();
+                    finalText = text;
+                    active = false;
+                    
+                    if (type == TextButtonType.IP)
+                    {
+                        // TODO: Call connect method or do it here
+                    }
+                    else if (type == TextButtonType.UserName)
+                    {
+                        // TODO: Call name change method or do it here
+                    }
                 }
             }
         }

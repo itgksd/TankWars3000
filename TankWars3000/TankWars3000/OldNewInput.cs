@@ -34,6 +34,14 @@ namespace TankWars3000
                 return false;
         }
 
+        public bool SingleLeftClick()
+        {
+            if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton == ButtonState.Released)
+                return true;
+            else
+                return false;
+        }
+
 
 
 
