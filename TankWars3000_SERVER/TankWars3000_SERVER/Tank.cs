@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TankWars3000
+namespace TankWars3000_SERVER
 {
-    class Tank
+   public class Tank
     {
         int health;
         int damage;
@@ -18,16 +18,20 @@ namespace TankWars3000
         Vector2 pos;
         Vector2 spawnPos;
 
-        String Name;
+        String name;
         Rectangle rect;
 
         bool alive;
         bool fired;
 
+        public int kills;
+        public int deaths;
+        
         public Tank()
         {
-
+           
         }
+
         public void Update()
         {
 
