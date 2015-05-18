@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TankWars3000
 {
-    enum GameStates
+    enum GameStates//
     {
         Lobby,
         Ingame,
