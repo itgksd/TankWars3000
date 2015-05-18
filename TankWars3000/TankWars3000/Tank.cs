@@ -38,7 +38,7 @@ namespace TankWars3000
 
         #region Methods
 
-        public void Update(OldNewInput input, ContentManager content, GraphicsDevice)
+        public void Update(OldNewInput input, ContentManager content, GraphicsDevice graphics)
         {
             #region input
             if (input.newKey.IsKeyDown(Keys.W))
