@@ -38,8 +38,9 @@ namespace TankWars3000
 
         #region Methods
 
-        public void Update(KeyboardState key, ContentManager content)
+        public void Update(OldNewInput input, KeyboardState key, ContentManager content, GraphicsDevice graphics)
         {
+            #region input
             if (key.IsKeyDown(Keys.W))
                 position += direction * speed;
 
@@ -71,9 +72,29 @@ namespace TankWars3000
             {
                 bullets.Add(new Bullet(content, angle, direction, position));
             }
+            #endregion
+
+            #region position and viewport
+            if (position.X >= graphics.Viewport.Width)
+                position.X = graphics.Viewport.Width - texture.Width;
+
+            if (position.Y >= graphics.Viewport.Height)
+                position.Y = graphics.Viewport.Height - texture.Height;
+
+            if (position.X < 0)
+                position.X = 0;
+
+            if (position.Y < 0)
+                position.Y = 0;
+            #endregion
 
             foreach (Bullet bullet in bullets)
                 bullet.Update();
+        }
+
+        public void CheckCollision()
+        {
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
