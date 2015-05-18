@@ -38,16 +38,16 @@ namespace TankWars3000
 
         #region Methods
 
-        public void Update(OldNewInput input, KeyboardState key, ContentManager content, GraphicsDevice graphics)
+        public void Update(OldNewInput input, ContentManager content)
         {
             #region input
             if (key.IsKeyDown(Keys.W))
                 position += direction * speed;
 
-            if (key.IsKeyDown(Keys.S))
+            if (input.newKey.IsKeyDown(Keys.S))
                 position -= direction * speed;
 
-            if (key.IsKeyDown(Keys.D)/* && old.IsKeyUp(Keys.D)*/)
+            if (input.newKey.IsKeyDown(Keys.D))
             {
                 angle += MathHelper.Pi / 20; 
                 //MathHelper.Pi * 2 is a full turn
@@ -57,7 +57,7 @@ namespace TankWars3000
                 direction.X = (float)Math.Cos(angle);
                 direction.Y = (float)Math.Sin(angle);
             }
-            if (key.IsKeyDown(Keys.A)/* && old.IsKeyUp(Keys.A)*/)
+            if (input.newKey.IsKeyDown(Keys.A))
             {
                 angle -= MathHelper.Pi / 20;
                 //MathHelper.Pi * 2 is a full turn
@@ -68,7 +68,7 @@ namespace TankWars3000
                 direction.Y = (float)Math.Sin(angle);
             }
             
-            if (key.IsKeyDown(Keys.Space))
+            if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
             {
                 bullets.Add(new Bullet(content, angle, direction, position));
             }
