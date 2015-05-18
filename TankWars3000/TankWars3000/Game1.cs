@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Lidgren.Network;
 
 namespace TankWars3000
 {
@@ -24,9 +25,12 @@ namespace TankWars3000
         SpriteBatch spriteBatch;
 
         GameStates gameState;
+        // Client Object
+        static NetClient Client;
 
-        // The Player
-        Tank tank;
+        // The Players
+        static List<Tank> tanks;
+
         OldNewInput input = new OldNewInput();
 
         Lobby lobby;
@@ -46,7 +50,10 @@ namespace TankWars3000
 
         protected override void Initialize()
         {
-            tank =new Tank(Content);
+            //Start Client
+            Client.Start();
+
+            tanks = new List<Tank>();
 
             gameState = GameStates.Lobby;
 
@@ -90,7 +97,7 @@ namespace TankWars3000
             if (gameState == GameStates.Ingame)
             {
                 // The player
-                tank.Update(input, Content, graphics);
+                //tank.Update(input, Content, graphics);
             }
             if (gameState == GameStates.Scoreboard)
             {
