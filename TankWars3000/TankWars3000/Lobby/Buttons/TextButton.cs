@@ -25,23 +25,26 @@ namespace TankWars3000
             get { return finalText; }
         }
 
-        public TextButton(ContentManager content, Vector2 position, string title, TextButtonType type, string defText) : base(content, position, title)
+        Action onEnterEvent;
+
+        public TextButton(ContentManager content, Vector2 position, string title, TextButtonType type, string defText, Action onEnterEvent = null) : base(content, position, title)
         {
             this.type = type;
             text = finalText = defText;
+            this.onEnterEvent = onEnterEvent;
         }
 
         public override void Update(OldNewInput input)
         {
             base.Update(input);
 
-            if (input.newMouse.LeftButton == ButtonState.Pressed && input.MouseRec.Intersects(outsideRec))
+            if (enabled && input.newMouse.LeftButton == ButtonState.Pressed && input.MouseRec.Intersects(outsideRec))
             {
                 active = true;
                 text = "";
             }
 
-            if (active)
+            if (active && enabled)
             {
                 char nextChar;
                 if (input.TryConvertKeyboardInput(out nextChar))
@@ -61,6 +64,8 @@ namespace TankWars3000
                 {
                     finalText = text;
                     active = false;
+                    if (onEnterEvent != null)
+                        onEnterEvent();
                     
                     if (type == TextButtonType.IP)
                     {
@@ -77,7 +82,7 @@ namespace TankWars3000
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            spriteBatch.DrawString(font, active ? text + "_" : text, new Vector2(insideRec.X + 10, insideRec.Y), Color.White);
+            spriteBatch.DrawString(font, active ? text + "_" : text, new Vector2(insideRec.X + 10, insideRec.Y), enabled ? Color.White : Color.White * disabledAplha);
         }
     }
 }
