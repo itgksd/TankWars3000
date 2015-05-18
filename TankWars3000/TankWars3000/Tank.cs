@@ -75,11 +75,11 @@ namespace TankWars3000
             #endregion
 
             #region position and viewport
-            if (position.X >= graphics.Viewport.Width)
-                position.X = graphics.Viewport.Width - texture.Width;
+            //if (position.X >= graphics.Viewport.Width)
+            //    position.X = graphics.Viewport.Width - texture.Width;
 
-            if (position.Y >= graphics.Viewport.Height)
-                position.Y = graphics.Viewport.Height - texture.Height;
+            //if (position.Y >= graphics.Viewport.Height)
+            //    position.Y = graphics.Viewport.Height - texture.Height;
 
             if (position.X < 0)
                 position.X = 0;

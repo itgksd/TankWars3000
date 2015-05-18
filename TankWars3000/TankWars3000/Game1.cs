@@ -51,7 +51,7 @@ namespace TankWars3000
         protected override void Initialize()
         {
             //Start Client
-            Client.Start();
+            //Client.Start();
 
             tanks = new List<Tank>();
 
