@@ -90,7 +90,7 @@ namespace TankWars3000
             if (gameState == GameStates.Ingame)
             {
                 // The player
-                tank.Update(input, Content);
+                tank.Update(input, Content, graphics);
             }
             if (gameState == GameStates.Scoreboard)
             {
