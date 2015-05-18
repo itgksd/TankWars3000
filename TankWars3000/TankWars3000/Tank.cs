@@ -38,10 +38,10 @@ namespace TankWars3000
 
         #region Methods
 
-        public void Update(OldNewInput input, ContentManager content, GraphicsDevice graphics)
+        public void Update(OldNewInput input, ContentManager content, GraphicsDevice)
         {
             #region input
-            if (key.IsKeyDown(Keys.W))
+            if (input.newKey.IsKeyDown(Keys.W))
                 position += direction * speed;
 
             if (input.newKey.IsKeyDown(Keys.S))
