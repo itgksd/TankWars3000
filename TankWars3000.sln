@@ -5,11 +5,11 @@ VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankWars3000", "TankWars3000\TankWars3000\TankWars3000.csproj", "{936B7874-130B-44E1-99DA-181377283EAF}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "TankWars3000Content", "TankWars3000\TankWars3000Content\TankWars3000Content.contentproj", "{B092241D-69D9-46F3-9FB2-86C184BA58C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankWars3000Content", "TankWars3000\TankWars3000Content\TankWars3000Content.contentproj", "{B092241D-69D9-46F3-9FB2-86C184BA58C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankWars3000_SERVER", "TankWars3000_SERVER\TankWars3000_SERVER\TankWars3000_SERVER.csproj", "{BC2D3F88-6D73-432C-874A-D8E3C9BD4227}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "TankWars3000_SERVERContent", "TankWars3000_SERVER\TankWars3000_SERVERContent\TankWars3000_SERVERContent.contentproj", "{43BD667E-1A73-4B66-8B8B-D05C7A1377A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankWars3000_SERVERContent", "TankWars3000_SERVER\TankWars3000_SERVERContent\TankWars3000_SERVERContent.contentproj", "{43BD667E-1A73-4B66-8B8B-D05C7A1377A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,5 +32,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
