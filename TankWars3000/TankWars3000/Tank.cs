@@ -42,53 +42,54 @@ namespace TankWars3000
         {
             if (IsAlive == true)
             {
-                #region input
-                if (input.newKey.IsKeyDown(Keys.W))
-                    position += direction * speed;
+            #region input
+            if (input.newKey.IsKeyDown(Keys.W))
+                position += direction * speed;
 
-                if (input.newKey.IsKeyDown(Keys.S))
-                    position -= direction * speed;
+            if (input.newKey.IsKeyDown(Keys.S))
+                position -= direction * speed;
 
-                if (input.newKey.IsKeyDown(Keys.D))
-                {
-                    angle += MathHelper.Pi / 20;
-                    //MathHelper.Pi * 2 is a full turn
-                    // / 2 is 90 degrees
-                    // divide to smaller pieces for less turn each button press
+            if (input.newKey.IsKeyDown(Keys.D))
+            {
+                angle += MathHelper.Pi / 20; 
+                //MathHelper.Pi * 2 is a full turn
+                // / 2 is 90 degrees
+                // divide to smaller pieces for less turn each button press
 
-                    direction.X = (float)Math.Cos(angle);
-                    direction.Y = (float)Math.Sin(angle);
-                }
-                if (input.newKey.IsKeyDown(Keys.A))
-                {
-                    angle -= MathHelper.Pi / 20;
-                    //MathHelper.Pi * 2 is a full turn
-                    // / 2 is 90 degrees
-                    // divide to smaller pieces for less turn each button press
+                direction.X = (float)Math.Cos(angle);
+                direction.Y = (float)Math.Sin(angle);
+            }
+            if (input.newKey.IsKeyDown(Keys.A))
+            {
+                angle -= MathHelper.Pi / 20;
+                //MathHelper.Pi * 2 is a full turn
+                // / 2 is 90 degrees
+                // divide to smaller pieces for less turn each button press
 
-                    direction.X = (float)Math.Cos(angle);
-                    direction.Y = (float)Math.Sin(angle);
-                }
+                direction.X = (float)Math.Cos(angle);
+                direction.Y = (float)Math.Sin(angle);
+            }
+            
+            if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
+            {
+                bullets.Add(new Bullet(content, angle, direction, position));
+            }
+            #endregion
 
-                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
-                {
-                    bullets.Add(new Bullet(content, angle, direction, position));
-                }
-                #endregion
+            #region position and viewpor
+            
+            if (position.X >= graphics.GraphicsDevice.Viewport.Width)
+                position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
 
-                #region position and viewport
-                if (position.X >= graphics.Viewport.Width)
-                    position.X = graphics.Viewport.Width - texture.Width;
+            if (position.Y >= graphics.GraphicsDevice.Viewport.Height)
+                position.Y = graphics.GraphicsDevice.Viewport.Height - texture.Height;
 
-                if (position.Y >= graphics.Viewport.Height)
-                    position.Y = graphics.Viewport.Height - texture.Height;
+            if (position.X < 0)
+                position.X = 0;
 
-                if (position.X < 0)
-                    position.X = 0;
-
-                if (position.Y < 0)
-                    position.Y = 0;
-                #endregion
+            if (position.Y < 0)
+                position.Y = 0;
+            #endregion
             }
             if (IsAlive ==false)
             {
