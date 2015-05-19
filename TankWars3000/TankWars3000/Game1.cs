@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TankWars3000
 {
-    enum GameStates//
+    enum GameStates
     {
         Lobby,
         Ingame,
@@ -24,6 +24,8 @@ namespace TankWars3000
         SpriteBatch spriteBatch;
 
         GameStates gameState;
+
+        GraphicsDevice graphicss;
 
         // The Player
         Tank tank;
@@ -90,7 +92,7 @@ namespace TankWars3000
             if (gameState == GameStates.Ingame)
             {
                 // The player
-                tank.Update(input, Content, graphics);
+                tank.Update(input, Content, graphicss);
             }
             if (gameState == GameStates.Scoreboard)
             {

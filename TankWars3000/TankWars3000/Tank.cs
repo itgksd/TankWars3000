@@ -13,6 +13,11 @@ namespace TankWars3000
     {
         #region Atributes
 
+        string name;
+
+        bool bulletFired = false;
+        bool IsAlive = true;
+
         int health = 3;
 
         float angle;//angle in radians
@@ -25,11 +30,6 @@ namespace TankWars3000
 
         Texture2D texture;
 
-        string name;
-
-        bool bulletFired = false;
-        bool isAlive = true;
-
         Rectangle collisionRect = new Rectangle();
 
         List<Bullet> bullets = new List<Bullet>();
@@ -38,55 +38,62 @@ namespace TankWars3000
 
         #region Methods
 
-        public void Update(OldNewInput input, ContentManager content, GraphicsDeviceManager graphics)
+        public void Update(OldNewInput input, ContentManager content, GraphicsDevice graphics)
         {
-            #region input
-            if (input.newKey.IsKeyDown(Keys.W))
-                position += direction * speed;
-
-            if (input.newKey.IsKeyDown(Keys.S))
-                position -= direction * speed;
-
-            if (input.newKey.IsKeyDown(Keys.D))
+            if (IsAlive == true)
             {
-                angle += MathHelper.Pi / 20; 
-                //MathHelper.Pi * 2 is a full turn
-                // / 2 is 90 degrees
-                // divide to smaller pieces for less turn each button press
+                #region input
+                if (input.newKey.IsKeyDown(Keys.W))
+                    position += direction * speed;
 
-                direction.X = (float)Math.Cos(angle);
-                direction.Y = (float)Math.Sin(angle);
+                if (input.newKey.IsKeyDown(Keys.S))
+                    position -= direction * speed;
+
+                if (input.newKey.IsKeyDown(Keys.D))
+                {
+                    angle += MathHelper.Pi / 20;
+                    //MathHelper.Pi * 2 is a full turn
+                    // / 2 is 90 degrees
+                    // divide to smaller pieces for less turn each button press
+
+                    direction.X = (float)Math.Cos(angle);
+                    direction.Y = (float)Math.Sin(angle);
+                }
+                if (input.newKey.IsKeyDown(Keys.A))
+                {
+                    angle -= MathHelper.Pi / 20;
+                    //MathHelper.Pi * 2 is a full turn
+                    // / 2 is 90 degrees
+                    // divide to smaller pieces for less turn each button press
+
+                    direction.X = (float)Math.Cos(angle);
+                    direction.Y = (float)Math.Sin(angle);
+                }
+
+                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
+                {
+                    bullets.Add(new Bullet(content, angle, direction, position));
+                }
+                #endregion
+
+                #region position and viewport
+                if (position.X >= graphics.Viewport.Width)
+                    position.X = graphics.Viewport.Width - texture.Width;
+
+                if (position.Y >= graphics.Viewport.Height)
+                    position.Y = graphics.Viewport.Height - texture.Height;
+
+                if (position.X < 0)
+                    position.X = 0;
+
+                if (position.Y < 0)
+                    position.Y = 0;
+                #endregion
             }
-            if (input.newKey.IsKeyDown(Keys.A))
+            if (IsAlive ==false)
             {
-                angle -= MathHelper.Pi / 20;
-                //MathHelper.Pi * 2 is a full turn
-                // / 2 is 90 degrees
-                // divide to smaller pieces for less turn each button press
 
-                direction.X = (float)Math.Cos(angle);
-                direction.Y = (float)Math.Sin(angle);
             }
-            
-            if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
-            {
-                bullets.Add(new Bullet(content, angle, direction, position));
-            }
-            #endregion
-
-            #region position and viewport
-            if (position.X >= graphics.Viewport.Width)
-                position.X = graphics.Viewport.Width - texture.Width;
-
-            if (position.Y >= graphics.Viewport.Height)
-                position.Y = graphics.Viewport.Height - texture.Height;
-
-            if (position.X < 0)
-                position.X = 0;
-
-            if (position.Y < 0)
-                position.Y = 0;
-            #endregion
 
             foreach (Bullet bullet in bullets)
                 bullet.Update();
