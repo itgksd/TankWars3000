@@ -98,7 +98,7 @@ namespace TankWars3000
             {
                 // The player
                 foreach (Tank tank in tanks)
-                tank.Update(input, Content, graphics);
+                tank.Update(input, Content, graphicss);
             }
             if (gameState == GameStates.Scoreboard)
             {
