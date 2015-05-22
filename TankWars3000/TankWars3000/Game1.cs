@@ -19,7 +19,7 @@ namespace TankWars3000
         Scoreboard
     }
 
-    public class Game1 : Microsoft.Xna.Framework.Game
+    public class Game1 : Microsoft.Xna.Framework.Game // Mll
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
