@@ -55,13 +55,14 @@ namespace TankWars3000
                 outmsg = client.CreateMessage();
 
             #region input
-                if (input.newKey.IsKeyDown(Keys.W))
+            if (input.newKey.IsKeyDown(Keys.W))
                 {
                     outmsg.Write((byte)PacketTypes.MOVE);
                     //position += direction * speed;
                 }
 
-                if (input.newKey.IsKeyDown(Keys.S))
+
+            if (input.newKey.IsKeyDown(Keys.S))
                 {
                     //position -= direction * speed;
                 }
@@ -115,6 +116,9 @@ namespace TankWars3000
 
             foreach (Bullet bullet in bullets)
                 bullet.Update();
+
+            // if we get back respons from the server
+            position += direction * speed;
         }
 
         public void CheckCollision()
@@ -135,6 +139,7 @@ namespace TankWars3000
             texture = content.Load<Texture2D>("Tank/TankTest");
             direction = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
+            speed = new Vector2(2, 2);
         }
         #endregion
     }
