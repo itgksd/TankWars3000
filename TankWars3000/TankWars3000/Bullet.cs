@@ -29,6 +29,7 @@ namespace TankWars3000
         public void Update()
         {
             position += direction * speed;
+
         }
 
         public void Draw(SpriteBatch spriteBatch)

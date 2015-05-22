@@ -19,7 +19,7 @@ namespace TankWars3000
         Scoreboard
     }
 
-    public class Game1 : Microsoft.Xna.Framework.Game
+    public class Game1 : Microsoft.Xna.Framework.Game // Mll
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -98,7 +98,11 @@ namespace TankWars3000
             {
                 // The player
                 foreach (Tank tank in tanks)
-                tank.Update(input, Content, graphicss);
+                {
+                    tank.Update(graphicss);
+                    tank.Input(input, Content);
+                }
+                
             }
             if (gameState == GameStates.Scoreboard)
             {
