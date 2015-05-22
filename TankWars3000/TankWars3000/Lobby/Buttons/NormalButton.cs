@@ -10,6 +10,8 @@ namespace TankWars3000
 {
     class NormalButton : BaseButton
     {
+        Action onClickEvent;
+
         bool pressed = false;
         public bool Pressed
         {
@@ -23,9 +25,10 @@ namespace TankWars3000
             set { titleColor = value; }
         }
 
-        public NormalButton(ContentManager content, Vector2 position, string title) : base(content, position, title)
+        public NormalButton(ContentManager content, Vector2 position, string title, Action onClickEvent = null) : base(content, position, title)
         {
             useInsideRec = false;
+            this.onClickEvent = onClickEvent;
         }
 
         public override void Update(OldNewInput input)
@@ -35,6 +38,9 @@ namespace TankWars3000
             if (input.MouseRec.Intersects(outsideRec) && input.SingleLeftClick())
             {
                 pressed = true;
+
+                if (onClickEvent != null)
+                    onClickEvent();
             }
         }
 

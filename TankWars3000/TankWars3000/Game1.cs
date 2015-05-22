@@ -12,7 +12,7 @@ using Lidgren.Network;
 
 namespace TankWars3000
 {
-    enum GameStates//
+    enum GameStates
     {
         Lobby,
         Ingame,
@@ -30,7 +30,7 @@ namespace TankWars3000
 
         // The Players
         static List<Tank> tanks;
-
+        GraphicsDevice graphicss;
         OldNewInput input = new OldNewInput();
 
         Lobby lobby;
@@ -97,7 +97,8 @@ namespace TankWars3000
             if (gameState == GameStates.Ingame)
             {
                 // The player
-                //tank.Update(input, Content, graphics);
+                foreach (Tank tank in tanks)
+                tank.Update(input, Content, graphicss);
             }
             if (gameState == GameStates.Scoreboard)
             {

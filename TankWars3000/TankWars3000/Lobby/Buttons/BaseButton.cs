@@ -31,6 +31,14 @@ namespace TankWars3000
             get { return active; }
         }
 
+        protected bool enabled = true;
+        public bool Enabled
+        {
+            get { return enabled; }
+            set { enabled = value; }
+        }
+        protected float disabledAplha = 0.5f;
+
         SoundEffect clickSound;
         protected bool soundEffect = true;
         public bool SoundEffect
@@ -59,7 +67,7 @@ namespace TankWars3000
 
         virtual public void Update(OldNewInput input)
         {
-            if (new Rectangle(input.newMouse.X, input.newMouse.Y, 1, 1).Intersects(outsideRec) || active)
+            if (enabled && (input.MouseRec.Intersects(outsideRec) || active))
             {
                 outSideColor = Color.DarkGray;
             }
@@ -68,7 +76,7 @@ namespace TankWars3000
                 outSideColor = orgOutSideColor;
             }
 
-            if (input.MouseRec.Intersects(outsideRec) && input.SingleLeftClick() && soundEffect)
+            if (enabled && input.MouseRec.Intersects(outsideRec) && input.SingleLeftClick() && soundEffect)
             {
                 clickSound.Play();
             }
@@ -76,10 +84,10 @@ namespace TankWars3000
 
         virtual public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(pixel, outsideRec, outSideColor);
+            spriteBatch.Draw(pixel, outsideRec, enabled ? outSideColor : outSideColor * disabledAplha);
             if (useInsideRec)
-                spriteBatch.Draw(pixel, insideRec, insideColor);
-            spriteBatch.DrawString(font, title, titlePos, titleColor);
+                spriteBatch.Draw(pixel, insideRec, enabled ? insideColor : insideColor * disabledAplha);
+            spriteBatch.DrawString(font, title, titlePos, enabled ? titleColor : titleColor * disabledAplha);
         }
     }
 }
