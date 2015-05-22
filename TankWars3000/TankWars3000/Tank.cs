@@ -50,6 +50,8 @@ namespace TankWars3000
 
         public void Update(GraphicsDevice graphics)
         {
+            foreach (Bullet bullet in bullets)
+                bullet.Update();
  
             if (position.X >= graphics.Viewport.Width)
                 position.X = graphics.Viewport.Width - texture.Width;
@@ -144,9 +146,6 @@ namespace TankWars3000
                     outmsg.Write(angle);
                     client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
-
-                foreach (Bullet bullet in bullets)
-                    bullet.Update();
 
                 // if we get back respons from the server
                 position += direction * speed;
