@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Lidgren.Network;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -43,6 +44,16 @@ namespace TankWars3000
             ipBtn.Enabled = false;
             readyBtn.IsTrue = false;
             // Connect to server
+
+            NetPeerConfiguration Config = new NetPeerConfiguration("game");
+
+            Game1.Client = new NetClient(Config);
+            NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
+
+            Game1.Client.Start();
+
+            outmsg.Write((byte)PacketTypes.LOGIN);
+            Game1.Client.Connect(ipBtn.Text, 14242, outmsg);
         }
 
         public void Disconnect()

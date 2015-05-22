@@ -10,11 +10,6 @@ using System.Text;
 
 namespace TankWars3000
 {
-    enum PacketTypes
-    {
-        SHOOT,
-        MOVE
-    }
     class Tank
     {
         #region Atributes
