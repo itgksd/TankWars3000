@@ -45,7 +45,6 @@ namespace TankWars3000
             #region input
             if (input.newKey.IsKeyDown(Keys.W))
                 
-
             if (input.newKey.IsKeyDown(Keys.S))
                 position -= direction * speed;
 
