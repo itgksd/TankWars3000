@@ -30,6 +30,7 @@ namespace TankWars3000
         {
             position += direction * speed;
 
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
