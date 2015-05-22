@@ -99,7 +99,7 @@ namespace TankWars3000_SERVER{
             
             while (true)
             {
-                while (gameState == GameStates.Lobby)
+                if (gameState == GameStates.Lobby)
                 {
 
                     if ((incomingMessage = Server.ReadMessage()) != null)

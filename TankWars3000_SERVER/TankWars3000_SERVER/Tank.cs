@@ -18,14 +18,14 @@ namespace TankWars3000_SERVER
         Vector2 pos;
         Vector2 spawnPos;
 
-        String name;
-        Rectangle rect;
+        private String name;
+        private Rectangle rect;
 
         bool alive;
         bool fired;
 
-        public int kills;
-        public int deaths;
+        private int kills;
+        private int deaths;
         
         public Tank()
         {
@@ -41,5 +41,45 @@ namespace TankWars3000_SERVER
         {
 
         }
+        public Rectangle Tankrect
+        {
+            get
+            {
+                return rect;
+            }
+            set
+            {
+                rect = value;
+            }
+        }
+       public String Name
+        {
+            get
+            {
+                return name;
+            }
+        }
+       public int Kills
+       {
+           get 
+           {
+               return kills;
+           }
+           set
+           {
+               kills = value;
+           }
+       }
+       public int Deaths
+       {
+           get
+           {
+               return deaths;
+           }
+           set
+           {
+               deaths = value;
+           }
+       }
     }
 }

@@ -38,15 +38,16 @@ namespace TankWars3000
 
         #region Methods
 
-        public void Update(KeyboardState key, ContentManager content)
+        public void Update(OldNewInput input, ContentManager content, GraphicsDeviceManager graphics)
         {
-            if (key.IsKeyDown(Keys.W))
+            #region input
+            if (input.newKey.IsKeyDown(Keys.W))
                 position += direction * speed;
 
-            if (key.IsKeyDown(Keys.S))
+            if (input.newKey.IsKeyDown(Keys.S))
                 position -= direction * speed;
 
-            if (key.IsKeyDown(Keys.D)/* && old.IsKeyUp(Keys.D)*/)
+            if (input.newKey.IsKeyDown(Keys.D))
             {
                 angle += MathHelper.Pi / 20; 
                 //MathHelper.Pi * 2 is a full turn
@@ -56,7 +57,7 @@ namespace TankWars3000
                 direction.X = (float)Math.Cos(angle);
                 direction.Y = (float)Math.Sin(angle);
             }
-            if (key.IsKeyDown(Keys.A)/* && old.IsKeyUp(Keys.A)*/)
+            if (input.newKey.IsKeyDown(Keys.A))
             {
                 angle -= MathHelper.Pi / 20;
                 //MathHelper.Pi * 2 is a full turn
@@ -67,13 +68,34 @@ namespace TankWars3000
                 direction.Y = (float)Math.Sin(angle);
             }
             
-            if (key.IsKeyDown(Keys.Space))
+            if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
             {
                 bullets.Add(new Bullet(content, angle, direction, position));
             }
+            #endregion
+
+            #region position and viewpor
+            
+            if (position.X >= graphics.GraphicsDevice.Viewport.Width)
+                position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
+
+            if (position.Y >= graphics.GraphicsDevice.Viewport.Height)
+                position.Y = graphics.GraphicsDevice.Viewport.Height - texture.Height;
+
+            if (position.X < 0)
+                position.X = 0;
+
+            if (position.Y < 0)
+                position.Y = 0;
+            #endregion
 
             foreach (Bullet bullet in bullets)
                 bullet.Update();
+        }
+
+        public void CheckCollision()
+        {
+
         }
 
         public void Draw(SpriteBatch spriteBatch)

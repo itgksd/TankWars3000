@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -30,6 +31,14 @@ namespace TankWars3000
             get { return active; }
         }
 
+        SoundEffect clickSound;
+        protected bool soundEffect = true;
+        public bool SoundEffect
+        {
+            get { return soundEffect; }
+            set { soundEffect = value; }
+        }
+
         public BaseButton(ContentManager content, Vector2 position, string title)
         {
             pixel = content.Load<Texture2D>("pixel");
@@ -44,6 +53,8 @@ namespace TankWars3000
             this.title = title;
             titlePos = new Vector2(position.X + 10, position.Y + 10);
             titleColor = Color.White;
+
+            clickSound = content.Load<SoundEffect>("Sound/buttonClick");
         }
 
         virtual public void Update(OldNewInput input)
@@ -55,6 +66,11 @@ namespace TankWars3000
             else
             {
                 outSideColor = orgOutSideColor;
+            }
+
+            if (input.MouseRec.Intersects(outsideRec) && input.SingleLeftClick() && soundEffect)
+            {
+                clickSound.Play();
             }
         }
 
