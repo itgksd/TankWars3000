@@ -25,10 +25,13 @@ namespace TankWars3000
             set { titleColor = value; }
         }
 
-        public NormalButton(ContentManager content, Vector2 position, string title, Action onClickEvent = null) : base(content, position, title)
+        public NormalButton(ContentManager content, Vector2 position, string title, Action onClickEvent = null, bool halfSize = false) : base(content, position, title)
         {
             useInsideRec = false;
             this.onClickEvent = onClickEvent;
+
+            if (halfSize)
+                outsideRec.Width = outsideRec.Width / 2 - 5;
         }
 
         public override void Update(OldNewInput input)
