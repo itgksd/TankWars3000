@@ -59,6 +59,19 @@ namespace TankWars3000_SERVER
                 return name;
             }
         }
+
+       public Vector2 Position
+       {
+           get
+           {
+               return pos;
+           }
+           set
+           {
+               pos = value;
+           }
+       }
+
        public int Kills
        {
            get 
