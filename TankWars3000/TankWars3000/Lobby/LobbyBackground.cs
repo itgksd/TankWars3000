@@ -12,7 +12,7 @@ namespace TankWars3000
 {
     class LobbyBackground
     {
-        Texture2D smoketx, backGlow, leftGlow;
+        Texture2D backGlow, leftGlow;
         int leftGlowX;
         //Rectangle f1, f2, r1, r2;
         Video video;

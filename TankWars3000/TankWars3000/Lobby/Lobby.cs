@@ -17,17 +17,38 @@ namespace TankWars3000
         ColorButton colorBtn;
         BoolButton readyBtn;
         NormalButton exitBtn;
+        NormalButton disconnectBtn;
 
         public Lobby(ContentManager content)
         {
             background = new LobbyBackground(content);
 
-            ipBtn    = new TextButton  (content, new Vector2(50, 50),  "IP",       TextButtonType.IP,       "192.168.10.10");
-            nameBtn  = new TextButton  (content, new Vector2(50, 110), "UserName", TextButtonType.UserName, "Player");
+            nameBtn  = new TextButton  (content, new Vector2(50, 50),  "UserName", TextButtonType.UserName, "Player");
+            ipBtn    = new TextButton  (content, new Vector2(50, 110), "IP",       TextButtonType.IP,       "192.168.10.10", Connect);
             colorBtn = new ColorButton (content, new Vector2(50, 170), "Tank Color");
             readyBtn = new BoolButton  (content, new Vector2(50, 230), "Ready?", false);
-            exitBtn  = new NormalButton(content, new Vector2(50, 290), "Exit");
+            disconnectBtn  = new NormalButton(content, new Vector2(50, 290), "Disconnect", Disconnect);
+            disconnectBtn.TitleColor = Color.Orange;
+            exitBtn  = new NormalButton(content, new Vector2(50, 350), "Exit", Exit);
             exitBtn.TitleColor = Color.Red;
+            
+        }
+
+        public void Connect()
+        {
+            nameBtn.Enabled = false;
+            // Connect to server
+        }
+
+        public void Disconnect()
+        {
+            // Disconnect code
+            nameBtn.Enabled = true;
+        }
+
+        public void Exit()
+        {
+            Environment.Exit(9);
         }
 
         public void Update(OldNewInput input)
@@ -38,10 +59,8 @@ namespace TankWars3000
             nameBtn.Update(input);
             colorBtn.Update(input);
             readyBtn.Update(input);
+            disconnectBtn.Update(input);
             exitBtn.Update(input);
-
-            if (exitBtn.Pressed) // If somebody pressed the exit button
-                Environment.Exit(0);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -52,6 +71,7 @@ namespace TankWars3000
             nameBtn.Draw(spriteBatch);
             colorBtn.Draw(spriteBatch);
             readyBtn.Draw(spriteBatch);
+            disconnectBtn.Draw(spriteBatch);
             exitBtn.Draw(spriteBatch);
         }
     }

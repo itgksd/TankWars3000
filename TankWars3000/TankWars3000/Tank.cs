@@ -13,6 +13,11 @@ namespace TankWars3000
     {
         #region Atributes
 
+        string name;
+
+        bool bulletFired = false;
+        bool IsAlive = true;
+
         int health = 3;
 
         float angle;//angle in radians
@@ -25,11 +30,6 @@ namespace TankWars3000
 
         Texture2D texture;
 
-        string name;
-
-        bool bulletFired = false;
-        bool isAlive = true;
-
         Rectangle collisionRect = new Rectangle();
 
         List<Bullet> bullets = new List<Bullet>();
@@ -38,8 +38,10 @@ namespace TankWars3000
 
         #region Methods
 
-        public void Update(OldNewInput input, ContentManager content, GraphicsDeviceManager graphics)
+        public void Update(OldNewInput input, ContentManager content, GraphicsDevice graphics)
         {
+            if (IsAlive == true)
+            {
             #region input
             if (input.newKey.IsKeyDown(Keys.W))
                 position += direction * speed;
@@ -76,11 +78,11 @@ namespace TankWars3000
 
             #region position and viewpor
             
-            if (position.X >= graphics.GraphicsDevice.Viewport.Width)
-                position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
+            if (position.X >= graphics.Viewport.Width)
+                position.X = graphics.Viewport.Width - texture.Width;
 
-            if (position.Y >= graphics.GraphicsDevice.Viewport.Height)
-                position.Y = graphics.GraphicsDevice.Viewport.Height - texture.Height;
+            if (position.Y >= graphics.Viewport.Height)
+                position.Y = graphics.Viewport.Height - texture.Height;
 
             if (position.X < 0)
                 position.X = 0;
@@ -88,6 +90,11 @@ namespace TankWars3000
             if (position.Y < 0)
                 position.Y = 0;
             #endregion
+            }
+            if (IsAlive ==false)
+            {
+
+            }
 
             foreach (Bullet bullet in bullets)
                 bullet.Update();
