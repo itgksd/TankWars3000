@@ -202,7 +202,7 @@ namespace TankWars3000_SERVER{
                     {
                         if (tank1.Tankrect.Intersects(tank2.Tankrect))
                         {
-                            
+                             
                         }
                     }
                 }
