@@ -77,10 +77,10 @@ namespace TankWars3000
                     //update position, then send it to the server
 
                     outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    outmsg.Write(name);
                     client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
@@ -90,10 +90,10 @@ namespace TankWars3000
                     //update position, then send it to the server
 
                     outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    outmsg.Write(name);
                     client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
@@ -108,10 +108,10 @@ namespace TankWars3000
                     direction.Y = (float)Math.Sin(angle);
 
                     outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    outmsg.Write(name);
                     client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
                 if (input.newKey.IsKeyDown(Keys.A))
@@ -125,10 +125,10 @@ namespace TankWars3000
                     direction.Y = (float)Math.Sin(angle);
 
                     outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    outmsg.Write(name);
                     client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
                 #endregion
@@ -136,6 +136,13 @@ namespace TankWars3000
                 if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
                 {
                     bullets.Add(new Bullet(content, angle, direction, position));
+
+                    outmsg.Write((byte)PacketTypes.SHOOT);
+                    outmsg.Write(name);
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
                 foreach (Bullet bullet in bullets)
