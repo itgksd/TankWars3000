@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Lidgren.Network;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -9,6 +10,11 @@ using System.Text;
 
 namespace TankWars3000
 {
+    enum PacketTypes
+    {
+        SHOOT,
+        MOVE
+    }
     class Tank
     {
         #region Atributes
@@ -32,6 +38,10 @@ namespace TankWars3000
 
         Rectangle collisionRect = new Rectangle();
 
+        NetClient client;
+
+        NetOutgoingMessage outmsg;
+
         List<Bullet> bullets = new List<Bullet>();
 
         #endregion
@@ -42,11 +52,19 @@ namespace TankWars3000
         {
             if (IsAlive == true)
             {
+                outmsg = client.CreateMessage();
+
             #region input
             if (input.newKey.IsKeyDown(Keys.W))
+                {
+                    outmsg.Write((byte)PacketTypes.MOVE);
+                    //position += direction * speed;
+                }
                 
             if (input.newKey.IsKeyDown(Keys.S))
-                position -= direction * speed;
+                {
+                    //position -= direction * speed;
+                }
 
             if (input.newKey.IsKeyDown(Keys.D))
             {
@@ -75,7 +93,7 @@ namespace TankWars3000
             }
             #endregion
 
-            #region position and viewpor
+            #region position and viewport
             
             if (position.X >= graphics.Viewport.Width)
                 position.X = graphics.Viewport.Width - texture.Width;
@@ -114,8 +132,9 @@ namespace TankWars3000
                 bullet.Draw(spriteBatch);
         }
 
-        public Tank(ContentManager content)
+        public Tank(ContentManager content, NetClient client)
         {
+            this.client = client;
             texture = content.Load<Texture2D>("Tank/TankTest");
             direction = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
