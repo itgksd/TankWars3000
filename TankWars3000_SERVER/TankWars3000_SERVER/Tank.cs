@@ -27,9 +27,9 @@ namespace TankWars3000_SERVER
         private int kills;
         private int deaths;
         
-        public Tank()
+        public Tank(String n)
         {
-           
+            name = n;
         }
 
         public void Update()
@@ -59,6 +59,19 @@ namespace TankWars3000_SERVER
                 return name;
             }
         }
+
+       public Vector2 Position
+       {
+           get
+           {
+               return pos;
+           }
+           set
+           {
+               pos = value;
+           }
+       }
+
        public int Kills
        {
            get 

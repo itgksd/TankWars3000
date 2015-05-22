@@ -122,7 +122,7 @@ namespace TankWars3000_SERVER{
                                     connectionAmount++;
                                     
                                     // skapa ny Tank och lägg det i en lista
-                                    tanks.Add(new Tank());
+                                    tanks.Add(new Tank(name));
                                 }
                                 break;
                             case NetIncomingMessageType.Data:
@@ -153,6 +153,9 @@ namespace TankWars3000_SERVER{
                            int y = incomingMessage.ReadInt32();
                            float angle = incomingMessage.ReadFloat();
                            String name = incomingMessage.ReadString();
+
+                           // kollision här tack
+                           Collision(angle);
 
                            NetOutgoingMessage outmsg = Server.CreateMessage();
                            outmsg.Write((byte)PacketTypes.MOVE);
@@ -187,6 +190,23 @@ namespace TankWars3000_SERVER{
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
+        }
+
+        private void Collision(float angle)
+        {
+            foreach (Tank tank1 in tanks)
+            {
+                foreach (Tank tank2 in tanks)
+                {
+                    if (tank1.Name != tank2.Name)
+                    {
+                        if (tank1.Tankrect.Intersects(tank2.Tankrect))
+                        {
+                            
+                        }
+                    }
+                }
+            }
         }
     }
 }
