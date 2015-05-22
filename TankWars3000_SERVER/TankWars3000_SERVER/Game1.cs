@@ -156,6 +156,7 @@ namespace TankWars3000_SERVER{
            
 
                            // kollision här tack
+                           Collision(angle);
 
                            NetOutgoingMessage outmsg = Server.CreateMessage();
                            outmsg.Write((byte)PacketTypes.MOVE);
@@ -192,6 +193,23 @@ namespace TankWars3000_SERVER{
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
+        }
+
+        private void Collision(float angle)
+        {
+            foreach (Tank tank1 in tanks)
+            {
+                foreach (Tank tank2 in tanks)
+                {
+                    if (tank1.Name != tank2.Name)
+                    {
+                        if (tank1.Tankrect.Intersects(tank2.Tankrect))
+                        {
+                             
+                        }
+                    }
+                }
+            }
         }
     }
 }

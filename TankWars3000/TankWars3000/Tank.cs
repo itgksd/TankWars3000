@@ -40,35 +40,52 @@ namespace TankWars3000
 
         NetClient client;
 
-        NetOutgoingMessage outmsg;
+        NetIncomingMessage incmsg;
 
         List<Bullet> bullets = new List<Bullet>();
+        List<Tank> tanks      = new List<Tank>();
 
         #endregion
 
         #region Methods
 
-        public void Update(OldNewInput input, ContentManager content, GraphicsDevice graphics)
+        public void Update(GraphicsDevice graphics)
+        {
+            foreach (Bullet bullet in bullets)
+                bullet.Update();
+ 
+            if (position.X >= graphics.Viewport.Width)
+                position.X = graphics.Viewport.Width - texture.Width;
+
+            if (position.Y >= graphics.Viewport.Height)
+                position.Y = graphics.Viewport.Height - texture.Height;
+
+            if (position.X < 0)
+                position.X = 0;
+
+            if (position.Y < 0)
+                position.Y = 0;
+            }
+
+        public void Input(OldNewInput input, ContentManager content)
         {
             if (IsAlive == true)
             {
-                outmsg = client.CreateMessage();
+                NetOutgoingMessage outmsg = client.CreateMessage();
 
-                #region input
+                #region Movment
                 if (input.newKey.IsKeyDown(Keys.W))
                     {
                         position += direction * speed;
                         //update position, then send it to the server
 
                         outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
                         outmsg.Write(position.X);
                         outmsg.Write(position.Y);
                         outmsg.Write(angle);
-                        outmsg.Write(name);
                         client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
-
                     }
-
 
             if (input.newKey.IsKeyDown(Keys.S))
                 {
@@ -76,12 +93,11 @@ namespace TankWars3000
                     //update position, then send it to the server
 
                     outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    outmsg.Write(name);
                     client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
-
                 }
 
             if (input.newKey.IsKeyDown(Keys.D))
@@ -95,10 +111,10 @@ namespace TankWars3000
                 direction.Y = (float)Math.Sin(angle);
 
                 outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
                 outmsg.Write(position.X);
                 outmsg.Write(position.Y);
                 outmsg.Write(angle);
-                outmsg.Write(name);
                 client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
             }
             if (input.newKey.IsKeyDown(Keys.A))
@@ -112,44 +128,28 @@ namespace TankWars3000
                 direction.Y = (float)Math.Sin(angle);
 
                 outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
                 outmsg.Write(position.X);
                 outmsg.Write(position.Y);
                 outmsg.Write(angle);
-                outmsg.Write(name);
                 client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
             }
+                #endregion
             
             if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
             {
                 bullets.Add(new Bullet(content, angle, direction, position));
+
+                    outmsg.Write((byte)PacketTypes.SHOOT);
+                    outmsg.Write(name);
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
             }
-            #endregion
-
-                #region position and viewport
-            
-            if (position.X >= graphics.Viewport.Width)
-                position.X = graphics.Viewport.Width - texture.Width;
-
-            if (position.Y >= graphics.Viewport.Height)
-                position.Y = graphics.Viewport.Height - texture.Height;
-
-            if (position.X < 0)
-                position.X = 0;
-
-            if (position.Y < 0)
-                position.Y = 0;
-            #endregion
-            }
-            if (IsAlive ==false)
-            {
-
-            }
-
-            foreach (Bullet bullet in bullets)
-                bullet.Update();
 
             // if we get back respons from the server
-            position += direction * speed;
+        }
         }
 
         public void CheckCollision()
@@ -160,6 +160,21 @@ namespace TankWars3000
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, collisionRect, Color.White, angle, textureOrigin, 1.0f,SpriteEffects.None, 0f);
+            if ((incmsg = client.ReadMessage()) != null)
+            {
+                if (incmsg.ReadByte() == (byte)PacketTypes.MOVE)
+                {
+                    foreach (Tank tank in tanks)
+                    {
+                        int newX = incmsg.ReadInt32();
+                        int newY = incmsg.ReadInt32();
+                        float newAngle = incmsg.ReadFloat();
+                        String newName = incmsg.ReadString();
+
+                        spriteBatch.Draw(texture, new Vector2(newX, newY), collisionRect, Color.White, newAngle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                    }
+                }
+            }
             foreach (Bullet bullet in bullets)
                 bullet.Draw(spriteBatch);
         }
