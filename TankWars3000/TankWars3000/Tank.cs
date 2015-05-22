@@ -54,17 +54,34 @@ namespace TankWars3000
             {
                 outmsg = client.CreateMessage();
 
-            #region input
-            if (input.newKey.IsKeyDown(Keys.W))
-                {
-                    outmsg.Write((byte)PacketTypes.MOVE);
-                    //position += direction * speed;
-                }
+                #region input
+                if (input.newKey.IsKeyDown(Keys.W))
+                    {
+                        position += direction * speed;
+                        //update position, then send it to the server
+
+                        outmsg.Write((byte)PacketTypes.MOVE);
+                        outmsg.Write(position.X);
+                        outmsg.Write(position.Y);
+                        outmsg.Write(angle);
+                        outmsg.Write(name);
+                        client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+
+                    }
 
 
             if (input.newKey.IsKeyDown(Keys.S))
                 {
-                    //position -= direction * speed;
+                    position -= direction * speed;
+                    //update position, then send it to the server
+
+                    outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    outmsg.Write(name);
+                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+
                 }
 
             if (input.newKey.IsKeyDown(Keys.D))
@@ -76,6 +93,13 @@ namespace TankWars3000
 
                 direction.X = (float)Math.Cos(angle);
                 direction.Y = (float)Math.Sin(angle);
+
+                outmsg.Write((byte)PacketTypes.MOVE);
+                outmsg.Write(position.X);
+                outmsg.Write(position.Y);
+                outmsg.Write(angle);
+                outmsg.Write(name);
+                client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
             }
             if (input.newKey.IsKeyDown(Keys.A))
             {
@@ -86,6 +110,13 @@ namespace TankWars3000
 
                 direction.X = (float)Math.Cos(angle);
                 direction.Y = (float)Math.Sin(angle);
+
+                outmsg.Write((byte)PacketTypes.MOVE);
+                outmsg.Write(position.X);
+                outmsg.Write(position.Y);
+                outmsg.Write(angle);
+                outmsg.Write(name);
+                client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
             }
             
             if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
@@ -94,7 +125,7 @@ namespace TankWars3000
             }
             #endregion
 
-            #region position and viewport
+                #region position and viewport
             
             if (position.X >= graphics.Viewport.Width)
                 position.X = graphics.Viewport.Width - texture.Width;
