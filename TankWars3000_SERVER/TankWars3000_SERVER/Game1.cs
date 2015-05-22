@@ -21,7 +21,8 @@ namespace TankWars3000_SERVER{
     {
         LOGIN,
         READY,
-        MOVE
+        MOVE,
+        SHOOT
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -38,6 +39,9 @@ namespace TankWars3000_SERVER{
 
         int amountOfPlayers = 8;
         int connectionAmount = 0;
+
+        List<Tank> tanks;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -68,8 +72,9 @@ namespace TankWars3000_SERVER{
             // Start it
             Server.Start();
 
+            tanks = new List<Tank>();
+
         
-            
             base.Initialize();
         }
 
@@ -77,8 +82,8 @@ namespace TankWars3000_SERVER{
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-
+            
+           
         }
 
         protected override void UnloadContent()
@@ -91,50 +96,51 @@ namespace TankWars3000_SERVER{
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-
+            
             while (true)
             {
-                
-
-
-
-                while (gameState == GameStates.Lobby)
+                if (gameState == GameStates.Lobby)
                 {
 
-                        if ((incomingMessage = Server.ReadMessage()) != null)
+                    if ((incomingMessage = Server.ReadMessage()) != null)
+                    {
+                        switch (incomingMessage.MessageType)
                         {
-                            switch (incomingMessage.MessageType)
-                            {
-                                //första paketet som skickas från klienten, skickas när klienten anroper Connect() metoden 
-                                // tror jag
-                                case NetIncomingMessageType.ConnectionApproval:
+                            //första paketet som skickas från klienten, skickas när klienten anroper Connect() metoden 
+                            case NetIncomingMessageType.ConnectionApproval:
 
-                                    // kollar om det första paketet är ett login paket. 
-                                    // man kan göra om enums till bytes.
-                                    if (incomingMessage.ReadByte() == (byte)PacketTypes.LOGIN)
-                                    {
-                                        // godkänner klienten, detta måste tydligen göras
-                                        incomingMessage.SenderConnection.Approve();
-                                        connectionAmount++;
+                                // kollar om det första paketet är ett login paket. 
+                                // man kan göra om enums till bytes.
+                                if (incomingMessage.ReadByte() == (byte)PacketTypes.LOGIN)
+                                {
 
-                                        // skapa by Tank och lägg det i en lista
-                                    }
-                                    break;
-                                case NetIncomingMessageType.Data:
+                                    String name = incomingMessage.ReadString();
+                                    //kolla om namnet finns
+
+                                    // godkänner klienten, detta måste tydligen göras
+                                    incomingMessage.SenderConnection.Approve();
+                                    connectionAmount++;
                                     
-                                    if (incomingMessage.ReadByte() == (byte)PacketTypes.READY)
-                                    {
-                                        // markera Tanken/klienten som redo
-                                    }
-                                    break;
-                            }
-                    }
-                        if (connectionAmount == amountOfPlayers)
-                        {
-                            // lobbyn full och spelet kan börja
-                            gameState = GameStates.Ingame;
+                                    // skapa ny Tank och lägg det i en lista
+                                    tanks.Add(new Tank());
+                                }
+                                break;
+                            case NetIncomingMessageType.Data:
+
+                                if (incomingMessage.ReadByte() == (byte)PacketTypes.READY)
+                                {
+                                    
+                                    // markera Tanken/klienten som redo
+                                }
+                                break;
                         }
-        
+                    }
+                    if (connectionAmount == amountOfPlayers)
+                    {
+                        // lobbyn full och spelet kan börja
+                        gameState = GameStates.Ingame;
+                    }
+
                 }
 
 
@@ -142,7 +148,32 @@ namespace TankWars3000_SERVER{
                 {
                     if ((incomingMessage = Server.ReadMessage()) != null)
                     {
-                        
+                       if(incomingMessage.ReadByte() == (byte)PacketTypes.MOVE) {
+                           int x = incomingMessage.ReadInt32();
+                           int y = incomingMessage.ReadInt32();
+                           float angle = incomingMessage.ReadFloat();
+                           String name = incomingMessage.ReadString();
+
+                           NetOutgoingMessage outmsg = Server.CreateMessage();
+                           outmsg.Write((byte)PacketTypes.MOVE);
+                           outmsg.Write(name);
+                           outmsg.Write(angle);
+                           outmsg.Write(x);
+                           outmsg.Write(y);
+                           Server.SendToAll(outmsg,NetDeliveryMethod.ReliableOrdered);
+                       }
+
+                       if (incomingMessage.ReadByte() == (byte)PacketTypes.SHOOT)
+                       {
+                           int x = incomingMessage.ReadInt32();
+                           int y = incomingMessage.ReadInt32();
+
+                           NetOutgoingMessage outmsg = Server.CreateMessage();
+                           outmsg.Write((byte)PacketTypes.SHOOT);
+                           outmsg.Write(x);
+                           outmsg.Write(y);
+                           Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+                       }
                     }
                 }
                 if (gameState == GameStates.Scoreboard)
