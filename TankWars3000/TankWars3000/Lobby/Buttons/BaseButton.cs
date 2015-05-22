@@ -16,6 +16,10 @@ namespace TankWars3000
         protected SpriteFont font;
 
         protected Rectangle outsideRec;
+        public Rectangle OutsideRec
+        {
+            get { return outsideRec; }
+        }
         protected Rectangle insideRec;
         protected bool useInsideRec = true;
 

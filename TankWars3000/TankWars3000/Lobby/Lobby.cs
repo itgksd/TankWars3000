@@ -18,16 +18,19 @@ namespace TankWars3000
         BoolButton readyBtn;
         NormalButton exitBtn;
         NormalButton disconnectBtn;
+        NormalButton connectBtn;
 
         public Lobby(ContentManager content)
         {
             background = new LobbyBackground(content);
 
             nameBtn  = new TextButton  (content, new Vector2(50, 50),  "UserName", TextButtonType.UserName, "Player");
-            ipBtn    = new TextButton  (content, new Vector2(50, 110), "IP",       TextButtonType.IP,       "192.168.10.10", Connect);
+            ipBtn    = new TextButton  (content, new Vector2(50, 110), "IP",       TextButtonType.IP,       "192.168.10.10");
             colorBtn = new ColorButton (content, new Vector2(50, 170), "Tank Color");
-            readyBtn = new BoolButton  (content, new Vector2(50, 230), "Ready?", false);
-            disconnectBtn  = new NormalButton(content, new Vector2(50, 290), "Disconnect", Disconnect);
+            readyBtn = new BoolButton(content, new Vector2(50, 230), "Ready?", false);
+            connectBtn = new NormalButton(content, new Vector2(50, 290), "Connect", Connect, true);
+            connectBtn.TitleColor = Color.Lime;
+            disconnectBtn  = new NormalButton(content, new Vector2(255 + 50, 290), "Disconnect", Disconnect, true);
             disconnectBtn.TitleColor = Color.Orange;
             exitBtn  = new NormalButton(content, new Vector2(50, 350), "Exit", Exit);
             exitBtn.TitleColor = Color.Red;
@@ -37,6 +40,8 @@ namespace TankWars3000
         public void Connect()
         {
             nameBtn.Enabled = false;
+            ipBtn.Enabled = false;
+            readyBtn.IsTrue = false;
             // Connect to server
         }
 
@@ -44,6 +49,7 @@ namespace TankWars3000
         {
             // Disconnect code
             nameBtn.Enabled = true;
+            ipBtn.Enabled = true;
         }
 
         public void Exit()
@@ -59,6 +65,7 @@ namespace TankWars3000
             nameBtn.Update(input);
             colorBtn.Update(input);
             readyBtn.Update(input);
+            connectBtn.Update(input);
             disconnectBtn.Update(input);
             exitBtn.Update(input);
         }
@@ -71,6 +78,7 @@ namespace TankWars3000
             nameBtn.Draw(spriteBatch);
             colorBtn.Draw(spriteBatch);
             readyBtn.Draw(spriteBatch);
+            connectBtn.Draw(spriteBatch);
             disconnectBtn.Draw(spriteBatch);
             exitBtn.Draw(spriteBatch);
         }
