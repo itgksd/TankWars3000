@@ -149,10 +149,11 @@ namespace TankWars3000_SERVER{
                     if ((incomingMessage = Server.ReadMessage()) != null)
                     {
                        if(incomingMessage.ReadByte() == (byte)PacketTypes.MOVE) {
+                           String name = incomingMessage.ReadString();
                            int x = incomingMessage.ReadInt32();
                            int y = incomingMessage.ReadInt32();
                            float angle = incomingMessage.ReadFloat();
-                           String name = incomingMessage.ReadString();
+           
 
                            // kollision här tack
 
@@ -167,8 +168,10 @@ namespace TankWars3000_SERVER{
 
                        if (incomingMessage.ReadByte() == (byte)PacketTypes.SHOOT)
                        {
+                           string name = incomingMessage.ReadString();
                            int x = incomingMessage.ReadInt32();
                            int y = incomingMessage.ReadInt32();
+                           float angle = incomingMessage.ReadFloat();
 
                            NetOutgoingMessage outmsg = Server.CreateMessage();
                            outmsg.Write((byte)PacketTypes.SHOOT);
