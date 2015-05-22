@@ -35,9 +35,10 @@ namespace TankWars3000
 
         NetClient client;
 
-        NetOutgoingMessage outmsg;
+        NetIncomingMessage incmsg;
 
         List<Bullet> bullets = new List<Bullet>();
+        List<Tank> tanks      = new List<Tank>();
 
         #endregion
 
@@ -65,23 +66,23 @@ namespace TankWars3000
         {
             if (IsAlive == true)
             {
-                outmsg = client.CreateMessage();
+                NetOutgoingMessage outmsg = client.CreateMessage();
 
                 #region Movment
                 if (input.newKey.IsKeyDown(Keys.W))
-                {
-                    position += direction * speed;
-                    //update position, then send it to the server
+                    {
+                        position += direction * speed;
+                        //update position, then send it to the server
 
-                    outmsg.Write((byte)PacketTypes.MOVE);
+                        outmsg.Write((byte)PacketTypes.MOVE);
                     outmsg.Write(name);
-                    outmsg.Write(position.X);
-                    outmsg.Write(position.Y);
-                    outmsg.Write(angle);
-                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
-                }
+                        outmsg.Write(position.X);
+                        outmsg.Write(position.Y);
+                        outmsg.Write(angle);
+                        client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    }
 
-                if (input.newKey.IsKeyDown(Keys.S))
+            if (input.newKey.IsKeyDown(Keys.S))
                 {
                     position -= direction * speed;
                     //update position, then send it to the server
@@ -94,45 +95,45 @@ namespace TankWars3000
                     client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
-                if (input.newKey.IsKeyDown(Keys.D))
-                {
-                    angle += MathHelper.Pi / 20;
-                    //MathHelper.Pi * 2 is a full turn
-                    // / 2 is 90 degrees
-                    // divide to smaller pieces for less turn each button press
+            if (input.newKey.IsKeyDown(Keys.D))
+            {
+                angle += MathHelper.Pi / 20; 
+                //MathHelper.Pi * 2 is a full turn
+                // / 2 is 90 degrees
+                // divide to smaller pieces for less turn each button press
 
-                    direction.X = (float)Math.Cos(angle);
-                    direction.Y = (float)Math.Sin(angle);
+                direction.X = (float)Math.Cos(angle);
+                direction.Y = (float)Math.Sin(angle);
 
-                    outmsg.Write((byte)PacketTypes.MOVE);
+                outmsg.Write((byte)PacketTypes.MOVE);
                     outmsg.Write(name);
-                    outmsg.Write(position.X);
-                    outmsg.Write(position.Y);
-                    outmsg.Write(angle);
-                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
-                }
-                if (input.newKey.IsKeyDown(Keys.A))
-                {
-                    angle -= MathHelper.Pi / 20;
-                    //MathHelper.Pi * 2 is a full turn
-                    // / 2 is 90 degrees
-                    // divide to smaller pieces for less turn each button press
+                outmsg.Write(position.X);
+                outmsg.Write(position.Y);
+                outmsg.Write(angle);
+                client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+            }
+            if (input.newKey.IsKeyDown(Keys.A))
+            {
+                angle -= MathHelper.Pi / 20;
+                //MathHelper.Pi * 2 is a full turn
+                // / 2 is 90 degrees
+                // divide to smaller pieces for less turn each button press
 
-                    direction.X = (float)Math.Cos(angle);
-                    direction.Y = (float)Math.Sin(angle);
+                direction.X = (float)Math.Cos(angle);
+                direction.Y = (float)Math.Sin(angle);
 
-                    outmsg.Write((byte)PacketTypes.MOVE);
+                outmsg.Write((byte)PacketTypes.MOVE);
                     outmsg.Write(name);
-                    outmsg.Write(position.X);
-                    outmsg.Write(position.Y);
-                    outmsg.Write(angle);
-                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
-                }
+                outmsg.Write(position.X);
+                outmsg.Write(position.Y);
+                outmsg.Write(angle);
+                client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+            }
                 #endregion
-
-                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
-                {
-                    bullets.Add(new Bullet(content, angle, direction, position));
+            
+            if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
+            {
+                bullets.Add(new Bullet(content, angle, direction, position));
 
                     outmsg.Write((byte)PacketTypes.SHOOT);
                     outmsg.Write(name);
@@ -140,11 +141,10 @@ namespace TankWars3000
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
                     client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
-                }
-
-                // if we get back respons from the server
-                position += direction * speed;
             }
+
+            // if we get back respons from the server
+        }
         }
 
         public void CheckCollision()
@@ -155,6 +155,21 @@ namespace TankWars3000
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, collisionRect, Color.White, angle, textureOrigin, 1.0f,SpriteEffects.None, 0f);
+            if ((incmsg = client.ReadMessage()) != null)
+            {
+                if (incmsg.ReadByte() == (byte)PacketTypes.MOVE)
+                {
+                    foreach (Tank tank in tanks)
+                    {
+                        int newX = incmsg.ReadInt32();
+                        int newY = incmsg.ReadInt32();
+                        float newAngle = incmsg.ReadFloat();
+                        String newName = incmsg.ReadString();
+
+                        spriteBatch.Draw(texture, new Vector2(newX, newY), collisionRect, Color.White, newAngle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                    }
+                }
+            }
             foreach (Bullet bullet in bullets)
                 bullet.Draw(spriteBatch);
         }

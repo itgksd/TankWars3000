@@ -36,8 +36,8 @@ namespace TankWars3000
         // Client Object
         public static NetClient Client;
 
-        // The Players
-        static List<Tank> tanks;
+        // The Player
+        Tank tank;
         GraphicsDevice graphicss;
         OldNewInput input = new OldNewInput();
 
@@ -61,8 +61,8 @@ namespace TankWars3000
             //Start Client
             //Client.Start();
 
-            tanks = new List<Tank>();
-
+            //tanks = new List<Tank>();
+            tank = new Tank(Content, Client);
             gameState = GameStates.Lobby;
 
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
@@ -92,8 +92,8 @@ namespace TankWars3000
         protected override void Update(GameTime gameTime)
         {
             //// Allows the game to exit
-            //if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-            //    this.Exit();
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                this.Exit();
 
             input.newKey = Keyboard.GetState();
             input.newMouse = Mouse.GetState();
@@ -136,7 +136,7 @@ namespace TankWars3000
                 {
                     spriteBatch.Begin();
 
-                    //tank.Draw(spriteBatch);
+                    tank.Draw(spriteBatch);
 
                     spriteBatch.End();
                 }
