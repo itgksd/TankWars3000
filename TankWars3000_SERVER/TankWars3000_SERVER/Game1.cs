@@ -122,7 +122,7 @@ namespace TankWars3000_SERVER{
                                     connectionAmount++;
                                     
                                     // skapa ny Tank och lägg det i en lista
-                                    tanks.Add(new Tank());
+                                    tanks.Add(new Tank(name));
                                 }
                                 break;
                             case NetIncomingMessageType.Data:
@@ -153,6 +153,8 @@ namespace TankWars3000_SERVER{
                            int y = incomingMessage.ReadInt32();
                            float angle = incomingMessage.ReadFloat();
                            String name = incomingMessage.ReadString();
+
+                           // kollision här tack
 
                            NetOutgoingMessage outmsg = Server.CreateMessage();
                            outmsg.Write((byte)PacketTypes.MOVE);
