@@ -14,6 +14,7 @@ namespace TankWars3000
         public bool IsTrue
         {
             get { return isTrue; }
+            set { isTrue = value; }
         }
 
         public BoolButton(ContentManager content, Vector2 position, string title, bool defBool) : base(content, position, title)
