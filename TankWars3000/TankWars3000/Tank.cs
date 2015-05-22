@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Lidgren.Network;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -9,6 +10,11 @@ using System.Text;
 
 namespace TankWars3000
 {
+    enum PacketTypes
+    {
+        SHOOT,
+        MOVE
+    }
     class Tank
     {
         #region Atributes
@@ -32,6 +38,10 @@ namespace TankWars3000
 
         Rectangle collisionRect = new Rectangle();
 
+        NetClient client;
+
+        NetOutgoingMessage outmsg;
+
         List<Bullet> bullets = new List<Bullet>();
 
         #endregion
@@ -42,12 +52,37 @@ namespace TankWars3000
         {
             if (IsAlive == true)
             {
-            #region input
-            if (input.newKey.IsKeyDown(Keys.W))
-                position += direction * speed;
+                outmsg = client.CreateMessage();
+
+                #region input
+                if (input.newKey.IsKeyDown(Keys.W))
+                    {
+                        position += direction * speed;
+                        //update position, then send it to the server
+
+                        outmsg.Write((byte)PacketTypes.MOVE);
+                        outmsg.Write(position.X);
+                        outmsg.Write(position.Y);
+                        outmsg.Write(angle);
+                        outmsg.Write(name);
+                        client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+
+                    }
+
 
             if (input.newKey.IsKeyDown(Keys.S))
-                position -= direction * speed;
+                {
+                    position -= direction * speed;
+                    //update position, then send it to the server
+
+                    outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    outmsg.Write(name);
+                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+
+                }
 
             if (input.newKey.IsKeyDown(Keys.D))
             {
@@ -58,6 +93,13 @@ namespace TankWars3000
 
                 direction.X = (float)Math.Cos(angle);
                 direction.Y = (float)Math.Sin(angle);
+
+                outmsg.Write((byte)PacketTypes.MOVE);
+                outmsg.Write(position.X);
+                outmsg.Write(position.Y);
+                outmsg.Write(angle);
+                outmsg.Write(name);
+                client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
             }
             if (input.newKey.IsKeyDown(Keys.A))
             {
@@ -68,6 +110,13 @@ namespace TankWars3000
 
                 direction.X = (float)Math.Cos(angle);
                 direction.Y = (float)Math.Sin(angle);
+
+                outmsg.Write((byte)PacketTypes.MOVE);
+                outmsg.Write(position.X);
+                outmsg.Write(position.Y);
+                outmsg.Write(angle);
+                outmsg.Write(name);
+                client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
             }
             
             if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
@@ -76,7 +125,7 @@ namespace TankWars3000
             }
             #endregion
 
-            #region position and viewpor
+                #region position and viewport
             
             if (position.X >= graphics.Viewport.Width)
                 position.X = graphics.Viewport.Width - texture.Width;
@@ -98,6 +147,9 @@ namespace TankWars3000
 
             foreach (Bullet bullet in bullets)
                 bullet.Update();
+
+            // if we get back respons from the server
+            position += direction * speed;
         }
 
         public void CheckCollision()
@@ -112,11 +164,13 @@ namespace TankWars3000
                 bullet.Draw(spriteBatch);
         }
 
-        public Tank(ContentManager content)
+        public Tank(ContentManager content, NetClient client)
         {
+            this.client = client;
             texture = content.Load<Texture2D>("Tank/TankTest");
             direction = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
+            speed = new Vector2(2, 2);
         }
         #endregion
     }
