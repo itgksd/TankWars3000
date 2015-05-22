@@ -19,14 +19,22 @@ namespace TankWars3000
         Scoreboard
     }
 
-    public class Game1 : Microsoft.Xna.Framework.Game // Mll
+    enum PacketTypes
+    {
+        LOGIN,
+        READY,
+        MOVE,
+        SHOOT
+    }
+
+    public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         GameStates gameState;
         // Client Object
-        static NetClient Client;
+        public static NetClient Client;
 
         // The Player
         Tank tank;
