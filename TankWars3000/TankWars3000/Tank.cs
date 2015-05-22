@@ -40,9 +40,10 @@ namespace TankWars3000
 
         NetClient client;
 
-        NetOutgoingMessage outmsg;
+        NetIncomingMessage incmsg;
 
         List<Bullet> bullets = new List<Bullet>();
+        List<Tank> tanks      = new List<Tank>();
 
         #endregion
 
@@ -52,7 +53,7 @@ namespace TankWars3000
         {
             if (IsAlive == true)
             {
-                outmsg = client.CreateMessage();
+                NetOutgoingMessage outmsg = client.CreateMessage();
 
                 #region input
                 if (input.newKey.IsKeyDown(Keys.W))
@@ -149,7 +150,6 @@ namespace TankWars3000
                 bullet.Update();
 
             // if we get back respons from the server
-            position += direction * speed;
         }
 
         public void CheckCollision()
@@ -160,6 +160,21 @@ namespace TankWars3000
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, collisionRect, Color.White, angle, textureOrigin, 1.0f,SpriteEffects.None, 0f);
+            if ((incmsg = client.ReadMessage()) != null)
+            {
+                if (incmsg.ReadByte() == (byte)PacketTypes.MOVE)
+                {
+                    foreach (Tank tank in tanks)
+                    {
+                        int newX = incmsg.ReadInt32();
+                        int newY = incmsg.ReadInt32();
+                        float newAngle = incmsg.ReadFloat();
+                        String newName = incmsg.ReadString();
+
+                        spriteBatch.Draw(texture, new Vector2(newX, newY), collisionRect, Color.White, newAngle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                    }
+                }
+            }
             foreach (Bullet bullet in bullets)
                 bullet.Draw(spriteBatch);
         }
