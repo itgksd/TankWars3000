@@ -43,54 +43,11 @@ namespace TankWars3000
 
         #region Methods
 
-        public void Update(OldNewInput input, ContentManager content, GraphicsDevice graphics)
+        public void Update(GraphicsDevice graphics)
         {
-            if (IsAlive == true)
-            {
-                outmsg = client.CreateMessage();
-
-            #region input
-            if (input.newKey.IsKeyDown(Keys.W))
-                {
-                    outmsg.Write((byte)PacketTypes.MOVE);
-                    //position += direction * speed;
-                }
-
-
-            if (input.newKey.IsKeyDown(Keys.S))
-                {
-                    //position -= direction * speed;
-                }
-
-            if (input.newKey.IsKeyDown(Keys.D))
-            {
-                angle += MathHelper.Pi / 20; 
-                //MathHelper.Pi * 2 is a full turn
-                // / 2 is 90 degrees
-                // divide to smaller pieces for less turn each button press
-
-                direction.X = (float)Math.Cos(angle);
-                direction.Y = (float)Math.Sin(angle);
-            }
-            if (input.newKey.IsKeyDown(Keys.A))
-            {
-                angle -= MathHelper.Pi / 20;
-                //MathHelper.Pi * 2 is a full turn
-                // / 2 is 90 degrees
-                // divide to smaller pieces for less turn each button press
-
-                direction.X = (float)Math.Cos(angle);
-                direction.Y = (float)Math.Sin(angle);
-            }
-            
-            if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
-            {
-                bullets.Add(new Bullet(content, angle, direction, position));
-            }
-            #endregion
-
-            #region position and viewport
-            
+            foreach (Bullet bullet in bullets)
+                bullet.Update();
+ 
             if (position.X >= graphics.Viewport.Width)
                 position.X = graphics.Viewport.Width - texture.Width;
 
@@ -102,18 +59,92 @@ namespace TankWars3000
 
             if (position.Y < 0)
                 position.Y = 0;
-            #endregion
             }
-            if (IsAlive ==false)
+
+        public void Input(OldNewInput input, ContentManager content)
+        {
+            if (IsAlive == true)
             {
+                outmsg = client.CreateMessage();
 
+                #region Movment
+                if (input.newKey.IsKeyDown(Keys.W))
+                {
+                    position += direction * speed;
+                    //update position, then send it to the server
+
+                    outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                }
+
+                if (input.newKey.IsKeyDown(Keys.S))
+                {
+                    position -= direction * speed;
+                    //update position, then send it to the server
+
+                    outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                }
+
+                if (input.newKey.IsKeyDown(Keys.D))
+                {
+                    angle += MathHelper.Pi / 20;
+                    //MathHelper.Pi * 2 is a full turn
+                    // / 2 is 90 degrees
+                    // divide to smaller pieces for less turn each button press
+
+                    direction.X = (float)Math.Cos(angle);
+                    direction.Y = (float)Math.Sin(angle);
+
+                    outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                }
+                if (input.newKey.IsKeyDown(Keys.A))
+                {
+                    angle -= MathHelper.Pi / 20;
+                    //MathHelper.Pi * 2 is a full turn
+                    // / 2 is 90 degrees
+                    // divide to smaller pieces for less turn each button press
+
+                    direction.X = (float)Math.Cos(angle);
+                    direction.Y = (float)Math.Sin(angle);
+
+                    outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                }
+                #endregion
+
+                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
+                {
+                    bullets.Add(new Bullet(content, angle, direction, position));
+
+                    outmsg.Write((byte)PacketTypes.SHOOT);
+                    outmsg.Write(name);
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                }
+
+                // if we get back respons from the server
+                position += direction * speed;
             }
-
-            foreach (Bullet bullet in bullets)
-                bullet.Update();
-
-            // if we get back respons from the server
-            position += direction * speed;
         }
 
         public void CheckCollision()

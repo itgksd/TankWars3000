@@ -27,9 +27,9 @@ namespace TankWars3000_SERVER
         private int kills;
         private int deaths;
         
-        public Tank()
+        public Tank(String n)
         {
-           
+            name = n;
         }
 
         public void Update()
