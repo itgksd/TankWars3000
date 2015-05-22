@@ -70,19 +70,19 @@ namespace TankWars3000
 
                 #region Movment
                 if (input.newKey.IsKeyDown(Keys.W))
-                    {
-                        position += direction * speed;
-                        //update position, then send it to the server
+                {
+                    position += direction * speed;
+                    //update position, then send it to the server
 
-                        outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write((byte)PacketTypes.MOVE);
                     outmsg.Write(name);
-                        outmsg.Write(position.X);
-                        outmsg.Write(position.Y);
-                        outmsg.Write(angle);
-                        client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
-                    }
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                }
 
-            if (input.newKey.IsKeyDown(Keys.S))
+                if (input.newKey.IsKeyDown(Keys.S))
                 {
                     position -= direction * speed;
                     //update position, then send it to the server
@@ -95,45 +95,45 @@ namespace TankWars3000
                     client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
-            if (input.newKey.IsKeyDown(Keys.D))
-            {
-                angle += MathHelper.Pi / 20; 
-                //MathHelper.Pi * 2 is a full turn
-                // / 2 is 90 degrees
-                // divide to smaller pieces for less turn each button press
+                if (input.newKey.IsKeyDown(Keys.D))
+                {
+                    angle += MathHelper.Pi / 20;
+                    //MathHelper.Pi * 2 is a full turn
+                    // / 2 is 90 degrees
+                    // divide to smaller pieces for less turn each button press
 
-                direction.X = (float)Math.Cos(angle);
-                direction.Y = (float)Math.Sin(angle);
+                    direction.X = (float)Math.Cos(angle);
+                    direction.Y = (float)Math.Sin(angle);
 
-                outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write((byte)PacketTypes.MOVE);
                     outmsg.Write(name);
-                outmsg.Write(position.X);
-                outmsg.Write(position.Y);
-                outmsg.Write(angle);
-                client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
-            }
-            if (input.newKey.IsKeyDown(Keys.A))
-            {
-                angle -= MathHelper.Pi / 20;
-                //MathHelper.Pi * 2 is a full turn
-                // / 2 is 90 degrees
-                // divide to smaller pieces for less turn each button press
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                }
+                if (input.newKey.IsKeyDown(Keys.A))
+                {
+                    angle -= MathHelper.Pi / 20;
+                    //MathHelper.Pi * 2 is a full turn
+                    // / 2 is 90 degrees
+                    // divide to smaller pieces for less turn each button press
 
-                direction.X = (float)Math.Cos(angle);
-                direction.Y = (float)Math.Sin(angle);
+                    direction.X = (float)Math.Cos(angle);
+                    direction.Y = (float)Math.Sin(angle);
 
-                outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write((byte)PacketTypes.MOVE);
                     outmsg.Write(name);
-                outmsg.Write(position.X);
-                outmsg.Write(position.Y);
-                outmsg.Write(angle);
-                client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
-            }
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                }
                 #endregion
-            
-            if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
-            {
-                bullets.Add(new Bullet(content, angle, direction, position));
+
+                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
+                {
+                    bullets.Add(new Bullet(content, angle, direction, position));
 
                     outmsg.Write((byte)PacketTypes.SHOOT);
                     outmsg.Write(name);
@@ -141,10 +141,11 @@ namespace TankWars3000
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
                     client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
-            }
+                }
 
-            // if we get back respons from the server
-        }
+                // if we get back respons from the server
+
+            }
         }
 
         public void CheckCollision()
