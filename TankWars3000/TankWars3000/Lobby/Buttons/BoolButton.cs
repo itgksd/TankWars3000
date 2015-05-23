@@ -17,18 +17,24 @@ namespace TankWars3000
             set { isTrue = value; }
         }
 
-        public BoolButton(ContentManager content, Vector2 position, string title, bool defBool) : base(content, position, title)
+        Action checkedChangeEvent;
+
+        public BoolButton(ContentManager content, Vector2 position, string title, bool defBool, Action checkedChangeEvent = null) : base(content, position, title)
         {
             isTrue = defBool;
+            this.checkedChangeEvent = checkedChangeEvent;
         }
 
         public override void Update(OldNewInput input)
         {
             base.Update(input);
 
-            if (input.MouseRec.Intersects(outsideRec) && input.SingleLeftClick())
+            if (enabled && input.MouseRec.Intersects(outsideRec) && input.SingleLeftClick())
             {
                 isTrue = isTrue ? false : true; // Toggle
+
+                if (checkedChangeEvent != null)
+                    checkedChangeEvent();
             }
         }
 
@@ -36,7 +42,7 @@ namespace TankWars3000
         {
             base.Draw(spriteBatch);
 
-            spriteBatch.Draw(pixel, insideRec, isTrue ? Color.Lime : Color.Red);
+            spriteBatch.Draw(pixel, insideRec, isTrue ? enabled ? Color.Lime : Color.Lime * disabledAplha : enabled ? Color.Red : Color.Red * disabledAplha);
         }
     }
 }

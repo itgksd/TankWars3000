@@ -26,13 +26,16 @@ namespace TankWars3000
             background = new LobbyBackground(content);
 
             nameBtn  = new TextButton  (content, new Vector2(50, 50),  "UserName", TextButtonType.UserName, "Player");
-            ipBtn    = new TextButton  (content, new Vector2(50, 110), "IP",       TextButtonType.IP,       "192.168.10.10");
+            ipBtn    = new TextButton  (content, new Vector2(50, 110), "IP",       TextButtonType.IP,       "127.0.0.1");
             colorBtn = new ColorButton (content, new Vector2(50, 170), "Tank Color");
-            readyBtn = new BoolButton(content, new Vector2(50, 230), "Ready?", false);
+            colorBtn.Enabled = false;
+            readyBtn = new BoolButton  (content, new Vector2(50, 230), "Ready?", false, ReadyChanged);
+            readyBtn.Enabled = false;
             connectBtn = new NormalButton(content, new Vector2(50, 290), "Connect", Connect, true);
             connectBtn.TitleColor = Color.Lime;
             disconnectBtn  = new NormalButton(content, new Vector2(255 + 50, 290), "Disconnect", Disconnect, true);
             disconnectBtn.TitleColor = Color.Orange;
+            disconnectBtn.Enabled = false;
             exitBtn  = new NormalButton(content, new Vector2(50, 350), "Exit", Exit);
             exitBtn.TitleColor = Color.Red;
             
@@ -43,6 +46,10 @@ namespace TankWars3000
             nameBtn.Enabled = false;
             ipBtn.Enabled = false;
             readyBtn.IsTrue = false;
+            readyBtn.Enabled = true;
+            disconnectBtn.Enabled = true;
+            connectBtn.Enabled = false;
+            colorBtn.Enabled = true;
             // Connect to server
 
             NetPeerConfiguration Config = new NetPeerConfiguration("game");
@@ -53,14 +60,37 @@ namespace TankWars3000
             Game1.Client.Start();
 
             outmsg.Write((byte)PacketTypes.LOGIN);
+
+            outmsg.Write(nameBtn.Text);
+
             Game1.Client.Connect(ipBtn.Text, 14242, outmsg);
         }
 
         public void Disconnect()
         {
+            Game1.Client.Disconnect("Disconnect.By.User");
             // Disconnect code
             nameBtn.Enabled = true;
             ipBtn.Enabled = true;
+            readyBtn.Enabled = false;
+            disconnectBtn.Enabled = false;
+            connectBtn.Enabled = true;
+            colorBtn.Enabled = false;
+        }
+
+        public void ReadyChanged()
+        {
+            // Send ready to server
+
+            NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
+
+            outmsg.Write((byte)PacketTypes.READY);
+
+            outmsg.Write(nameBtn.Text);
+
+            outmsg.Write(readyBtn.IsTrue);
+
+            Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void Exit()

@@ -36,7 +36,7 @@ namespace TankWars3000
         {
             base.Update(input);
 
-            if (input.MouseRec.Intersects(insideRec) && input.newMouse.LeftButton == ButtonState.Pressed)
+            if (enabled && input.MouseRec.Intersects(insideRec) && input.newMouse.LeftButton == ButtonState.Pressed)
             {
                 selectedX = input.newMouse.X;
 
@@ -56,11 +56,11 @@ namespace TankWars3000
         {
             base.Draw(spriteBatch);
 
-            spriteBatch.Draw(rainbow, insideRec, Color.White);
+            spriteBatch.Draw(rainbow, insideRec, enabled ? Color.White : Color.White * disabledAplha);
 
             // Draw the arrows
-            spriteBatch.Draw(arrow, lowerArrow, Color.White);
-            spriteBatch.Draw(arrow, upperArrow, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipVertically, 0);
+            spriteBatch.Draw(arrow, lowerArrow, enabled ? Color.White : Color.White * disabledAplha);
+            spriteBatch.Draw(arrow, upperArrow, null, enabled ? Color.White : Color.White * disabledAplha, 0, Vector2.Zero, 1, SpriteEffects.FlipVertically, 0);
         }
     }
 }

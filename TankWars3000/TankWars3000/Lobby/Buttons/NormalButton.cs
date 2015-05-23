@@ -38,7 +38,7 @@ namespace TankWars3000
         {
             base.Update(input);
 
-            if (input.MouseRec.Intersects(outsideRec) && input.SingleLeftClick())
+            if (enabled && input.MouseRec.Intersects(outsideRec) && input.SingleLeftClick())
             {
                 pressed = true;
 

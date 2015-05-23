@@ -77,6 +77,11 @@ namespace TankWars3000
                     }
                 }
             }
+            else if (active && !enabled)
+            {
+                active = false;
+                text = finalText;
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
