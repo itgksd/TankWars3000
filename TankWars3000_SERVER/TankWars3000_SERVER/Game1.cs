@@ -116,8 +116,6 @@ namespace TankWars3000_SERVER{
                                 // man kan göra om enums till bytes.
                                 if (incomingMessage.ReadByte() == (byte)PacketTypes.LOGIN)
                                 {
-
-
                                     String name = incomingMessage.ReadString();
                                     //kolla om namnet finns
 
@@ -200,6 +198,8 @@ namespace TankWars3000_SERVER{
                        }
                     }
                 }
+                
+                
                 if (gameState == GameStates.Scoreboard)
                 {
 
