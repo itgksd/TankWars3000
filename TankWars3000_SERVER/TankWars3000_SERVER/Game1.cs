@@ -25,7 +25,8 @@ namespace TankWars3000_SERVER{
         READY,
         MOVE,
         SHOOT,
-        TEST
+        TEST,
+        LOBBYPLAYERLIST
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -147,6 +148,13 @@ namespace TankWars3000_SERVER{
 
                                     Debug.WriteLine("Sv-Received ready packet. Name:" + playerName + "|Ready:" + playerReady);
                                 }
+
+                                // Send list of player to all everytime somebody sends anything to the server
+                                NetOutgoingMessage outMsg =  Server.CreateMessage();
+                                outMsg.Write((byte)PacketTypes.LOBBYPLAYERLIST);
+                                Server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+                                Debug.WriteLine("Sv-Send lobby-player-list to all");
+
                                 break;
                             default:
                                 Debug.WriteLine("Sv-" + incomingMessage.MessageType + " - " + incomingMessage.ReadString());
