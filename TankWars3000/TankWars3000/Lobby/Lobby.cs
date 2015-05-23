@@ -14,7 +14,11 @@ namespace TankWars3000
 {
     class Lobby
     {
+        bool connected = false;
+
         LobbyBackground background;
+
+        ContentManager content;
 
         // Buttons
         TextButton ipBtn, nameBtn;
@@ -23,6 +27,8 @@ namespace TankWars3000
         NormalButton exitBtn;
         NormalButton disconnectBtn;
         NormalButton connectBtn;
+
+        List<PlayerListItem> playerList = new List<PlayerListItem>();
 
         public Lobby(ContentManager content)
         {
@@ -42,7 +48,8 @@ namespace TankWars3000
             disconnectBtn.Enabled = false;
             exitBtn  = new NormalButton(content, new Vector2(50, 350), "Exit", Exit);
             exitBtn.TitleColor = Color.Red;
-            
+
+            this.content = content;
         }
 
         public void Connect()
@@ -75,6 +82,7 @@ namespace TankWars3000
 
             // Message that will contain the aproval msg (or something else)
             NetIncomingMessage incommsg;
+            long loopCount = 0; // Used to break if it takes to long
 
             while (!canStart)
             {
@@ -88,6 +96,7 @@ namespace TankWars3000
                                 // Read message
                                 string testMsg = incommsg.ReadString();
                                 Debug.WriteLine("Cl-Test message received, connection working");
+                                connected = true;
                                 // Add players and stuff
                                 canStart = true;
                             }
@@ -96,6 +105,14 @@ namespace TankWars3000
                             Debug.WriteLine("Cl-" + incommsg.MessageType + " - " + incommsg.ReadString());
                             break;
                     }
+                }
+
+                loopCount++;
+                if (loopCount > 200000000) // Keeps it from freezing alltogether when not being able to connect.. A timeout i guess
+                {
+                    Debug.WriteLine("Cl-Timeout, can't connect");
+                    Disconnect();
+                    break;
                 }
             }
             #endregion
@@ -111,6 +128,8 @@ namespace TankWars3000
             disconnectBtn.Enabled = false;
             connectBtn.Enabled = true;
             colorBtn.Enabled = false;
+
+            connected = false;
         }
 
         public void ReadyChanged()
@@ -144,6 +163,30 @@ namespace TankWars3000
             connectBtn.Update(input);
             disconnectBtn.Update(input);
             exitBtn.Update(input);
+
+            NetIncomingMessage incom;
+            if (connected && (incom = Game1.Client.ReadMessage()) != null) // Are there any new messanges?
+            {
+                if (incom.MessageType == NetIncomingMessageType.Data) // Is it a "data" message?
+                {
+                    if (incom.ReadByte() == (byte)PacketTypes.LOBBYPLAYERLIST) // Does it contain a LobbyPlayerList?
+                    {
+                        Debug.WriteLine("Cl-Received the playerlist");
+
+                        playerList.Clear(); // Clear the "old" data
+
+                        // TODO: LOOP though every player
+                        for (int i = 1; i <= 10; i++)
+                        {
+                            // if a player with i index exists draw his name 
+                            //
+                            // else draw empty lobby list item
+                            Random r = new Random(); // TEMP!!
+                            playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, i * 40)));
+                        }
+                    }
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -157,6 +200,8 @@ namespace TankWars3000
             connectBtn.Draw(spriteBatch);
             disconnectBtn.Draw(spriteBatch);
             exitBtn.Draw(spriteBatch);
+
+            playerList.ForEach(p => p.Draw(spriteBatch));
         }
     }
 }
