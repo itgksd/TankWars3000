@@ -5,8 +5,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace TankWars3000
 {
@@ -14,6 +16,7 @@ namespace TankWars3000
     {
         LobbyBackground background;
 
+        // Buttons
         TextButton ipBtn, nameBtn;
         ColorButton colorBtn;
         BoolButton readyBtn;
@@ -25,6 +28,7 @@ namespace TankWars3000
         {
             background = new LobbyBackground(content);
 
+            // Buttons
             nameBtn  = new TextButton  (content, new Vector2(50, 50),  "UserName", TextButtonType.UserName, "Player");
             ipBtn    = new TextButton  (content, new Vector2(50, 110), "IP",       TextButtonType.IP,       "127.0.0.1");
             colorBtn = new ColorButton (content, new Vector2(50, 170), "Tank Color");
@@ -64,6 +68,37 @@ namespace TankWars3000
             outmsg.Write(nameBtn.Text);
 
             Game1.Client.Connect(ipBtn.Text, 14242, outmsg);
+
+            #region Wait for test connection
+            // Wait for aproval.. might freeze the game tho
+            bool canStart = false;
+
+            // Message that will contain the aproval msg (or something else)
+            NetIncomingMessage incommsg;
+
+            while (!canStart)
+            {
+                if ((incommsg = Game1.Client.ReadMessage()) != null)
+                {
+                    switch (incommsg.MessageType)
+                    {
+                        case NetIncomingMessageType.Data:
+                            if (incommsg.ReadByte() == (byte)PacketTypes.TEST)
+                            {
+                                // Read message
+                                string testMsg = incommsg.ReadString();
+                                Debug.WriteLine("Cl-Test message received, connection working");
+                                // Add players and stuff
+                                canStart = true;
+                            }
+                            break;
+                        default:
+                            Debug.WriteLine("Cl-" + incommsg.MessageType + " - " + incommsg.ReadString());
+                            break;
+                    }
+                }
+            }
+            #endregion
         }
 
         public void Disconnect()

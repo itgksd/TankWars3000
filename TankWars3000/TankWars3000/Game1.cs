@@ -24,7 +24,8 @@ namespace TankWars3000
         LOGIN,
         READY,
         MOVE,
-        SHOOT
+        SHOOT,
+        TEST
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -64,10 +65,10 @@ namespace TankWars3000
             tank = new Tank(Content, Client);
             gameState = GameStates.Lobby;
 
-            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            graphics.IsFullScreen = true;
-            graphics.ApplyChanges();
+            //graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            //graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            //graphics.IsFullScreen = true;
+            //graphics.ApplyChanges();
             IsMouseVisible = true;
 
             screenRec = new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height);

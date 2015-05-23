@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Lidgren.Network;
+using System.Threading;
+using System.Diagnostics;
 namespace TankWars3000_SERVER{
 
     enum GameStates
@@ -22,7 +24,8 @@ namespace TankWars3000_SERVER{
         LOGIN,
         READY,
         MOVE,
-        SHOOT
+        SHOOT,
+        TEST
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -114,6 +117,7 @@ namespace TankWars3000_SERVER{
                                 if (incomingMessage.ReadByte() == (byte)PacketTypes.LOGIN)
                                 {
 
+
                                     String name = incomingMessage.ReadString();
                                     //kolla om namnet finns
 
@@ -123,15 +127,29 @@ namespace TankWars3000_SERVER{
                                     
                                     // skapa ny Tank och lägg det i en lista
                                     tanks.Add(new Tank(name));
+
+                                    Debug.WriteLine("Sv-Sending test message");
+                                    // Skicka ett test paket för att låta klienten veta att anslutningen fungerar.. "Ni" kan nog ta bort den senare om den inte behövs längre
+                                    NetOutgoingMessage testMsg = Server.CreateMessage();
+                                    testMsg.Write((byte)PacketTypes.TEST);
+                                    testMsg.Write("Test string");
+                                    Server.SendMessage(testMsg, incomingMessage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
                                 }
                                 break;
                             case NetIncomingMessageType.Data:
 
                                 if (incomingMessage.ReadByte() == (byte)PacketTypes.READY)
                                 {
-                                    
                                     // markera Tanken/klienten som redo
+
+                                    string playerName = incomingMessage.ReadString();
+                                    bool playerReady = incomingMessage.ReadBoolean();
+
+                                    Debug.WriteLine("Sv-Received ready packet. Name:" + playerName + "|Ready:" + playerReady);
                                 }
+                                break;
+                            default:
+                                Debug.WriteLine("Sv-" + incomingMessage.MessageType + " - " + incomingMessage.ReadString());
                                 break;
                         }
                     }
