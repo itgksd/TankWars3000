@@ -28,7 +28,8 @@ namespace TankWars3000_SERVER{
         TEST,
         LOBBYPLAYERLIST,
         COLOR,
-        GAMESTATE
+        GAMESTATE,
+        DISCONNECTREASON
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -119,8 +120,32 @@ namespace TankWars3000_SERVER{
                                 // man kan göra om enums till bytes.
                                 if (incomingMessage.ReadByte() == (byte)PacketTypes.LOGIN)
                                 {
+                                    Thread.Sleep(100); // Helps with connecting. The server sends the test message faster than the client can start receive messages
                                     String name = incomingMessage.ReadString();
                                     //kolla om namnet finns
+                                    if (tanks.ContainsKey(name))
+                                    {
+                                        incomingMessage.SenderConnection.Approve();
+                                        Debug.WriteLine("Sv-Sending deny reason. Name already exist.");
+                                        NetOutgoingMessage outmsg = Server.CreateMessage();
+                                        outmsg.Write((byte)PacketTypes.DISCONNECTREASON);
+                                        outmsg.Write("Your name is already used on this server!");
+                                        Server.SendMessage(outmsg, incomingMessage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
+                                        incomingMessage.SenderConnection.Deny("Name already exists in the server!");
+                                        break;
+                                    }
+                                    // If the server is full send a message before disconnecting
+                                    if (tanks.Count >= amountOfPlayers)
+                                    {
+                                        incomingMessage.SenderConnection.Approve();
+                                        Debug.WriteLine("Sv-Sending deny reason.Server full");
+                                        NetOutgoingMessage outmsg = Server.CreateMessage();
+                                        outmsg.Write((byte)PacketTypes.DISCONNECTREASON);
+                                        outmsg.Write("Server is full!");
+                                        Server.SendMessage(outmsg, incomingMessage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
+                                        incomingMessage.SenderConnection.Deny("Server full!");
+                                        break;
+                                    }
 
                                     // godkänner klienten, detta måste tydligen göras
                                     incomingMessage.SenderConnection.Approve();

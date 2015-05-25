@@ -91,19 +91,35 @@ namespace TankWars3000
                     switch (incommsg.MessageType)
                     {
                         case NetIncomingMessageType.Data:
-                            if (incommsg.ReadByte() == (byte)PacketTypes.TEST)
+                            switch (incommsg.ReadByte())
                             {
-                                // Read message
-                                string testMsg = incommsg.ReadString();
-                                Debug.WriteLine("Cl-Test message received, connection working");
-                                Notify.NewMessage("Connected!", Color.Lime);
-                                connected = true;
-                                // Add players and stuff
-                                canStart = true;
+                                case (byte)PacketTypes.TEST:
+                                    // Read message
+                                    string testMsg = incommsg.ReadString();
+                                    Debug.WriteLine("Cl-Test message received, connection working");
+                                    Notify.NewMessage("Connected!", Color.Lime);
+                                    connected = true;
+                                    // Add players and stuff
+                                    canStart = true;
+                                    break;
+                                case (byte)PacketTypes.DISCONNECTREASON:
+                                    Debug.WriteLine("Cl-Deny packet received");
+                                    Notify.NewMessage("Disconnect reason: " + incommsg.ReadString(), Color.Purple);
+                                    canStart = true;
+                                    Disconnect();
+                                    break;
+                                default:
+                                    break;
                             }
                             break;
+                        case NetIncomingMessageType.WarningMessage:
+                            string msgW = incommsg.ReadString();
+                            Debug.WriteLine("Cl-" + incommsg.MessageType + " - " + msgW);
+                            Notify.NewMessage("Warning: " + msgW, Color.Purple);
+                            break;
                         default:
-                            Debug.WriteLine("Cl-" + incommsg.MessageType + " - " + incommsg.ReadString());
+                            string msg = incommsg.ReadString();
+                            Debug.WriteLine("Cl-" + incommsg.MessageType + " - " + msg);
                             break;
                     }
                 }
@@ -208,9 +224,14 @@ namespace TankWars3000
 
                                 playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, k * 40), name, color, ready));
                             }
+                            for (int i = incommingPlayers + 1; i <= 8; i++)
+                            {
+                                playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, i * 40)));
+                            }
                             break;
                         case (byte)PacketTypes.GAMESTATE:
                             Debug.WriteLine("Cl-Reveiced gamestate change");
+                            background.PlayMusic = false;
                             Notify.NewMessage("Starting Game!", Color.LightBlue);
                             Game1.gameState = (GameStates)incom.ReadByte();
                             break;

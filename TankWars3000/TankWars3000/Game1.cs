@@ -28,7 +28,8 @@ namespace TankWars3000
         TEST,
         LOBBYPLAYERLIST,
         COLOR,
-        GAMESTATE
+        GAMESTATE,
+        DISCONNECTREASON
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -93,10 +94,6 @@ namespace TankWars3000
 
         protected override void Update(GameTime gameTime)
         {
-            //// Allows the game to exit
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                this.Exit();
-
             input.newKey = Keyboard.GetState();
             input.newMouse = Mouse.GetState();
 

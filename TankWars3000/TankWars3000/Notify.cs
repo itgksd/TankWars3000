@@ -111,7 +111,7 @@ namespace TankWars3000
 
             public void Draw(SpriteBatch spriteBatch)
             {
-                spriteBatch.Draw(pixelTx, rectangle, color * 0.6f);
+                spriteBatch.Draw(pixelTx, rectangle, color * 0.8f);
                 spriteBatch.DrawString(font, message, new Vector2(10, rectangle.Y), Color.White);
             }
         }
