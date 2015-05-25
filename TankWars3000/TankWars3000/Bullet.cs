@@ -18,6 +18,8 @@ namespace TankWars3000
 
         Rectangle collisionRect = new Rectangle();
 
+        string name;
+
         int damage              = 1;
 
         bool isAlvie;
@@ -29,6 +31,10 @@ namespace TankWars3000
             get { return isAlvie; }
             set { isAlvie = true; }
         }
+        public string Name
+        {
+            get { return name; }
+        }
 
         #endregion
 
@@ -36,8 +42,6 @@ namespace TankWars3000
 
         public void Update(GraphicsDeviceManager graphics)
         {
-            position += direction * speed;
-
             if (position.X > graphics.GraphicsDevice.Viewport.Width)
                 isAlvie = false;
             if (position.Y > graphics.GraphicsDevice.Viewport.Height)

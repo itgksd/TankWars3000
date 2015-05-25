@@ -82,7 +82,7 @@ namespace TankWars3000
                         tank.position.X = incmsg.ReadInt32();
                         tank.position.Y = incmsg.ReadInt32();
                     }
-                }
+            }
 
                 if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
                 {
