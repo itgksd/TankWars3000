@@ -40,9 +40,11 @@ namespace TankWars3000_SERVER{
         // Configuration object
         static NetPeerConfiguration Config;
         NetIncomingMessage incomingMessage;
-
+        DateTime previousUpdate;
         int amountOfPlayers = 8;
         int connectionAmount = 0;
+
+        List<bullet> bullets = new List<bullet>();
 
         List<Tank> tanks;
 
@@ -140,7 +142,7 @@ namespace TankWars3000_SERVER{
                                 if (incomingMessage.ReadByte() == (byte)PacketTypes.READY)
                                 {
                                     // markera Tanken/klienten som redo
-
+                                    
                                     string playerName = incomingMessage.ReadString();
                                     bool playerReady = incomingMessage.ReadBoolean();
 
@@ -199,7 +201,7 @@ namespace TankWars3000_SERVER{
                            int x = incomingMessage.ReadInt32();
                            int y = incomingMessage.ReadInt32();
                            float angle = incomingMessage.ReadFloat();
-
+                           bullets.Add(new bullet(x, y, angle, name));
                            NetOutgoingMessage outmsg = Server.CreateMessage();
                            outmsg.Write((byte)PacketTypes.SHOOT);
                            outmsg.Write(x);
@@ -207,6 +209,8 @@ namespace TankWars3000_SERVER{
                            Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                        }
                     }
+
+
                 }
                 
                 
@@ -254,6 +258,10 @@ namespace TankWars3000_SERVER{
                     }
                 }
             }
+        }
+        private void bulletCollision()
+        {
+
         }
     }
 }
