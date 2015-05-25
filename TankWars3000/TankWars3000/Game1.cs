@@ -60,9 +60,6 @@ namespace TankWars3000
 
         protected override void Initialize()
         {
-            //Start Client
-            //Client.Start();
-
             tank = new Tank(Content, Client);
             gameState = GameStates.Lobby;
 
