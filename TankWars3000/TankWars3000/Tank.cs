@@ -29,7 +29,7 @@ namespace TankWars3000
 
         TimeSpan reloadTime     = new TimeSpan(0, 0, 4);
 
-        static Texture2D texture;
+        Texture2D texture;
 
         Rectangle collisionRect = new Rectangle();
 
@@ -180,7 +180,7 @@ namespace TankWars3000
                 {
                     foreach (Tank tank in tanks)
                     {
-                        spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, Color.White, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(tank., tank.position, tank.collisionRect, Color.White, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
                     }
                 }
             }
