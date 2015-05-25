@@ -90,6 +90,7 @@
     <Compile Include="Lobby\Lobby.cs" />
     <Compile Include="Lobby\LobbyBackground.cs" />
     <Compile Include="Lobby\PlayerListItem.cs" />
+    <Compile Include="Notify.cs" />
     <Compile Include="OldNewInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

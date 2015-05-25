@@ -161,30 +161,30 @@ namespace TankWars3000_SERVER{
                                         tanks[playerName].TankColor = playerColor;
                                         break;
                                 }
-
-                                // Send list of player to all everytime somebody sends anything to the server
-                                NetOutgoingMessage outMsg =  Server.CreateMessage();
-                                outMsg.Write((byte)PacketTypes.LOBBYPLAYERLIST);
-
-                                // Packa ner viktigaste informationen om alla spelarna
-                                outMsg.Write(tanks.Count); // Send the amount of players that will be send
-                                foreach (KeyValuePair<string, Tank> tank in tanks)
-                                {
-                                    outMsg.Write(tank.Key); // Name
-                                    outMsg.Write(tank.Value.TankColor.R); // Color R
-                                    outMsg.Write(tank.Value.TankColor.G); // Color G
-                                    outMsg.Write(tank.Value.TankColor.B); // Color B
-                                    outMsg.Write(tank.Value.Ready); // Ready
-                                }
-
-                                Server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
-                                Debug.WriteLine("Sv-Send lobby-player-list to all");
-
                                 break;
                             default:
                                 Debug.WriteLine("Sv-" + incomingMessage.MessageType + " - " + incomingMessage.ReadString());
                                 break;
                         }
+
+                        #region Send list of player to all everytime somebody sends anything to the server
+                        NetOutgoingMessage outMsg = Server.CreateMessage();
+                        outMsg.Write((byte)PacketTypes.LOBBYPLAYERLIST);
+
+                        // Packa ner viktigaste informationen om alla spelarna
+                        outMsg.Write(tanks.Count); // Send the amount of players that will be send
+                        foreach (KeyValuePair<string, Tank> tank in tanks)
+                        {
+                            outMsg.Write(tank.Key); // Name
+                            outMsg.Write(tank.Value.TankColor.R); // Color R
+                            outMsg.Write(tank.Value.TankColor.G); // Color G
+                            outMsg.Write(tank.Value.TankColor.B); // Color B
+                            outMsg.Write(tank.Value.Ready); // Ready
+                        }
+
+                        Server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+                        Debug.WriteLine("Sv-Send lobby-player-list to all");
+                        #endregion
                     }
 
                     // Check if we can start

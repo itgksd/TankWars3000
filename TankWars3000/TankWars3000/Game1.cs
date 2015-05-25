@@ -83,6 +83,7 @@ namespace TankWars3000
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             lobby = new Lobby(Content);
+            Notify.LoadContent(Content);
         }
 
         protected override void UnloadContent()
@@ -114,6 +115,8 @@ namespace TankWars3000
 
             }
 
+            Notify.Update(gameTime);
+
             input.SetOldKey();
             input.SetOldMouse();
 
@@ -127,6 +130,7 @@ namespace TankWars3000
                 {
                     spriteBatch.Begin();
                     lobby.Draw(spriteBatch);
+                    Notify.Draw(spriteBatch);
                     spriteBatch.End();
                 }
                 if (gameState == GameStates.Ingame)
@@ -134,12 +138,16 @@ namespace TankWars3000
                     spriteBatch.Begin();
 
                     tank.Draw(spriteBatch, tanks);
+                    Notify.Draw(spriteBatch);
 
                     spriteBatch.End();
                 }
                 if (gameState == GameStates.Scoreboard)
                 {
                     spriteBatch.Begin();
+
+
+                    Notify.Draw(spriteBatch);
 
                     spriteBatch.End();
                 }
