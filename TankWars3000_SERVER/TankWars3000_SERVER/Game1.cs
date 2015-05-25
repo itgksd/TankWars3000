@@ -266,6 +266,9 @@ namespace TankWars3000_SERVER{
                 foreach (Tank tank in tanks)
                 {
                     if ()
+                    {
+
+                    }
                 }
             }
         }
