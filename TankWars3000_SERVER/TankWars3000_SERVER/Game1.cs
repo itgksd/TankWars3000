@@ -231,7 +231,18 @@ namespace TankWars3000_SERVER{
                     {
                         if (tank1.Tankrect.Intersects(tank2.Tankrect))
                         {
-                             
+                            Vector2 collisionPosition1 = new Vector2();
+                            collisionPosition1.X = tank1.Position.X + ((float)Math.Cos(angle + Math.PI));
+                            collisionPosition1.Y = tank1.Position.Y + ((float)Math.Sin(angle + Math.PI));
+
+                            tank1.Position = collisionPosition1;
+
+                            Vector2 collisionPosition2 = new Vector2();
+                            collisionPosition2.X = tank2.Position.X + ((float)Math.Cos(angle));
+                            collisionPosition2.Y = tank2.Position.Y + ((float)Math.Sin(angle));
+
+                            tank2.Position = collisionPosition2;
+
                         }
                     }
                 }
