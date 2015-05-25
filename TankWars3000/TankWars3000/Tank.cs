@@ -145,11 +145,6 @@ namespace TankWars3000
             }
         }
 
-        public void CheckCollision()
-        {
-
-        }
-
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, collisionRect, Color.White, angle, textureOrigin, 1.0f,SpriteEffects.None, 0f);
