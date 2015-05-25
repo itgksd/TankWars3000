@@ -26,7 +26,8 @@ namespace TankWars3000
         MOVE,
         SHOOT,
         TEST,
-        LOBBYPLAYERLIST
+        LOBBYPLAYERLIST,
+        COLOR
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -104,7 +105,7 @@ namespace TankWars3000
             if (gameState == GameStates.Ingame)
             {
                 // The player
-                    tank.Update(graphics, tanks);
+                    tank.Update(Content, graphics, tanks);
                     tank.Input(input, Content);
             }
             if (gameState == GameStates.Scoreboard)
@@ -131,7 +132,7 @@ namespace TankWars3000
                 {
                     spriteBatch.Begin();
 
-                    tank.Draw(spriteBatch);
+                    tank.Draw(spriteBatch, tanks);
 
                     spriteBatch.End();
                 }

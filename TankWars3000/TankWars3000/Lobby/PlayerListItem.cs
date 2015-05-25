@@ -11,7 +11,7 @@ namespace TankWars3000
     class PlayerListItem
     {
         static Texture2D pixelTx, tankTx;
-        Rectangle rectangle, tankRec;
+        Rectangle rectangle, tankRec, readyRec;
         static SpriteFont font;
 
         String name = "";
@@ -40,13 +40,15 @@ namespace TankWars3000
         {
             Load(content, position);
         }
-        public PlayerListItem(ContentManager content, Vector2 position, string playerName, Color playerColor)
+        public PlayerListItem(ContentManager content, Vector2 position, string playerName, Color playerColor, bool ready)
         {
             Load(content, position);
-            tankRec = new Rectangle(rectangle.X + 5, rectangle.Y + 5, 30, rectangle.Height - 10);
+            tankRec = new Rectangle(rectangle.X + 7, rectangle.Y + 5, 30, rectangle.Height - 10);
+            readyRec = new Rectangle(rectangle.X, rectangle.Y, 4, rectangle.Height);
 
             name = playerName;
             tankColor = playerColor;
+            this.ready = ready;
         }
 
         public void Load(ContentManager content, Vector2 position)
@@ -69,6 +71,7 @@ namespace TankWars3000
             if (name != "")
             {
                 spriteBatch.Draw(tankTx, tankRec, tankColor);
+                spriteBatch.Draw(pixelTx, readyRec, ready ? Color.Lime : Color.Red);
                 spriteBatch.DrawString(font, name, new Vector2(rectangle.X + 50, rectangle.Y), Color.White);
             }
         }

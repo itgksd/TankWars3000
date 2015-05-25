@@ -41,7 +41,7 @@ namespace TankWars3000
 
         #region Methods
 
-        public void Update(GraphicsDeviceManager graphics, List<Tank> tanks)
+        public void Update(ContentManager content, GraphicsDeviceManager graphics, List<Tank> tanks)
         {
             foreach (Bullet bullet in bullets)
                 bullet.Update(graphics);
@@ -82,11 +82,12 @@ namespace TankWars3000
                         tank.position.X = incmsg.ReadInt32();
                         tank.position.Y = incmsg.ReadInt32();
                     }
-            }
+                }
 
                 if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
                 {
-
+                    Bullet bullet = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadUInt32(), incmsg.ReadUInt32()) );
+                    bullets.Add(bullet);
                 }
             }
         }
