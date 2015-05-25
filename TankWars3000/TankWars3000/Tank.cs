@@ -44,7 +44,7 @@ namespace TankWars3000
 
         #region Methods
 
-        public void Update(GraphicsDevice graphics)
+        public void Update(GraphicsDeviceManager graphics)
         {
             foreach (Bullet bullet in bullets)
                 bullet.Update(graphics);
@@ -60,11 +60,11 @@ namespace TankWars3000
                 }
             }
  
-            if (position.X >= graphics.Viewport.Width)
-                position.X = graphics.Viewport.Width - texture.Width;
+            if (position.X >= graphics.GraphicsDevice.Viewport.Width)
+                position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
 
-            if (position.Y >= graphics.Viewport.Height)
-                position.Y = graphics.Viewport.Height - texture.Height;
+            if (position.Y >= graphics.GraphicsDevice.Viewport.Height)
+                position.Y = graphics.GraphicsDevice.Viewport.Height - texture.Height;
 
             if (position.X < 0)
                 position.X = 0;
@@ -154,11 +154,6 @@ namespace TankWars3000
                     client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
             }
-        }
-
-        public void CheckCollision()
-        {
-
         }
 
         public void Draw(SpriteBatch spriteBatch)
