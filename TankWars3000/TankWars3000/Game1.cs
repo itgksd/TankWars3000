@@ -12,7 +12,7 @@ using Lidgren.Network;
 
 namespace TankWars3000
 {
-    enum GameStates
+    public enum GameStates
     {
         Lobby,
         Ingame,
@@ -27,7 +27,8 @@ namespace TankWars3000
         SHOOT,
         TEST,
         LOBBYPLAYERLIST,
-        COLOR
+        COLOR,
+        GAMESTATE
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -35,7 +36,7 @@ namespace TankWars3000
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        GameStates gameState;
+        public static GameStates gameState;
 
         // Client Object
         public static NetClient Client;

@@ -77,8 +77,8 @@ namespace TankWars3000
                 {
                     foreach (Tank tank in tanks)
                     {
-                        tank.name = incmsg.ReadString();
-                        tank.angle = incmsg.ReadFloat();
+                        tank.name       = incmsg.ReadString();
+                        tank.angle      = incmsg.ReadFloat();
                         tank.position.X = incmsg.ReadInt32();
                         tank.position.Y = incmsg.ReadInt32();
                         try
@@ -182,7 +182,7 @@ namespace TankWars3000
 
         public void Draw(SpriteBatch spriteBatch, List<Tank> tanks)
         {
-            if ((incmsg = Game1.Client.ReadMessage()) != null)
+            if ((incmsg               = Game1.Client.ReadMessage()) != null)
             {
                 if (incmsg.ReadByte() == (byte)PacketTypes.MOVE)
                 {
@@ -198,10 +198,10 @@ namespace TankWars3000
 
         public Tank(ContentManager content)
         {
-            texture = content.Load<Texture2D>("Tank/TankTest");
-            direction = new Vector2(1, 0);
+            texture       = content.Load<Texture2D>("Tank/TankTest");
+            direction     = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
-            speed = new Vector2(2, 2);
+            speed         = new Vector2(2, 2);
         }
         #endregion
     }
