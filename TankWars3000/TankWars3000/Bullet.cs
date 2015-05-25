@@ -34,13 +34,13 @@ namespace TankWars3000
 
         #region Methods
 
-        public void Update(GraphicsDevice graphics)
+        public void Update(GraphicsDeviceManager graphics)
         {
             position += direction * speed;
 
-            if (position.X > graphics.Viewport.Width)
+            if (position.X > graphics.GraphicsDevice.Viewport.Width)
                 isAlvie = false;
-            if (position.Y > graphics.Viewport.Height)
+            if (position.Y > graphics.GraphicsDevice.Viewport.Height)
                 isAlvie = false;
             if (position.Y < 0)
                 isAlvie = false;

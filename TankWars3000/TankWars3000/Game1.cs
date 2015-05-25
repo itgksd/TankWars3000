@@ -35,12 +35,13 @@ namespace TankWars3000
         SpriteBatch spriteBatch;
 
         GameStates gameState;
+
         // Client Object
         public static NetClient Client;
 
         // The Player
         Tank tank;
-        GraphicsDevice graphicss;
+
         OldNewInput input = new OldNewInput();
 
         Lobby lobby;
@@ -106,7 +107,7 @@ namespace TankWars3000
             if (gameState == GameStates.Ingame)
             {
                 // The player
-                    tank.Update(graphicss);
+                    tank.Update(graphics);
                     tank.Input(input, Content);
             }
             if (gameState == GameStates.Scoreboard)
