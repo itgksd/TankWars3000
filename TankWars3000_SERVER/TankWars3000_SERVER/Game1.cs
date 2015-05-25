@@ -270,16 +270,16 @@ namespace TankWars3000_SERVER{
                         if (tank1.Value.Tankrect.Intersects(tank2.Value.Tankrect))
                         {
                             Vector2 collisionPosition1 = new Vector2();
-                            collisionPosition1.X = tank1.Position.X + ((float)Math.Cos(angle + Math.PI));
-                            collisionPosition1.Y = tank1.Position.Y + ((float)Math.Sin(angle + Math.PI));
+                            collisionPosition1.X = tank1.Value.Position.X + ((float)Math.Cos(angle + Math.PI));
+                            collisionPosition1.Y = tank1.Value.Position.Y + ((float)Math.Sin(angle + Math.PI));
                              
-                            tank1.Position = collisionPosition1;
+                            tank1.Value.Position = collisionPosition1;
 
                             Vector2 collisionPosition2 = new Vector2();
-                            collisionPosition2.X = tank2.Position.X + ((float)Math.Cos(angle));
-                            collisionPosition2.Y = tank2.Position.Y + ((float)Math.Sin(angle));
+                            collisionPosition2.X = tank2.Value.Position.X + ((float)Math.Cos(angle));
+                            collisionPosition2.Y = tank2.Value.Position.Y + ((float)Math.Sin(angle));
 
-                            tank2.Position = collisionPosition2;
+                            tank2.Value.Position = collisionPosition2;
 
                         }
                     }
@@ -290,13 +290,13 @@ namespace TankWars3000_SERVER{
         {
             foreach (bullet bullet in bullets)
             {
-                foreach (Tank tank in tanks)
-                {
-                    if ()
-                    {
+                //foreach (Tank tank in tanks)
+                //{
+                //    if ()
+                //    {
 
-                    }
-                }
+                //    }
+                //}
             }
         }
     }
