@@ -36,13 +36,12 @@ namespace TankWars3000
         NetIncomingMessage incmsg;
 
         List<Bullet> bullets    = new List<Bullet>();
-        List<Tank> tanks        = new List<Tank>();
 
         #endregion
 
         #region Methods
 
-        public void Update(GraphicsDeviceManager graphics)
+        public void Update(GraphicsDeviceManager graphics, List<Tank> tanks)
         {
             foreach (Bullet bullet in bullets)
                 bullet.Update(graphics);
@@ -76,7 +75,13 @@ namespace TankWars3000
             {
                 if(incmsg.ReadByte() == (byte)PacketTypes.MOVE)
                 {
-
+                    foreach (Tank tank in tanks)
+                    {
+                        tank.name = incmsg.ReadString();
+                        tank.angle = incmsg.ReadFloat();
+                        tank.position.X = incmsg.ReadInt32();
+                        tank.position.Y = incmsg.ReadInt32();
+                    }
                 }
 
                 if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
@@ -167,21 +172,15 @@ namespace TankWars3000
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, List<Tank> tanks)
         {
-            spriteBatch.Draw(texture, position, collisionRect, Color.White, angle, textureOrigin, 1.0f,SpriteEffects.None, 0f);
             if ((incmsg = Game1.Client.ReadMessage()) != null)
             {
                 if (incmsg.ReadByte() == (byte)PacketTypes.MOVE)
                 {
                     foreach (Tank tank in tanks)
                     {
-                        int newX = incmsg.ReadInt32();
-                        int newY = incmsg.ReadInt32();
-                        float newAngle = incmsg.ReadFloat();
-                        String newName = incmsg.ReadString();
-
-                        spriteBatch.Draw(texture, new Vector2(newX, newY), collisionRect, Color.White, newAngle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, Color.White, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
                     }
                 }
             }

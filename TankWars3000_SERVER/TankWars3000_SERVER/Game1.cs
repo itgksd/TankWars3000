@@ -40,9 +40,11 @@ namespace TankWars3000_SERVER{
         // Configuration object
         static NetPeerConfiguration Config;
         NetIncomingMessage incomingMessage;
-
+        DateTime previousUpdate;
         int amountOfPlayers = 8;
         int connectionAmount = 0;
+
+        List<bullet> bullets = new List<bullet>();
 
         List<Tank> tanks;
 
@@ -140,7 +142,7 @@ namespace TankWars3000_SERVER{
                                 if (incomingMessage.ReadByte() == (byte)PacketTypes.READY)
                                 {
                                     // markera Tanken/klienten som redo
-
+                                    
                                     string playerName = incomingMessage.ReadString();
                                     bool playerReady = incomingMessage.ReadBoolean();
 
@@ -170,6 +172,9 @@ namespace TankWars3000_SERVER{
 
                 if (gameState == GameStates.Ingame)
                 {
+                    
+                    DateTime currentDatetime = DateTime.Now;
+                    currentDatetime = previousUpdate;
                     if ((incomingMessage = Server.ReadMessage()) != null)
                     {
                        if(incomingMessage.ReadByte() == (byte)PacketTypes.MOVE) {
@@ -199,7 +204,7 @@ namespace TankWars3000_SERVER{
                            int x = incomingMessage.ReadInt32();
                            int y = incomingMessage.ReadInt32();
                            float angle = incomingMessage.ReadFloat();
-
+                           bullets.Add(new bullet(x, y, angle, name));
                            NetOutgoingMessage outmsg = Server.CreateMessage();
                            outmsg.Write((byte)PacketTypes.SHOOT);
                            outmsg.Write(x);
@@ -207,6 +212,8 @@ namespace TankWars3000_SERVER{
                            Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                        }
                     }
+
+
                 }
                 
                 
@@ -251,6 +258,19 @@ namespace TankWars3000_SERVER{
                             tank2.Position = collisionPosition2;
 
                         }
+                    }
+                }
+            }
+        }
+        private void bulletCollision()
+        {
+            foreach (bullet bullet in bullets)
+            {
+                foreach (Tank tank in tanks)
+                {
+                    if ()
+                    {
+
                     }
                 }
             }
