@@ -173,6 +173,7 @@ namespace TankWars3000_SERVER{
                     if ((incomingMessage = Server.ReadMessage()) != null)
                     {
                        if(incomingMessage.ReadByte() == (byte)PacketTypes.MOVE) {
+                           //Spara värden Server fick från client
                            String name = incomingMessage.ReadString();
                            int x = incomingMessage.ReadInt32();
                            int y = incomingMessage.ReadInt32();
@@ -182,6 +183,7 @@ namespace TankWars3000_SERVER{
                            // kollision här tack
                            Collision(angle);
 
+                           //Skicka alla värden till alla Clients
                            NetOutgoingMessage outmsg = Server.CreateMessage();
                            outmsg.Write((byte)PacketTypes.MOVE);
                            outmsg.Write(name);
