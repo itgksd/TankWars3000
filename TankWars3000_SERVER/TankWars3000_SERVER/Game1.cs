@@ -219,6 +219,7 @@ namespace TankWars3000_SERVER{
                            outmsg.Write(angle);
                            outmsg.Write(x);
                            outmsg.Write(y);
+                           outmsg.Write(bulletCollision());
                            Server.SendToAll(outmsg,NetDeliveryMethod.ReliableOrdered);
                        }
 
@@ -286,7 +287,7 @@ namespace TankWars3000_SERVER{
                 }
                         }
                     }
-        private void bulletCollision()
+        private bool bulletCollision()
         {
             for (int i = 0; i <= bullets.Count -1;)
             {
@@ -296,17 +297,27 @@ namespace TankWars3000_SERVER{
                     {
                         if (bullets[i].Rect.Intersects(tank.Value.Tankrect))
                         {
-                            bullets.RemoveAt(i);
+
                             tank.Value.Health--;
 
+                            Vector2 bulletcollisionposition = new Vector2();
+                            bulletcollisionposition.X = tank.Value.Position.X + ((float)Math.Cos(bullets[i].Angle));
+                            bulletcollisionposition.Y = tank.Value.Position.Y + ((float)Math.Sin(bullets[i].Angle));
+                            tank.Value.Position = bulletcollisionposition;
+
+                            bullets.RemoveAt(i);
+                            return true;
                         }
                         else
                         {
                             i++;
+                            return false;
                         }
                     }
+                    else return false;
                 }
             }
+            return false;
         }
     }
 }
