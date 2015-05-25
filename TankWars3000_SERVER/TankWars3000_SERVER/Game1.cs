@@ -261,7 +261,13 @@ namespace TankWars3000_SERVER{
         }
         private void bulletCollision()
         {
-
+            foreach (bullet bullet in bullets)
+            {
+                foreach (Tank tank in tanks)
+                {
+                    if ()
+                }
+            }
         }
     }
 }

@@ -30,6 +30,7 @@ namespace TankWars3000_SERVER
         public Tank(String n)
         {
             name = n;
+            health = 3;
         }
        
         
@@ -38,10 +39,19 @@ namespace TankWars3000_SERVER
 
         }
 
-        private void CheckCollision()
+        public int Health
         {
-
+            get
+            {
+                return health;
+            }
+            set
+            {
+                health = value;
+            }
         }
+
+
         public Rectangle Tankrect
         {
             get
