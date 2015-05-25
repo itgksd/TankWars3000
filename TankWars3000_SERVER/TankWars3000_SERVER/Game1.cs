@@ -27,7 +27,8 @@ namespace TankWars3000_SERVER{
         SHOOT,
         TEST,
         LOBBYPLAYERLIST,
-        COLOR
+        COLOR,
+        GAMESTATE
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -185,12 +186,21 @@ namespace TankWars3000_SERVER{
                                 break;
                         }
                     }
-                    if (connectionAmount == amountOfPlayers)
-                    {
-                        // lobbyn full och spelet kan börja
-                        gameState = GameStates.Ingame;
-                    }
 
+                    // Check if we can start
+                    int readyCount = 0;
+                    foreach (KeyValuePair<string, Tank> tank in tanks)
+                        if (tank.Value.Ready)
+                            readyCount++;
+                    if (tanks.Count > 1 && (float)Decimal.Divide(readyCount, tanks.Count) > 0.7f)
+                    {
+                        gameState = GameStates.Ingame;
+
+                        NetOutgoingMessage outmsg = Server.CreateMessage();
+                        outmsg.Write((byte)PacketTypes.GAMESTATE);
+                        outmsg.Write((byte)GameStates.Ingame);
+                        Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    }
                 }
 
 

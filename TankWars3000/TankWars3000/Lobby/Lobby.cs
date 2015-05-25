@@ -185,21 +185,29 @@ namespace TankWars3000
             {
                 if (incom.MessageType == NetIncomingMessageType.Data) // Is it a "data" message?
                 {
-                    if (incom.ReadByte() == (byte)PacketTypes.LOBBYPLAYERLIST) // Does it contain a LobbyPlayerList?
+                    switch (incom.ReadByte())
                     {
-                        Debug.WriteLine("Cl-Received the playerlist");
+                        case (byte)PacketTypes.LOBBYPLAYERLIST:
+                            Debug.WriteLine("Cl-Received the playerlist");
 
-                        playerList.Clear(); // Clear the "old" data
+                            playerList.Clear(); // Clear the "old" data
 
-                        int incommingPlayers = incom.ReadInt32();
-                        for (int k = 1; k <= incommingPlayers; k++)
-                        {
-                            string name = incom.ReadString();
-                            Color color = new Color(incom.ReadByte(), incom.ReadByte(), incom.ReadByte());
-                            bool ready = incom.ReadBoolean();
+                            int incommingPlayers = incom.ReadInt32();
+                            for (int k = 1; k <= incommingPlayers; k++)
+                            {
+                                string name = incom.ReadString();
+                                Color color = new Color(incom.ReadByte(), incom.ReadByte(), incom.ReadByte());
+                                bool ready = incom.ReadBoolean();
 
-                            playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, k * 40), name, color, ready));
-                        }
+                                playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, k * 40), name, color, ready));
+                            }
+                            break;
+                        case (byte)PacketTypes.GAMESTATE:
+                            Debug.WriteLine("Cl-Reveiced gamestate change");
+                            Game1.gameState = (GameStates)incom.ReadByte();
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
