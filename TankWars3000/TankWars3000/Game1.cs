@@ -26,7 +26,8 @@ namespace TankWars3000
         MOVE,
         SHOOT,
         TEST,
-        LOBBYPLAYERLIST
+        LOBBYPLAYERLIST,
+        COLOR
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game

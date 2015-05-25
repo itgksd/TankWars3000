@@ -24,12 +24,16 @@ namespace TankWars3000
             get { return selectedColor; }
         }
 
-        public ColorButton(ContentManager content, Vector2 position, string title) : base(content, position, title)
+        Action colorChangeEvent;
+
+        public ColorButton(ContentManager content, Vector2 position, string title, Action colorChangeEvent = null) : base(content, position, title)
         {
             rainbow = content.Load<Texture2D>("images/rainbowColors");
 
             arrow = content.Load<Texture2D>("images/triangle");
             selectedX = insideRec.X + insideRec.Width / 2;
+
+            this.colorChangeEvent = colorChangeEvent;
         }
 
         public override void Update(OldNewInput input)
@@ -44,6 +48,10 @@ namespace TankWars3000
                 rainbow.GetData(pixelColors);
 
                 selectedColor = pixelColors[(input.newMouse.X - insideRec.X) + ((input.newMouse.Y - insideRec.Y) * rainbow.Width)];
+
+                // Event
+                if (colorChangeEvent != null)
+                    colorChangeEvent();
             }
 
 
