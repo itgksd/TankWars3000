@@ -58,6 +58,7 @@ namespace TankWars3000
                 }
             }
  
+            #region Window update
             if (position.X >= graphics.GraphicsDevice.Viewport.Width)
                 position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
 
@@ -69,9 +70,21 @@ namespace TankWars3000
 
             if (position.Y < 0)
                 position.Y = 0;
+            #endregion
 
+            if ((incmsg = Game1.Client.ReadMessage()) != null)
+            {
+                if(incmsg.ReadByte() == (byte)PacketTypes.MOVE)
+                {
 
-         }
+            }
+
+                if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
+                {
+
+                }
+            }
+        }
 
         public void Input(OldNewInput input, ContentManager content)
         {
@@ -144,8 +157,6 @@ namespace TankWars3000
 
                 if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
                 {
-                    bullets.Add(new Bullet(content, angle, direction, position));
-
                     outmsg.Write((byte)PacketTypes.SHOOT);
                     outmsg.Write(name);
                     outmsg.Write(position.X);
