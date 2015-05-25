@@ -172,6 +172,9 @@ namespace TankWars3000_SERVER{
 
                 if (gameState == GameStates.Ingame)
                 {
+                    
+                    DateTime currentDatetime = DateTime.Now;
+                    currentDatetime = previousUpdate;
                     if ((incomingMessage = Server.ReadMessage()) != null)
                     {
                        if(incomingMessage.ReadByte() == (byte)PacketTypes.MOVE) {
