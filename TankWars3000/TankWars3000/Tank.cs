@@ -25,9 +25,9 @@ namespace TankWars3000
 
         Vector2 speed, position, spawnPos, direction, textureOrigin;
 
-        Color color = new Color();
+        Color color             = new Color();
 
-        TimeSpan reloadTime = new TimeSpan(0, 0, 4);
+        TimeSpan reloadTime     = new TimeSpan(0, 0, 4);
 
         Texture2D texture;
 
@@ -37,8 +37,8 @@ namespace TankWars3000
 
         NetIncomingMessage incmsg;
 
-        List<Bullet> bullets = new List<Bullet>();
-        List<Tank> tanks      = new List<Tank>();
+        List<Bullet> bullets    = new List<Bullet>();
+        List<Tank> tanks        = new List<Tank>();
 
         #endregion
 
@@ -48,6 +48,17 @@ namespace TankWars3000
         {
             foreach (Bullet bullet in bullets)
                 bullet.Update(graphics);
+
+            // Remove bullet
+            for (int i = 0; i < bullets.Count; i++)
+            {
+                bullets[i].Update(graphics);     // Update
+                if (bullets[i].IsAlive == false) // Remove if dead
+                {
+                    bullets.RemoveAt(i);
+                    i--; // Fix index
+                }
+            }
  
             if (position.X >= graphics.Viewport.Width)
                 position.X = graphics.Viewport.Width - texture.Width;
