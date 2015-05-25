@@ -63,7 +63,6 @@ namespace TankWars3000
             //Start Client
             //Client.Start();
 
-            //tanks = new List<Tank>();
             tank = new Tank(Content, Client);
             gameState = GameStates.Lobby;
 
