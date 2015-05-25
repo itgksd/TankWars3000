@@ -41,10 +41,10 @@ namespace TankWars3000_SERVER{
         // Configuration object
         static NetPeerConfiguration Config;
         NetIncomingMessage incomingMessage;
-
+        DateTime previousUpdate;
         int amountOfPlayers = 8;
         int connectionAmount = 0;
-
+        List<bullet> bullets = new List<bullet>();
         Dictionary<string, Tank> tanks;
 
         public Game1()
@@ -142,14 +142,14 @@ namespace TankWars3000_SERVER{
                                 switch (incomingMessage.ReadByte())
                                 {
                                     case (byte)PacketTypes.READY:
-                                        // markera Tanken/klienten som redo
+                                    // markera Tanken/klienten som redo
 
-                                        string playerName = incomingMessage.ReadString();
-                                        bool playerReady = incomingMessage.ReadBoolean();
+                                    string playerName = incomingMessage.ReadString();
+                                    bool playerReady = incomingMessage.ReadBoolean();
 
                                         tanks[playerName].Ready = playerReady;
 
-                                        Debug.WriteLine("Sv-Received ready packet. Name:" + playerName + "|Ready:" + playerReady);
+                                    Debug.WriteLine("Sv-Received ready packet. Name:" + playerName + "|Ready:" + playerReady);
                                         break;
                                     case (byte)PacketTypes.COLOR:
                                         // Ändra färgen på tanken
@@ -196,9 +196,13 @@ namespace TankWars3000_SERVER{
 
                 if (gameState == GameStates.Ingame)
                 {
+                    
+                    DateTime currentDatetime = DateTime.Now;
+                    currentDatetime = previousUpdate;
                     if ((incomingMessage = Server.ReadMessage()) != null)
                     {
                        if(incomingMessage.ReadByte() == (byte)PacketTypes.MOVE) {
+                           //Spara värden Server fick från client
                            String name = incomingMessage.ReadString();
                            int x = incomingMessage.ReadInt32();
                            int y = incomingMessage.ReadInt32();
@@ -208,6 +212,7 @@ namespace TankWars3000_SERVER{
                            // kollision här tack
                            Collision(angle);
 
+                           //Skicka alla värden till alla Clients
                            NetOutgoingMessage outmsg = Server.CreateMessage();
                            outmsg.Write((byte)PacketTypes.MOVE);
                            outmsg.Write(name);
@@ -223,7 +228,7 @@ namespace TankWars3000_SERVER{
                            int x = incomingMessage.ReadInt32();
                            int y = incomingMessage.ReadInt32();
                            float angle = incomingMessage.ReadFloat();
-
+                           bullets.Add(new bullet(x, y, angle, name));
                            NetOutgoingMessage outmsg = Server.CreateMessage();
                            outmsg.Write((byte)PacketTypes.SHOOT);
                            outmsg.Write(x);
@@ -231,6 +236,8 @@ namespace TankWars3000_SERVER{
                            Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                        }
                     }
+
+
                 }
                 
                 
@@ -241,11 +248,16 @@ namespace TankWars3000_SERVER{
             }
             base.Update(gameTime);
         }
+
+
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
         }
+
+
 
         private void Collision(float angle)
         {
@@ -257,8 +269,32 @@ namespace TankWars3000_SERVER{
                     {
                         if (tank1.Value.Tankrect.Intersects(tank2.Value.Tankrect))
                         {
+                            Vector2 collisionPosition1 = new Vector2();
+                            collisionPosition1.X = tank1.Position.X + ((float)Math.Cos(angle + Math.PI));
+                            collisionPosition1.Y = tank1.Position.Y + ((float)Math.Sin(angle + Math.PI));
                              
+                            tank1.Position = collisionPosition1;
+
+                            Vector2 collisionPosition2 = new Vector2();
+                            collisionPosition2.X = tank2.Position.X + ((float)Math.Cos(angle));
+                            collisionPosition2.Y = tank2.Position.Y + ((float)Math.Sin(angle));
+
+                            tank2.Position = collisionPosition2;
+
                         }
+                    }
+                }
+                        }
+                    }
+        private void bulletCollision()
+        {
+            foreach (bullet bullet in bullets)
+            {
+                foreach (Tank tank in tanks)
+                {
+                    if ()
+                    {
+
                     }
                 }
             }
