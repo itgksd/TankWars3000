@@ -77,7 +77,7 @@ namespace TankWars3000
                 if(incmsg.ReadByte() == (byte)PacketTypes.MOVE)
                 {
 
-            }
+                }
 
                 if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
                 {
