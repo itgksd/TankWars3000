@@ -57,7 +57,7 @@ namespace TankWars3000
                     i--; // Fix index
                 }
             }
-
+ 
             #region Window update
             if (position.X >= graphics.GraphicsDevice.Viewport.Width)
                 position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
@@ -77,7 +77,7 @@ namespace TankWars3000
                 if(incmsg.ReadByte() == (byte)PacketTypes.MOVE)
                 {
 
-                }
+            }
 
                 if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
                 {
