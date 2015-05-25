@@ -41,6 +41,7 @@ namespace TankWars3000
 
         // The Player
         Tank tank;
+        List<Tank> tanks = new List<Tank>();
 
         OldNewInput input = new OldNewInput();
 
@@ -103,7 +104,7 @@ namespace TankWars3000
             if (gameState == GameStates.Ingame)
             {
                 // The player
-                    tank.Update(graphics);
+                    tank.Update(graphics, tanks);
                     tank.Input(input, Content);
             }
             if (gameState == GameStates.Scoreboard)
