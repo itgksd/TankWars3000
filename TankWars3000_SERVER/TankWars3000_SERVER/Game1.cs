@@ -290,14 +290,14 @@ namespace TankWars3000_SERVER{
         {
             for (int i = 0; i <= bullets.Count -1;)
             {
-                foreach (Tank tank in tanks)
+                foreach (KeyValuePair<string, Tank> tank in tanks)
                 {
-                    if (bullets[i].Name != tank.Name)
+                    if (bullets[i].Name != tank.Value.Name)
                     {
-                        if (bullets[i].Rect.Intersects(tank.Tankrect))
+                        if (bullets[i].Rect.Intersects(tank.Value.Tankrect))
                         {
                             bullets.RemoveAt(i);
-                            tank.Health--;
+                            tank.Value.Health--;
 
                         }
                         else
