@@ -72,7 +72,18 @@ namespace TankWars3000
                 position.Y = 0;
             #endregion
 
-            
+            if ((incmsg = Game1.Client.ReadMessage()) != null)
+            {
+                if(incmsg.ReadByte() == (byte)PacketTypes.MOVE)
+                {
+
+                }
+
+                if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
+                {
+
+                }
+            }
         }
 
         public void Input(OldNewInput input, ContentManager content)
