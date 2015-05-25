@@ -29,7 +29,7 @@ namespace TankWars3000
 
         TimeSpan reloadTime     = new TimeSpan(0, 0, 4);
 
-        static Texture2D texture;
+        Texture2D texture;
 
         Rectangle collisionRect = new Rectangle();
 
