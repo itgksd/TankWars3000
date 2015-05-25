@@ -18,6 +18,20 @@ namespace TankWars3000_SERVER
         Vector2 pos;
         Vector2 spawnPos;
 
+        Color tankColor = Color.White;
+       public Color TankColor
+        {
+            get { return tankColor; }
+            set { tankColor = value; }
+        }
+
+       bool ready;
+       public bool Ready
+       {
+           get { return ready; }
+           set { ready = value; }
+       }
+
         private String name;
         private Rectangle rect;
 
@@ -30,6 +44,7 @@ namespace TankWars3000_SERVER
         public Tank(String n)
         {
             name = n;
+            health = 3;
         }
        
         
@@ -38,10 +53,19 @@ namespace TankWars3000_SERVER
 
         }
 
-        private void CheckCollision()
+        public int Health
         {
-
+            get
+            {
+                return health;
+            }
+            set
+            {
+                health = value;
+            }
         }
+
+
         public Rectangle Tankrect
         {
             get

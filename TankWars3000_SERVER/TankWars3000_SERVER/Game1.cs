@@ -26,7 +26,8 @@ namespace TankWars3000_SERVER{
         MOVE,
         SHOOT,
         TEST,
-        LOBBYPLAYERLIST
+        LOBBYPLAYERLIST,
+        COLOR
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -43,10 +44,8 @@ namespace TankWars3000_SERVER{
         DateTime previousUpdate;
         int amountOfPlayers = 8;
         int connectionAmount = 0;
-
         List<bullet> bullets = new List<bullet>();
-
-        List<Tank> tanks;
+        Dictionary<string, Tank> tanks;
 
         public Game1()
         {
@@ -78,7 +77,7 @@ namespace TankWars3000_SERVER{
             // Start it
             Server.Start();
 
-            tanks = new List<Tank>();
+            tanks = new Dictionary<string, Tank>();
 
         
             base.Initialize();
@@ -127,7 +126,7 @@ namespace TankWars3000_SERVER{
                                     connectionAmount++;
                                     
                                     // skapa ny Tank och lägg det i en lista
-                                    tanks.Add(new Tank(name));
+                                    tanks.Add(name, new Tank(name));
 
                                     Debug.WriteLine("Sv-Sending test message");
                                     // Skicka ett test paket för att låta klienten veta att anslutningen fungerar.. "Ni" kan nog ta bort den senare om den inte behövs längre
@@ -139,19 +138,44 @@ namespace TankWars3000_SERVER{
                                 break;
                             case NetIncomingMessageType.Data:
 
-                                if (incomingMessage.ReadByte() == (byte)PacketTypes.READY)
+
+                                switch (incomingMessage.ReadByte())
                                 {
+                                    case (byte)PacketTypes.READY:
                                     // markera Tanken/klienten som redo
-                                    
+
                                     string playerName = incomingMessage.ReadString();
                                     bool playerReady = incomingMessage.ReadBoolean();
 
+                                        tanks[playerName].Ready = playerReady;
+
                                     Debug.WriteLine("Sv-Received ready packet. Name:" + playerName + "|Ready:" + playerReady);
+                                        break;
+                                    case (byte)PacketTypes.COLOR:
+                                        // Ändra färgen på tanken
+
+                                        playerName = incomingMessage.ReadString();
+                                        Color playerColor = new Color(incomingMessage.ReadByte(), incomingMessage.ReadByte(), incomingMessage.ReadByte());
+
+                                        tanks[playerName].TankColor = playerColor;
+                                        break;
                                 }
 
                                 // Send list of player to all everytime somebody sends anything to the server
                                 NetOutgoingMessage outMsg =  Server.CreateMessage();
                                 outMsg.Write((byte)PacketTypes.LOBBYPLAYERLIST);
+
+                                // Packa ner viktigaste informationen om alla spelarna
+                                outMsg.Write(tanks.Count); // Send the amount of players that will be send
+                                foreach (KeyValuePair<string, Tank> tank in tanks)
+                                {
+                                    outMsg.Write(tank.Key); // Name
+                                    outMsg.Write(tank.Value.TankColor.R); // Color R
+                                    outMsg.Write(tank.Value.TankColor.G); // Color G
+                                    outMsg.Write(tank.Value.TankColor.B); // Color B
+                                    outMsg.Write(tank.Value.Ready); // Ready
+                                }
+
                                 Server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
                                 Debug.WriteLine("Sv-Send lobby-player-list to all");
 
@@ -172,6 +196,9 @@ namespace TankWars3000_SERVER{
 
                 if (gameState == GameStates.Ingame)
                 {
+                    
+                    DateTime currentDatetime = DateTime.Now;
+                    currentDatetime = previousUpdate;
                     if ((incomingMessage = Server.ReadMessage()) != null)
                     {
                        if(incomingMessage.ReadByte() == (byte)PacketTypes.MOVE) {
@@ -234,18 +261,18 @@ namespace TankWars3000_SERVER{
 
         private void Collision(float angle)
         {
-            foreach (Tank tank1 in tanks)
+            foreach (KeyValuePair<string, Tank> tank1 in tanks)
             {
-                foreach (Tank tank2 in tanks)
+                foreach (KeyValuePair<string, Tank> tank2 in tanks)
                 {
-                    if (tank1.Name != tank2.Name)
+                    if (tank1.Key != tank2.Key)
                     {
-                        if (tank1.Tankrect.Intersects(tank2.Tankrect))
+                        if (tank1.Value.Tankrect.Intersects(tank2.Value.Tankrect))
                         {
                             Vector2 collisionPosition1 = new Vector2();
                             collisionPosition1.X = tank1.Position.X + ((float)Math.Cos(angle + Math.PI));
                             collisionPosition1.Y = tank1.Position.Y + ((float)Math.Sin(angle + Math.PI));
-
+                             
                             tank1.Position = collisionPosition1;
 
                             Vector2 collisionPosition2 = new Vector2();
@@ -257,11 +284,20 @@ namespace TankWars3000_SERVER{
                         }
                     }
                 }
-            }
-        }
+                        }
+                    }
         private void bulletCollision()
         {
+            foreach (bullet bullet in bullets)
+            {
+                foreach (Tank tank in tanks)
+                {
+                    if ()
+                    {
 
+                    }
+                }
+            }
         }
     }
 }

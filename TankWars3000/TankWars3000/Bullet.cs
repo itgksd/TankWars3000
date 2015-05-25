@@ -12,7 +12,7 @@ namespace TankWars3000
     {
         #region Atributes
 
-        Vector2 position, speed, direction, textureOrigin;
+        Vector2 position, speed, textureOrigin;
 
         Texture2D texture;
 
@@ -24,16 +24,10 @@ namespace TankWars3000
 
         bool isAlvie;
 
-        float angle; //angle in radians
-
         public bool IsAlive
         {
             get { return isAlvie; }
             set { isAlvie = true; }
-        }
-        public string Name
-        {
-            get { return name; }
         }
 
         #endregion
@@ -58,14 +52,13 @@ namespace TankWars3000
         }
 
         //need angle to draw bullet, direction to make it move the right way
-        public Bullet(ContentManager content, float newangle ,Vector2 newdirection, Vector2 newposition)
+        public Bullet(ContentManager content,string newname, Vector2 newposition)
         {
             texture       = content.Load<Texture2D>("Tank/Bullet");
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
             speed         = new Vector2(15, 15);
-            direction     = newdirection;
-            angle         = newangle;
             position      = newposition;
+            name          = newname;
         }
         #endregion
     }
