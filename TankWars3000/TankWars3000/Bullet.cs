@@ -31,10 +31,6 @@ namespace TankWars3000
             get { return isAlvie; }
             set { isAlvie = true; }
         }
-        public string Name
-        {
-            get { return name; }
-        }
 
         #endregion
 
