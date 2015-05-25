@@ -149,6 +149,8 @@ namespace TankWars3000
 
             connected = false;
 
+            playerList.Clear();
+
             Notify.NewMessage("Disconnected!", Color.Orange);
         }
 
