@@ -69,7 +69,9 @@ namespace TankWars3000
 
             if (position.Y < 0)
                 position.Y = 0;
-            }
+
+
+         }
 
         public void Input(OldNewInput input, ContentManager content)
         {
