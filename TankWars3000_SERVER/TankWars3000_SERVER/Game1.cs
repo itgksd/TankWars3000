@@ -288,15 +288,24 @@ namespace TankWars3000_SERVER{
                     }
         private void bulletCollision()
         {
-            foreach (bullet bullet in bullets)
+            for (int i = 0; i <= bullets.Count -1;)
             {
-                //foreach (Tank tank in tanks)
-                //{
-                //    if ()
-                //    {
+                foreach (Tank tank in tanks)
+                {
+                    if (bullets[i].Name != tank.Name)
+                    {
+                        if (bullets[i].Rect.Intersects(tank.Tankrect))
+                        {
+                            bullets.RemoveAt(i);
+                            tank.Health--;
 
-                //    }
-                //}
+                        }
+                        else
+                        {
+                            i++;
+                        }
+                    }
+                }
             }
         }
     }
