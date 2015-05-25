@@ -11,7 +11,7 @@ namespace TankWars3000_SERVER
         int xPos;
         int yPos;
         float angle;
-        string name;
+        private string name;
         private Rectangle rect;
 
         public bullet(int x, int y, float a, string n)
@@ -29,6 +29,13 @@ namespace TankWars3000_SERVER
             set
             {
                 rect = value;
+            }
+        }
+        public String Name
+        {
+            get
+            {
+                return name;
             }
         }
     }
