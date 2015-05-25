@@ -175,6 +175,7 @@ namespace TankWars3000_SERVER{
                     if ((incomingMessage = Server.ReadMessage()) != null)
                     {
                        if(incomingMessage.ReadByte() == (byte)PacketTypes.MOVE) {
+                           //Spara värden Server fick från client
                            String name = incomingMessage.ReadString();
                            int x = incomingMessage.ReadInt32();
                            int y = incomingMessage.ReadInt32();
@@ -184,6 +185,7 @@ namespace TankWars3000_SERVER{
                            // kollision här tack
                            Collision(angle);
 
+                           //Skicka alla värden till alla Clients
                            NetOutgoingMessage outmsg = Server.CreateMessage();
                            outmsg.Write((byte)PacketTypes.MOVE);
                            outmsg.Write(name);
@@ -219,11 +221,16 @@ namespace TankWars3000_SERVER{
             }
             base.Update(gameTime);
         }
+
+
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
         }
+
+
 
         private void Collision(float angle)
         {
@@ -235,7 +242,18 @@ namespace TankWars3000_SERVER{
                     {
                         if (tank1.Tankrect.Intersects(tank2.Tankrect))
                         {
-                             
+                            Vector2 collisionPosition1 = new Vector2();
+                            collisionPosition1.X = tank1.Position.X + ((float)Math.Cos(angle + Math.PI));
+                            collisionPosition1.Y = tank1.Position.Y + ((float)Math.Sin(angle + Math.PI));
+
+                            tank1.Position = collisionPosition1;
+
+                            Vector2 collisionPosition2 = new Vector2();
+                            collisionPosition2.X = tank2.Position.X + ((float)Math.Cos(angle));
+                            collisionPosition2.Y = tank2.Position.Y + ((float)Math.Sin(angle));
+
+                            tank2.Position = collisionPosition2;
+
                         }
                     }
                 }

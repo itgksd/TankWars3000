@@ -35,12 +35,14 @@ namespace TankWars3000
         SpriteBatch spriteBatch;
 
         GameStates gameState;
+
         // Client Object
         public static NetClient Client;
 
         // The Player
         Tank tank;
-        GraphicsDevice graphicss;
+        List<Tank> tanks = new List<Tank>();
+
         OldNewInput input = new OldNewInput();
 
         Lobby lobby;
@@ -59,11 +61,7 @@ namespace TankWars3000
 
         protected override void Initialize()
         {
-            //Start Client
-            //Client.Start();
-
-            //tanks = new List<Tank>();
-            tank = new Tank(Content, Client);
+            tank = new Tank(Content);
             gameState = GameStates.Lobby;
 
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
@@ -106,7 +104,7 @@ namespace TankWars3000
             if (gameState == GameStates.Ingame)
             {
                 // The player
-                    tank.Update(graphicss);
+                    tank.Update(graphics, tanks);
                     tank.Input(input, Content);
             }
             if (gameState == GameStates.Scoreboard)
