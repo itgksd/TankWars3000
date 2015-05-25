@@ -131,7 +131,7 @@ namespace TankWars3000
                 {
                     spriteBatch.Begin();
 
-                    tank.Draw(spriteBatch);
+                    tank.Draw(spriteBatch, tanks);
 
                     spriteBatch.End();
                 }
