@@ -25,20 +25,18 @@ namespace TankWars3000
 
         Vector2 speed, position, spawnPos, direction, textureOrigin;
 
-        Color color = new Color();
+        Color color             = new Color();
 
-        TimeSpan reloadTime = new TimeSpan(0, 0, 4);
+        TimeSpan reloadTime     = new TimeSpan(0, 0, 4);
 
         Texture2D texture;
 
         Rectangle collisionRect = new Rectangle();
 
-        NetClient client;
-
         NetIncomingMessage incmsg;
 
-        List<Bullet> bullets = new List<Bullet>();
-        List<Tank> tanks      = new List<Tank>();
+        List<Bullet> bullets    = new List<Bullet>();
+        List<Tank> tanks        = new List<Tank>();
 
         #endregion
 
@@ -48,7 +46,19 @@ namespace TankWars3000
         {
             foreach (Bullet bullet in bullets)
                 bullet.Update(graphics);
+
+            // Remove bullet
+            for (int i = 0; i < bullets.Count; i++)
+            {
+                bullets[i].Update(graphics);     // Update
+                if (bullets[i].IsAlive == false) // Remove if dead
+                {
+                    bullets.RemoveAt(i);
+                    i--; // Fix index
+                }
+            }
  
+            #region Window update
             if (position.X >= graphics.GraphicsDevice.Viewport.Width)
                 position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
 
@@ -60,13 +70,27 @@ namespace TankWars3000
 
             if (position.Y < 0)
                 position.Y = 0;
+            #endregion
+
+            if ((incmsg = Game1.Client.ReadMessage()) != null)
+            {
+                if(incmsg.ReadByte() == (byte)PacketTypes.MOVE)
+                {
+
             }
+
+                if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
+                {
+
+                }
+            }
+        }
 
         public void Input(OldNewInput input, ContentManager content)
         {
             if (IsAlive == true)
             {
-                NetOutgoingMessage outmsg = client.CreateMessage();
+                NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
 
                 #region Movment
                 if (input.newKey.IsKeyDown(Keys.W))
@@ -79,7 +103,7 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
                 if (input.newKey.IsKeyDown(Keys.S))
@@ -92,7 +116,7 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
                 if (input.newKey.IsKeyDown(Keys.D))
@@ -110,7 +134,7 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
                 if (input.newKey.IsKeyDown(Keys.A))
                 {
@@ -127,20 +151,18 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
                 #endregion
 
                 if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
                 {
-                    bullets.Add(new Bullet(content, angle, direction, position));
-
                     outmsg.Write((byte)PacketTypes.SHOOT);
                     outmsg.Write(name);
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
             }
         }
@@ -148,7 +170,7 @@ namespace TankWars3000
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, collisionRect, Color.White, angle, textureOrigin, 1.0f,SpriteEffects.None, 0f);
-            if ((incmsg = client.ReadMessage()) != null)
+            if ((incmsg = Game1.Client.ReadMessage()) != null)
             {
                 if (incmsg.ReadByte() == (byte)PacketTypes.MOVE)
                 {
@@ -167,9 +189,8 @@ namespace TankWars3000
                 bullet.Draw(spriteBatch);
         }
 
-        public Tank(ContentManager content, NetClient client)
+        public Tank(ContentManager content)
         {
-            this.client = client;
             texture = content.Load<Texture2D>("Tank/TankTest");
             direction = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);

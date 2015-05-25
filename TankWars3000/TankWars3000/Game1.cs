@@ -60,7 +60,7 @@ namespace TankWars3000
 
         protected override void Initialize()
         {
-            tank = new Tank(Content, Client);
+            tank = new Tank(Content);
             gameState = GameStates.Lobby;
 
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
