@@ -40,9 +40,11 @@ namespace TankWars3000_SERVER{
         // Configuration object
         static NetPeerConfiguration Config;
         NetIncomingMessage incomingMessage;
-        DateTime previousUpdate;
+        DateTime nextUpdate;
         int amountOfPlayers = 8;
         int connectionAmount = 0;
+
+        bool canCountTime = true;
 
         List<bullet> bullets = new List<bullet>();
 
@@ -172,9 +174,15 @@ namespace TankWars3000_SERVER{
 
                 if (gameState == GameStates.Ingame)
                 {
+                    if (DateTime.Now > nextUpdate)
+                    {
+                        // uppdatera bullet
+                        nextUpdate = DateTime.Now.AddMilliseconds(100);
+                    }
+                  
                     
-                    DateTime currentDatetime = DateTime.Now;
-                    currentDatetime = previousUpdate;
+
+                    
                     if ((incomingMessage = Server.ReadMessage()) != null)
                     {
                        if(incomingMessage.ReadByte() == (byte)PacketTypes.MOVE) {
@@ -204,9 +212,12 @@ namespace TankWars3000_SERVER{
                            int x = incomingMessage.ReadInt32();
                            int y = incomingMessage.ReadInt32();
                            float angle = incomingMessage.ReadFloat();
+
                            bullets.Add(new bullet(x, y, angle, name));
+
                            NetOutgoingMessage outmsg = Server.CreateMessage();
                            outmsg.Write((byte)PacketTypes.SHOOT);
+                           outmsg.Write(name);
                            outmsg.Write(x);
                            outmsg.Write(y);
                            Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
