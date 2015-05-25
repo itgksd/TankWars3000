@@ -38,7 +38,7 @@ namespace TankWars3000
 
         static public void NewMessage(string text, Color color)
         {
-            items.Add(new NotifyItem(pixelTx, font, items.Count * 30, text, color));
+            items.Add(new NotifyItem(pixelTx, font, items.Count > 0 ? items[items.Count - 1].Y + 30 : 0, text, color));
         }
 
 
@@ -67,9 +67,13 @@ namespace TankWars3000
             string message;
             Color color;
             TimeSpan timer;
-            int Y;
+            int y;
+            public int Y
+            {
+                get { return y; }
+            }
 
-            public NotifyItem(Texture2D ppixelTx, SpriteFont ffont, int y, string mmessage, Color ccolor)
+            public NotifyItem(Texture2D ppixelTx, SpriteFont ffont, int yy, string mmessage, Color ccolor)
             {
                 pixelTx = ppixelTx;
                 font = ffont;
@@ -77,7 +81,7 @@ namespace TankWars3000
                 message = mmessage;
                 color = ccolor;
 
-                Y = y;
+                y = yy;
 
 
                 rectangle = new Rectangle(0, -30, Game1.ScreenRec.Width, 30);

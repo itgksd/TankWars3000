@@ -125,7 +125,7 @@ namespace TankWars3000
                 }
 
                 loopCount++;
-                if (loopCount > 200000000) // Keeps it from freezing alltogether when not being able to connect.. A timeout i guess
+                if (loopCount > 100000000) // Keeps it from freezing alltogether when not being able to connect.. A timeout i guess
                 {
                     Debug.WriteLine("Cl-Timeout, can't connect");
                     Notify.NewMessage("Connection failed, timeout :(", Color.Red);
@@ -204,6 +204,11 @@ namespace TankWars3000
             connectBtn.Update(input);
             disconnectBtn.Update(input);
             exitBtn.Update(input);
+            playerList.ForEach(p => p.Update());
+
+            // STOP THE MUSIC
+            if (input.SingleKey(Keys.M))
+                background.PlayMusic = false;
 
             NetIncomingMessage incom;
             if (connected && (incom = Game1.Client.ReadMessage()) != null) // Are there any new messanges?
@@ -215,20 +220,24 @@ namespace TankWars3000
                         case (byte)PacketTypes.LOBBYPLAYERLIST:
                             Debug.WriteLine("Cl-Received the playerlist");
 
-                            playerList.Clear(); // Clear the "old" data
-
-                            int incommingPlayers = incom.ReadInt32();
-                            for (int k = 1; k <= incommingPlayers; k++)
+                            bool animate = playerList.Count == 0 ? true : false;
+                            if (playerList.Count == 0 || playerList[0].Statee == PlayerListItem.State.NONE) // To keep the game from removing the initial animation
                             {
-                                string name = incom.ReadString();
-                                Color color = new Color(incom.ReadByte(), incom.ReadByte(), incom.ReadByte());
-                                bool ready = incom.ReadBoolean();
+                                playerList.Clear(); // Clear the "old" data
 
-                                playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, k * 40), name, color, ready));
-                            }
-                            for (int i = incommingPlayers + 1; i <= 8; i++)
-                            {
-                                playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, i * 40)));
+                                int incommingPlayers = incom.ReadInt32();
+                                for (int k = 1; k <= incommingPlayers; k++)
+                                {
+                                    string name = incom.ReadString();
+                                    Color color = new Color(incom.ReadByte(), incom.ReadByte(), incom.ReadByte());
+                                    bool ready = incom.ReadBoolean();
+
+                                    playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, k * 40), name, color, ready, animate));
+                                }
+                                for (int i = incommingPlayers + 1; i <= 8; i++)
+                                {
+                                    playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, i * 40), animate));
+                                }
                             }
                             break;
                         case (byte)PacketTypes.GAMESTATE:
