@@ -20,17 +20,32 @@ namespace TankWars3000
 
         int damage              = 1;
 
+        bool isAlvie;
+
         float angle; //angle in radians
+
+        public bool IsAlive
+        {
+            get { return isAlvie; }
+            set { isAlvie = true; }
+        }
 
         #endregion
 
         #region Methods
 
-        public void Update()
+        public void Update(GraphicsDevice graphics)
         {
             position += direction * speed;
 
-
+            if (position.X > graphics.Viewport.Width)
+                isAlvie = false;
+            if (position.Y > graphics.Viewport.Height)
+                isAlvie = false;
+            if (position.Y < 0)
+                isAlvie = false;
+            if (position.X < 0)
+                isAlvie = false;
         }
 
         public void Draw(SpriteBatch spriteBatch)
