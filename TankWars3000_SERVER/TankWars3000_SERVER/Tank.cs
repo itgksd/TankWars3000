@@ -18,6 +18,20 @@ namespace TankWars3000_SERVER
         Vector2 pos;
         Vector2 spawnPos;
 
+        Color tankColor = Color.White;
+       public Color TankColor
+        {
+            get { return tankColor; }
+            set { tankColor = value; }
+        }
+
+       bool ready;
+       public bool Ready
+       {
+           get { return ready; }
+           set { ready = value; }
+       }
+
         private String name;
         private Rectangle rect;
 
