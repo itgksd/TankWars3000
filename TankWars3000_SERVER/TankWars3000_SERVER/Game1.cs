@@ -217,11 +217,16 @@ namespace TankWars3000_SERVER{
             }
             base.Update(gameTime);
         }
+
+
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
         }
+
+
 
         private void Collision(float angle)
         {
