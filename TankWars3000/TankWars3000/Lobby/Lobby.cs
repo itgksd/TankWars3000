@@ -28,6 +28,10 @@ namespace TankWars3000
         NormalButton disconnectBtn;
         NormalButton connectBtn;
 
+        // Setting Buttons
+        NormalButton muteMusicBtn;
+        NormalButton fullScreenBtn;
+
         List<PlayerListItem> playerList = new List<PlayerListItem>();
 
         DateTime lastBeat = DateTime.MaxValue;
@@ -52,6 +56,11 @@ namespace TankWars3000
             disconnectBtn.Enabled = false;
             exitBtn  = new NormalButton(content, new Vector2(50, 350), "Exit", Exit);
             exitBtn.TitleColor = Color.Red;
+
+            muteMusicBtn = new NormalButton(content, new Vector2(50, Game1.ScreenRec.Height - 100), "Mute Music", MuteMusic, true);
+            muteMusicBtn.TitleColor = Color.LightGray;
+            fullScreenBtn = new NormalButton(content, new Vector2(255 + 50, Game1.ScreenRec.Height - 100), "Fullscreen", Fullscreen, true);
+            fullScreenBtn.TitleColor = Color.LightGray;
 
             this.content = content;
         }
@@ -147,17 +156,29 @@ namespace TankWars3000
             Environment.Exit(9);
         }
 
+        public void MuteMusic()
+        {
+            background.PlayMusic = background.PlayMusic ? false : true;
+        }
+
+        public void Fullscreen()
+        {
+            Game1.Fullscreen = Game1.Fullscreen ? false : true;
+        }
+
         public void Update(OldNewInput input)
         {
             background.Update();
 
-            ipBtn.Update(input);
+            ipBtn.Update(input); // Orkar inte bry mig om polyformism..
             nameBtn.Update(input);
             colorBtn.Update(input);
             readyBtn.Update(input);
             connectBtn.Update(input);
             disconnectBtn.Update(input);
             exitBtn.Update(input);
+            muteMusicBtn.Update(input);
+            fullScreenBtn.Update(input);
             playerList.ForEach(p => p.Update());
 
             // STOP THE MUSIC
@@ -254,6 +275,8 @@ namespace TankWars3000
             connectBtn.Draw(spriteBatch);
             disconnectBtn.Draw(spriteBatch);
             exitBtn.Draw(spriteBatch);
+            muteMusicBtn.Draw(spriteBatch);
+            fullScreenBtn.Draw(spriteBatch);
 
             playerList.ForEach(p => p.Draw(spriteBatch));
         }

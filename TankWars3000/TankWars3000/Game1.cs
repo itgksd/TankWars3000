@@ -54,6 +54,13 @@ namespace TankWars3000
 
         Lobby lobby;
 
+        static bool fullscreen = false;
+        static public bool Fullscreen
+        {
+            get { return fullscreen; }
+            set { fullscreen = value; }
+        }
+
         static        Rectangle screenRec;
         static public Rectangle ScreenRec
         {
@@ -73,7 +80,7 @@ namespace TankWars3000
 
             graphics.PreferredBackBufferWidth  = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
             IsMouseVisible                     = true;
 
@@ -125,6 +132,14 @@ namespace TankWars3000
             input.SetOldMouse();
 
             base.Update(gameTime);
+
+
+            // Fullscreen
+            if (graphics.IsFullScreen != fullscreen)
+            {
+                graphics.IsFullScreen = fullscreen;
+                graphics.ApplyChanges();
+            }
         }
         protected override void Draw(GameTime gameTime)
         {
