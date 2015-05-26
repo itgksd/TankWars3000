@@ -30,7 +30,8 @@ namespace TankWars3000
         LOBBYPLAYERLIST,
         COLOR,
         GAMESTATE,
-        DISCONNECTREASON
+        DISCONNECTREASON,
+        HEARTBEAT
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game

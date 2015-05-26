@@ -88,6 +88,7 @@ namespace TankWars3000
         }
 
         int ticksTimer = 0;
+        int aniSpeed = 9;
         public void Update()
         {
             // All for the animation! :D
@@ -95,8 +96,8 @@ namespace TankWars3000
                 ticksTimer++;
             if (state == State.FILLING && ticksTimer > 120) // <- To lazy for gametime
             {
-                animationRec.X -= 7;
-                animationRec.Width += 7;
+                animationRec.X -= aniSpeed;
+                animationRec.Width += aniSpeed;
 
                 if (animationRec.X <= rectangle.X)
                     state = State.EMPTYING;
@@ -105,7 +106,7 @@ namespace TankWars3000
             }
             else if (state == State.EMPTYING)
             {
-                animationRec.Width -= 7;
+                animationRec.Width -= aniSpeed;
                 if (animationRec.Width <= 0)
                     state = State.NONE;
 

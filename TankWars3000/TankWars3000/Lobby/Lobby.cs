@@ -246,6 +246,13 @@ namespace TankWars3000
                             Notify.NewMessage("Starting Game!", Color.LightBlue);
                             Game1.gameState = (GameStates)incom.ReadByte();
                             break;
+                        case (byte)PacketTypes.HEARTBEAT:
+                            Debug.WriteLine("Cl-Received heartbeat, responding");
+                            NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
+                            outmsg.Write((byte)PacketTypes.HEARTBEAT);
+                            outmsg.Write(nameBtn.Text);
+                            Game1.Client.SendMessage(outmsg, incom.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+                            break;
                         default:
                             break;
                     }
