@@ -85,7 +85,7 @@ namespace TankWars3000
             long loopCount = 0; // Used to break if it takes to long
 
             connected = true;
-            while (false /*!canStart*/)
+            while (!canStart)
             {
                 if ((incommsg = Game1.Client.ReadMessage()) != null)
                 {

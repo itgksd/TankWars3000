@@ -371,19 +371,19 @@ namespace TankWars3000_SERVER
                 }
 
 
-                //// Ta bort gammla anslutningar
-                //List<string> tmpKeys = new List<string>();
-                //foreach (KeyValuePair<string, Tank> tank in tanks)
-                //{
-                //    if ((DateTime.Now - tank.Value.LastBeat).TotalSeconds >= 31)
-                //    {
-                //        tmpKeys.Add(tank.Value.Name);
-                //    }
-                //}
-                //foreach (string item in tmpKeys)
-                //{
-                //    tanks.Remove(item);
-                //}
+                // Ta bort gammla anslutningar
+                List<string> tmpKeys = new List<string>();
+                foreach (KeyValuePair<string, Tank> tank in tanks)
+                {
+                    if ((DateTime.Now - tank.Value.LastBeat).TotalSeconds >= 31)
+                    {
+                        tmpKeys.Add(tank.Value.Name);
+                    }
+                }
+                foreach (string item in tmpKeys)
+                {
+                    tanks.Remove(item);
+                }
             }
             base.Update(gameTime);
         }
