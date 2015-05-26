@@ -220,6 +220,8 @@ namespace TankWars3000
                         default:
                             break;
                     }
+
+                    lastBeat = DateTime.Now;
                 }
             }
 
@@ -227,7 +229,7 @@ namespace TankWars3000
             TimeSpan timeSinceLastBeat = DateTime.Now.Subtract(lastBeat);
             if (connected && timeSinceLastBeat.TotalSeconds > 10)
             {
-                Notify.NewMessage("Connection lost", Color.Red);
+                Notify.NewMessage("Connection lost, no respons in the last 10 seconds.", Color.Red);
                 Disconnect();
             }
         }
