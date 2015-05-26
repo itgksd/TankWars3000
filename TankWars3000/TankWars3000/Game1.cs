@@ -23,15 +23,17 @@ namespace TankWars3000
     {
         LOGIN,
         READY,
-        STARTPOS,
+        START,
         MOVE,
         SHOOT,
         TEST,
         LOBBYPLAYERLIST,
         COLOR,
+        DEATH,
         GAMESTATE,
         DISCONNECTREASON,
-        HEARTBEAT
+        HEARTBEAT,
+        STARTPOS
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
