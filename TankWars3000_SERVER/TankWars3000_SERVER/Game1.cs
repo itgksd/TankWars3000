@@ -281,6 +281,7 @@ namespace TankWars3000_SERVER
 
                             float angle = (float) (deg + Math.PI);
 
+                            outmsg.Write(tank.Value.Name);
                             outmsg.Write(angle);
                             outmsg.Write(x);
                             outmsg.Write(y);
