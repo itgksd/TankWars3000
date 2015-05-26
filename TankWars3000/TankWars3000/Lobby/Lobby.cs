@@ -84,7 +84,8 @@ namespace TankWars3000
             NetIncomingMessage incommsg;
             long loopCount = 0; // Used to break if it takes to long
 
-            while (!canStart)
+            connected = true;
+            while (false /*!canStart*/)
             {
                 if ((incommsg = Game1.Client.ReadMessage()) != null)
                 {
