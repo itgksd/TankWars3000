@@ -67,6 +67,7 @@ namespace TankWars3000
                         foreach (Tank tank in tanks)
                         {
                             tank.name = incmsg.ReadString();
+                            tank.angle = incmsg.ReadFloat();
                             tank.position.X = incmsg.ReadInt32();
                             tank.position.Y = incmsg.ReadInt32();
                         }
