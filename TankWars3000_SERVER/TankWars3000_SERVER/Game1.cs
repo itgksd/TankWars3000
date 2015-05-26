@@ -275,8 +275,8 @@ namespace TankWars3000_SERVER
                             outmsg.Write(tank.Value.Name);
                         
 
-                            x = (int) ((Math.Cos(deg)) * 500) + (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2) ;
-                            y = (int)((Math.Sin(deg)) * 500) + (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2);
+                            x = (int) ((Math.Cos(deg)) * 350) + (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2) ;
+                            y = (int)((Math.Sin(deg)) * 350) + (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2);
                             deg += degSum;
 
                             float angle = (float) (deg + Math.PI);
