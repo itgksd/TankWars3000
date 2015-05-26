@@ -29,7 +29,8 @@ namespace TankWars3000_SERVER{
         LOBBYPLAYERLIST,
         COLOR,
         GAMESTATE,
-        DISCONNECTREASON
+        DISCONNECTREASON,
+        HEARTBEAT
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -48,6 +49,7 @@ namespace TankWars3000_SERVER{
         int connectionAmount = 0;
         List<bullet> bullets = new List<bullet>();
         Dictionary<string, Tank> tanks;
+        System.Timers.Timer timer;
 
         public Game1()
         {
@@ -83,6 +85,27 @@ namespace TankWars3000_SERVER{
 
         
             base.Initialize();
+
+            timer = new System.Timers.Timer(1000);
+            timer.Elapsed += timer_Elapsed;
+            timer.Enabled = true;
+        }
+
+        void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            // Check the connections
+            NetOutgoingMessage outmsg = Server.CreateMessage();
+            outmsg.Write((byte)PacketTypes.HEARTBEAT);
+            Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+
+            Thread.Sleep(500);
+
+            // Check for messages
+            NetIncomingMessage inmsg;
+            while ((inmsg = Server.ReadMessage()) != null)
+            {
+                
+            }
         }
 
         protected override void LoadContent()
