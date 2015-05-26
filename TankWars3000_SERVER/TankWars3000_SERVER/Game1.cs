@@ -47,6 +47,7 @@ namespace TankWars3000_SERVER{
         int connectionAmount = 0;
         List<bullet> bullets = new List<bullet>();
         Dictionary<string, Tank> tanks;
+        Vector2 explosionPosition;
 
         public Game1()
         {
@@ -229,7 +230,12 @@ namespace TankWars3000_SERVER{
                            outmsg.Write(angle);
                            outmsg.Write(x);
                            outmsg.Write(y);
-                           outmsg.Write(bulletCollision());
+                           if (bulletCollision() == true)
+                           {
+                               outmsg.Write(explosionPosition.X);
+                               outmsg.Write(explosionPosition.Y);
+                           }
+                           
                            Server.SendToAll(outmsg,NetDeliveryMethod.ReliableOrdered);
                        }
 
@@ -309,6 +315,8 @@ namespace TankWars3000_SERVER{
                         {
 
                             tank.Value.Health--;
+
+                            explosionPosition = tank.Value.Position;
 
                             Vector2 bulletcollisionposition = new Vector2();
                             bulletcollisionposition.X = tank.Value.Position.X + ((float)Math.Cos(bullets[i].Angle));
