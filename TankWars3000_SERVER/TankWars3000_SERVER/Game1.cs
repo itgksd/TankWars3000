@@ -406,7 +406,7 @@ namespace TankWars3000_SERVER
 
 
 
-        private void Collision(float angle)
+        private void Collision(float angle) //Kollision av Tanks
         {
             foreach (KeyValuePair<string, Tank> tank1 in tanks)
             {
@@ -414,47 +414,47 @@ namespace TankWars3000_SERVER
                 {
                     if (tank1.Key != tank2.Key)
                     {
-                        if (tank1.Value.Tankrect.Intersects(tank2.Value.Tankrect))
+                        if (tank1.Value.Tankrect.Intersects(tank2.Value.Tankrect)) //Själva kollisionen
                         {
                             Vector2 collisionPosition1 = new Vector2();
                             collisionPosition1.X = tank1.Value.Position.X + ((float)Math.Cos(angle + Math.PI));
                             collisionPosition1.Y = tank1.Value.Position.Y + ((float)Math.Sin(angle + Math.PI));
                              
-                            tank1.Value.Position = collisionPosition1;
+                            tank1.Value.Position = collisionPosition1; // Ändra positionen av tank1 
 
                             Vector2 collisionPosition2 = new Vector2();
                             collisionPosition2.X = tank2.Value.Position.X + ((float)Math.Cos(angle));
                             collisionPosition2.Y = tank2.Value.Position.Y + ((float)Math.Sin(angle));
 
-                            tank2.Value.Position = collisionPosition2;
+                            tank2.Value.Position = collisionPosition2; // Ändra positionen av tank2
 
                         }
                     }
                 }
                         }
                     }
-        private bool bulletCollision()
+        private bool bulletCollision() // Kolla om bullet kolliderar med Tank
         {
             for (int i = 0; i <= bullets.Count - 1; )
             {
                 foreach (KeyValuePair<string, Tank> tank in tanks)
                 {
-                    if (bullets[i].Name != tank.Value.Name)
+                    if (bullets[i].Name != tank.Value.Name) // Tank kan inte träffa sig själv!
                     {
-                        if (bullets[i].Rect.Intersects(tank.Value.Tankrect))
+                        if (bullets[i].Rect.Intersects(tank.Value.Tankrect)) // Själva kollisionen
                         {
 
-                            tank.Value.Health--;
+                            tank.Value.Health--; // Tank blir skadad!
 
-                            explosionPosition = tank.Value.Position;
+                            explosionPosition = tank.Value.Position; // Bestämma explosions-positionen åt client, värdet skickas senare genom MOVE-Package
 
                             Vector2 bulletcollisionposition = new Vector2();
                             bulletcollisionposition.X = tank.Value.Position.X + ((float)Math.Cos(bullets[i].Angle));
                             bulletcollisionposition.Y = tank.Value.Position.Y + ((float)Math.Sin(bullets[i].Angle));
-                            tank.Value.Position = bulletcollisionposition;
+                            tank.Value.Position = bulletcollisionposition; //Tank blir flyttad av kollisionen med bullet
 
-                            bullets.RemoveAt(i);
-                            return true;
+                            bullets.RemoveAt(i); // Bullet "förstörs" vid kollisionen
+                            return true; // Att kollisionen hände skickas till client och skickar då explosionposition
                         }
                         else
                         {
