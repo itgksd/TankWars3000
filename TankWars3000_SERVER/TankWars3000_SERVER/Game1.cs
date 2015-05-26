@@ -213,7 +213,7 @@ namespace TankWars3000_SERVER
                                     case (byte)PacketTypes.HEARTBEAT:
                                         string name = incomingMessage.ReadString();
                                         tanks[name].LastBeat = DateTime.Now;
-                                        Debug.WriteLine("HeartBeat respons for " + name);
+                                        Debug.WriteLine("Sv-HeartBeat respons for " + name);
                                         break;
                                 }
                                 break;
