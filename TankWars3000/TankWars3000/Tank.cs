@@ -191,7 +191,7 @@ namespace TankWars3000
 
         public Tank(ContentManager content)
         {
-            texture       = content.Load<Texture2D>("Tank/TankTest");
+            texture       = content.Load<Texture2D>("Tank/Tank");
             direction     = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
             speed         = new Vector2(2, 2);
