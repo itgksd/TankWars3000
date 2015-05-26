@@ -20,6 +20,13 @@ namespace TankWars3000
         Texture2D videoTexture;
 
         Song song;
+        bool playMusic = true;
+
+        public bool PlayMusic
+        {
+            get { return playMusic; }
+            set { playMusic = value; if (playMusic) MediaPlayer.Play(song); else MediaPlayer.Stop(); }
+        }
 
         public LobbyBackground(ContentManager content)
         {
