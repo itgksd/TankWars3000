@@ -78,7 +78,7 @@ namespace TankWars3000
             tank      = new Tank(Content);
             gameState = GameStates.Lobby;
 
-            trail = new TankTrack(Content);
+            //trail = new TankTrack(Content); Emil! Du har inte inkluderat själva klassen i din commit! Kolla i untracked files!
 
             graphics.PreferredBackBufferWidth  = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
