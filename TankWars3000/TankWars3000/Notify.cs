@@ -18,7 +18,7 @@ namespace TankWars3000
         static public void LoadContent(ContentManager content)
         {
             pixelTx = content.Load<Texture2D>("pixel");
-            font = content.Load<SpriteFont>("DefFont");
+            font    = content.Load<SpriteFont>("DefFont");
         }
 
         static public void Update(GameTime gameTime)
@@ -57,15 +57,15 @@ namespace TankWars3000
                 get { return state; }
             }
 
-            static Texture2D pixelTx;
+            static Texture2D  pixelTx;
             static SpriteFont font;
-            Rectangle rectangle;
-            public Rectangle Rectangle
+            Rectangle         rectangle;
+            public Rectangle  Rectangle
             {
                 get { return rectangle; }
             }
-            string message;
-            Color color;
+            string   message;
+            Color    color;
             TimeSpan timer;
             int y;
             public int Y
@@ -76,10 +76,10 @@ namespace TankWars3000
             public NotifyItem(Texture2D ppixelTx, SpriteFont ffont, int yy, string mmessage, Color ccolor)
             {
                 pixelTx = ppixelTx;
-                font = ffont;
+                font    = ffont;
 
                 message = mmessage;
-                color = ccolor;
+                color   = ccolor;
 
                 y = yy;
 
@@ -90,33 +90,33 @@ namespace TankWars3000
             public void Update(GameTime gameTime)
             {
                 if (rectangle.Y >= Y)
-                    state = State.down;
+                    state       = State.down;
 
-                if (state == State.down && timer.TotalSeconds >= 5)
-                    state = State.goingup;
+                if (state       == State.down && timer.TotalSeconds >= 5)
+                    state       = State.goingup;
 
-                if (state == State.goingup && rectangle.Y <= -100)
-                    state = State.done;
+                if (state       == State.goingup && rectangle.Y <= -100)
+                    state       = State.done;
 
 
-                if (state == State.goingdown)
+                if (state       == State.goingdown)
                 {
                     rectangle.Y += 2;
                 }
-                else if (state == State.down)
+                else if (state  == State.down)
                 {
-                    timer += gameTime.ElapsedGameTime;
+                    timer       += gameTime.ElapsedGameTime;
                 }
-                else if (state == State.goingup)
+                else if (state   == State.goingup)
                 {
-                    rectangle.Y -= 2;
+                    rectangle.Y  -= 2;
                 }
             }
 
             public void Draw(SpriteBatch spriteBatch)
             {
-                spriteBatch.Draw(pixelTx, rectangle, color * 0.8f);
-                spriteBatch.DrawString(font, message, new Vector2(10, rectangle.Y), Color.White);
+                spriteBatch.Draw(pixelTx,    rectangle, color * 0.8f);
+                spriteBatch.DrawString(font, message,   new Vector2(10, rectangle.Y), Color.White);
             }
         }
     }
