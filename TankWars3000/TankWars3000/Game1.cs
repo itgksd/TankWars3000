@@ -36,7 +36,7 @@ namespace TankWars3000
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        SpriteBatch           spriteBatch;
 
         public static GameStates gameState;
 
@@ -45,13 +45,13 @@ namespace TankWars3000
 
         // The Player
         Tank tank;
-        List<Tank> tanks = new List<Tank>();
+        List<Tank> tanks  = new List<Tank>();
 
         OldNewInput input = new OldNewInput();
 
         Lobby lobby;
 
-        static Rectangle screenRec;
+        static        Rectangle screenRec;
         static public Rectangle ScreenRec
         {
             get { return screenRec; }
@@ -59,20 +59,20 @@ namespace TankWars3000
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphics              = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
-            tank = new Tank(Content);
+            tank      = new Tank(Content);
             gameState = GameStates.Lobby;
 
-            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            graphics.PreferredBackBufferWidth  = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
-            IsMouseVisible = true;
+            IsMouseVisible                     = true;
 
             screenRec = new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height);
 
@@ -95,18 +95,21 @@ namespace TankWars3000
 
         protected override void Update(GameTime gameTime)
         {
-            input.newKey = Keyboard.GetState();
+            input.newKey   = Keyboard.GetState();
             input.newMouse = Mouse.GetState();
 
-            if (gameState == GameStates.Lobby)
+            if (gameState  == GameStates.Lobby)
             {
                 lobby.Update(input);
             }
-            if (gameState == GameStates.Ingame)
+            if (gameState  == GameStates.Ingame)
             {
                 // The player
+                foreach (Tank tank in tanks)
+                {
                     tank.Update(Content, graphics, tanks);
                     tank.Input(input, Content);
+                }
             }
             if (gameState == GameStates.Scoreboard)
             {
@@ -135,7 +138,9 @@ namespace TankWars3000
                 {
                     spriteBatch.Begin();
 
+                    foreach (Tank tank in tanks)
                     tank.Draw(spriteBatch, tanks);
+
                     Notify.Draw(spriteBatch);
 
                     spriteBatch.End();

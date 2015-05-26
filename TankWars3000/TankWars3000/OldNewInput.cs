@@ -10,7 +10,7 @@ namespace TankWars3000
     class OldNewInput
     {
         public KeyboardState newKey, oldKey;
-        public MouseState newMouse, oldMouse;
+        public MouseState    newMouse, oldMouse;
 
         public Rectangle MouseRec
         {
@@ -19,7 +19,7 @@ namespace TankWars3000
 
         public void SetOldKey()
         {
-            oldKey = newKey;
+            oldKey   = newKey;
         }
         public void SetOldMouse()
         {
@@ -107,18 +107,18 @@ namespace TankWars3000
                     case Keys.NumPad9: key = '9'; return true;
 
                     //Special keys
-                    case Keys.OemTilde: if (shift) { key = '~'; } else { key = '`'; } return true;
-                    case Keys.OemSemicolon: if (shift) { key = ':'; } else { key = ';'; } return true;
-                    case Keys.OemQuotes: if (shift) { key = '"'; } else { key = '\''; } return true;
-                    case Keys.OemQuestion: if (shift) { key = '?'; } else { key = '/'; } return true;
-                    case Keys.OemPlus: if (shift) { key = '+'; } else { key = '='; } return true;
-                    case Keys.OemPipe: if (shift) { key = '|'; } else { key = '\\'; } return true;
-                    case Keys.OemPeriod: if (shift) { key = '>'; } else { key = '.'; } return true;
-                    case Keys.OemOpenBrackets: if (shift) { key = '{'; } else { key = '['; } return true;
-                    case Keys.OemCloseBrackets: if (shift) { key = '}'; } else { key = ']'; } return true;
-                    case Keys.OemMinus: if (shift) { key = '_'; } else { key = '-'; } return true;
-                    case Keys.OemComma: if (shift) { key = '<'; } else { key = ','; } return true;
-                    case Keys.Space: key = ' '; return true;
+                    case Keys.OemTilde:         if (shift) { key = '~'; } else { key = '`';  } return true;
+                    case Keys.OemSemicolon:     if (shift) { key = ':'; } else { key = ';';  } return true;
+                    case Keys.OemQuotes:        if (shift) { key = '"'; } else { key = '\''; } return true;
+                    case Keys.OemQuestion:      if (shift) { key = '?'; } else { key = '/';  } return true;
+                    case Keys.OemPlus:          if (shift) { key = '+'; } else { key = '=';  } return true;
+                    case Keys.OemPipe:          if (shift) { key = '|'; } else { key = '\\'; } return true;
+                    case Keys.OemPeriod:        if (shift) { key = '>'; } else { key = '.';  } return true;
+                    case Keys.OemOpenBrackets:  if (shift) { key = '{'; } else { key = '[';  } return true;
+                    case Keys.OemCloseBrackets: if (shift) { key = '}'; } else { key = ']';  } return true;
+                    case Keys.OemMinus:         if (shift) { key = '_'; } else { key = '-';  } return true;
+                    case Keys.OemComma:         if (shift) { key = '<'; } else { key = ',';  } return true;
+                    case Keys.Space: key                                             = ' '; return true;
                 }
             }
 
