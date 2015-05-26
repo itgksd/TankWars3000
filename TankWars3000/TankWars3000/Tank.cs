@@ -56,7 +56,25 @@ namespace TankWars3000
                     i--; // Fix index
                 }
             }
- 
+
+            #region startposition
+            if(position == null)
+            {
+                if ((incmsg = Game1.Client.ReadMessage()) != null)
+                {
+                    if (incmsg.ReadByte() == (byte)PacketTypes.START)
+                    {
+                        foreach (Tank tank in tanks)
+                        {
+                            tank.name = incmsg.ReadString();
+                            tank.position.X = incmsg.ReadInt32();
+                            tank.position.Y = incmsg.ReadInt32();
+                        }
+                    }
+                }
+            }
+            #endregion
+
             #region Window update
             if (position.X >= graphics.GraphicsDevice.Viewport.Width)
                 position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;

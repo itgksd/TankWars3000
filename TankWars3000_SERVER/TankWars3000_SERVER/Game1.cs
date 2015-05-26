@@ -24,6 +24,7 @@ namespace TankWars3000_SERVER
     {
         LOGIN,
         READY,
+        START,
         MOVE,
         SHOOT,
         TEST,
@@ -32,6 +33,7 @@ namespace TankWars3000_SERVER
         DEATH,
         GAMESTATE,
         DISCONNECTREASON,
+        HEARTBEAT,
         STARTPOS
     }
 
@@ -55,6 +57,7 @@ namespace TankWars3000_SERVER
 
         List<bullet> bullets = new List<bullet>();
         Dictionary<string, Tank> tanks;
+        System.Timers.Timer timer;
 
         public Game1()
         {
@@ -90,6 +93,19 @@ namespace TankWars3000_SERVER
 
         
             base.Initialize();
+
+            timer = new System.Timers.Timer(5000);
+            timer.Elapsed += timer_Elapsed;
+            timer.Enabled = true;
+        }
+
+        void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            // Check the connections
+            NetOutgoingMessage outmsg = Server.CreateMessage();
+            outmsg.Write((byte)PacketTypes.HEARTBEAT);
+            Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+            Debug.WriteLine("Sv-Sending heartbeat");
         }
 
         protected override void LoadContent()
@@ -193,6 +209,11 @@ namespace TankWars3000_SERVER
 
                                         tanks[playerName].TankColor = playerColor;
                                         break;
+                                    case (byte)PacketTypes.HEARTBEAT:
+                                        string name = incomingMessage.ReadString();
+                                        tanks[name].LastBeat = DateTime.Now;
+                                        Debug.WriteLine("HeartBeat respons for " + name);
+                                        break;
                                 }
                                 break;
                             default:
@@ -202,21 +223,21 @@ namespace TankWars3000_SERVER
 
                                 // Send list of player to all everytime somebody sends anything to the server
                                 NetOutgoingMessage outMsg =  Server.CreateMessage();
-                                outMsg.Write((byte)PacketTypes.LOBBYPLAYERLIST);
+                        outMsg.Write((byte)PacketTypes.LOBBYPLAYERLIST);
 
-                                // Packa ner viktigaste informationen om alla spelarna
-                                outMsg.Write(tanks.Count); // Send the amount of players that will be send
-                                foreach (KeyValuePair<string, Tank> tank in tanks)
-                                {
-                                    outMsg.Write(tank.Key); // Name
-                                    outMsg.Write(tank.Value.TankColor.R); // Color R
-                                    outMsg.Write(tank.Value.TankColor.G); // Color G
-                                    outMsg.Write(tank.Value.TankColor.B); // Color B
-                                    outMsg.Write(tank.Value.Ready); // Ready
-                                }
+                        // Packa ner viktigaste informationen om alla spelarna
+                        outMsg.Write(tanks.Count); // Send the amount of players that will be send
+                        foreach (KeyValuePair<string, Tank> tank in tanks)
+                        {
+                            outMsg.Write(tank.Key); // Name
+                            outMsg.Write(tank.Value.TankColor.R); // Color R
+                            outMsg.Write(tank.Value.TankColor.G); // Color G
+                            outMsg.Write(tank.Value.TankColor.B); // Color B
+                            outMsg.Write(tank.Value.Ready); // Ready
+                        }
 
-                                Server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
-                                Debug.WriteLine("Sv-Send lobby-player-list to all");
+                        Server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+                        Debug.WriteLine("Sv-Send lobby-player-list to all");
                      
                     }
 
@@ -346,6 +367,21 @@ namespace TankWars3000_SERVER
                 if (gameState == GameStates.Scoreboard)
                 {
 
+                }
+
+
+                // Ta bort gammla anslutningar
+                List<string> tmpKeys = new List<string>();
+                foreach (KeyValuePair<string, Tank> tank in tanks)
+                {
+                    if ((DateTime.Now - tank.Value.LastBeat).TotalSeconds >= 31)
+                    {
+                        tmpKeys.Add(tank.Value.Name);
+                    }
+                }
+                foreach (string item in tmpKeys)
+                {
+                    tanks.Remove(item);
                 }
             }
             base.Update(gameTime);

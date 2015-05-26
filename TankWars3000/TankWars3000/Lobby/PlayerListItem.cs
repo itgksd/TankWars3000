@@ -61,7 +61,8 @@ namespace TankWars3000
         public PlayerListItem(ContentManager content, Vector2 position, string playerName, Color playerColor, bool ready, bool animate = false)
         {
             Load(content, position);
-            tankRec = new Rectangle(rectangle.X + 7, rectangle.Y + 5, 30, rectangle.Height - 10);
+            float procsize = (float)Decimal.Divide(rectangle.Height - 10, tankTx.Height);
+            tankRec = new Rectangle(rectangle.X + 7, rectangle.Y + 5, (int)(tankTx.Width * procsize), (int)(tankTx.Height * procsize));
             readyRec = new Rectangle(rectangle.X, rectangle.Y, 4, rectangle.Height);
 
             name = playerName;
@@ -81,12 +82,13 @@ namespace TankWars3000
                 tankTx = content.Load<Texture2D>("Tank/Tank");
             }
 
-            this.rectangle = new Rectangle((int)position.X, (int)position.Y, 300, 30);
+            this.rectangle = new Rectangle((int)position.X, (int)position.Y, 400, 40);
 
-            animationRec = new Rectangle(rectangle.X + rectangle.Width + 50, rectangle.Y, 0, rectangle.Height);
+            animationRec = new Rectangle(rectangle.X + rectangle.Width + 40, rectangle.Y, 0, rectangle.Height);
         }
 
         int ticksTimer = 0;
+        int aniSpeed = 9;
         public void Update()
         {
             // All for the animation! :D
@@ -94,8 +96,8 @@ namespace TankWars3000
                 ticksTimer++;
             if (state == State.FILLING && ticksTimer > 120) // <- To lazy for gametime
             {
-                animationRec.X -= 7;
-                animationRec.Width += 7;
+                animationRec.X -= aniSpeed;
+                animationRec.Width += aniSpeed;
 
                 if (animationRec.X <= rectangle.X)
                     state = State.EMPTYING;
@@ -104,7 +106,7 @@ namespace TankWars3000
             }
             else if (state == State.EMPTYING)
             {
-                animationRec.Width -= 7;
+                animationRec.Width -= aniSpeed;
                 if (animationRec.Width <= 0)
                     state = State.NONE;
 
@@ -123,7 +125,7 @@ namespace TankWars3000
                 {
                     spriteBatch.Draw(tankTx, tankRec, tankColor);
                     spriteBatch.Draw(pixelTx, readyRec, ready ? Color.Lime : Color.Red);
-                    spriteBatch.DrawString(font, name, new Vector2(rectangle.X + 50, rectangle.Y), Color.White);
+                    spriteBatch.DrawString(font, name, new Vector2(rectangle.X + 60, rectangle.Y + 5), Color.White);
                 }
             }
 

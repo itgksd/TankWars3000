@@ -232,11 +232,11 @@ namespace TankWars3000
                                     Color color = new Color(incom.ReadByte(), incom.ReadByte(), incom.ReadByte());
                                     bool ready = incom.ReadBoolean();
 
-                                    playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, k * 40), name, color, ready, animate));
+                                    playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 450, k * 50), name, color, ready, animate));
                                 }
                                 for (int i = incommingPlayers + 1; i <= 8; i++)
                                 {
-                                    playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, i * 40), animate));
+                                    playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 450, i * 50), animate));
                                 }
                             }
                             break;
@@ -245,6 +245,13 @@ namespace TankWars3000
                             background.PlayMusic = false;
                             Notify.NewMessage("Starting Game!", Color.LightBlue);
                             Game1.gameState = (GameStates)incom.ReadByte();
+                            break;
+                        case (byte)PacketTypes.HEARTBEAT:
+                            Debug.WriteLine("Cl-Received heartbeat, responding");
+                            NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
+                            outmsg.Write((byte)PacketTypes.HEARTBEAT);
+                            outmsg.Write(nameBtn.Text);
+                            Game1.Client.SendMessage(outmsg, incom.SenderConnection, NetDeliveryMethod.ReliableOrdered);
                             break;
                         default:
                             break;
