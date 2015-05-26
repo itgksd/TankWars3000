@@ -71,6 +71,8 @@ namespace TankWars3000
             tank      = new Tank(Content);
             gameState = GameStates.Lobby;
 
+            trail = new TankTrack(Content);
+
             graphics.PreferredBackBufferWidth  = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             //graphics.IsFullScreen = true;
@@ -141,7 +143,7 @@ namespace TankWars3000
                 {
                     spriteBatch.Begin();
 
-                    foreach (Tank tank in tanks)
+                    foreach (Tank tank in  tanks)
                     tank.Draw(spriteBatch, tanks);
 
                     Notify.Draw(spriteBatch);

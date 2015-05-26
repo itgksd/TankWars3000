@@ -14,15 +14,6 @@ namespace TankWars3000
     {
         #region Atributes
 
-        string name;
-
-        bool bulletFired = false;
-        bool IsAlive = true;
-
-        int health = 3;
-
-        float angle = 0;//angle in radians
-
         Vector2 speed, position, spawnPos, direction, textureOrigin, explositionPos;
 
         Color color             = new Color();
@@ -37,12 +28,26 @@ namespace TankWars3000
 
         List<Bullet> bullets    = new List<Bullet>();
 
+        // Trail
+        TankTrack trail;
+        List<TankTrack> trails  = new List<TankTrack>();
+
+        string name;
+
+        bool bulletFired        = false;
+        bool IsAlive            = true;
+
+        int health              = 3;
+
+        float angle             = 0;//angle in radians
+
         #endregion
 
         #region Methods
 
         public void Update(ContentManager content, GraphicsDeviceManager graphics, List<Tank> tanks)
         {
+            #region Bullet
             foreach (Bullet bullet in bullets)
                 bullet.Update(graphics);
 
@@ -56,18 +61,19 @@ namespace TankWars3000
                     i--; // Fix index
                 }
             }
+            #endregion
 
-            #region startposition
-            if(position == null)
+            #region start position
+            if (position == null)
             {
-                if ((incmsg = Game1.Client.ReadMessage()) != null)
+                if ((incmsg                 = Game1.Client.ReadMessage()) != null)
                 {
-                    if (incmsg.ReadByte() == (byte)PacketTypes.STARTPOS)
+                    if (incmsg.ReadByte()   == (byte)PacketTypes.STARTPOS)
                     {
                         foreach (Tank tank in tanks)
                         {
-                            tank.name = incmsg.ReadString();
-                            tank.angle = incmsg.ReadFloat();
+                            tank.name       = incmsg.ReadString();
+                            tank.angle      = incmsg.ReadFloat();
                             tank.position.X = incmsg.ReadInt32();
                             tank.position.Y = incmsg.ReadInt32();
                         }
@@ -90,16 +96,25 @@ namespace TankWars3000
                 position.Y = 0;
             #endregion
 
+            #region Trail
+            // Trail is going to be here \\\///
+
+
+            /*foreach (TankTrack trail in trails)
+                trail.Update();
+            */
+            #endregion
+
             if ((incmsg = Game1.Client.ReadMessage()) != null)
             {
-                if(incmsg.ReadByte() == (byte)PacketTypes.MOVE)
+                if(incmsg.ReadByte()              == (byte)PacketTypes.MOVE)
                 {
                     foreach (Tank tank in tanks)
                     {
-                        tank.name       = incmsg.ReadString();
-                        tank.angle      = incmsg.ReadFloat();
-                        tank.position.X = incmsg.ReadInt32();
-                        tank.position.Y = incmsg.ReadInt32();
+                        tank.name                 = incmsg.ReadString();
+                        tank.angle                = incmsg.ReadFloat();
+                        tank.position.X           = incmsg.ReadInt32();
+                        tank.position.Y           = incmsg.ReadInt32();
                         try
                         {
                             tank.explositionPos.X = incmsg.ReadInt32();
@@ -112,7 +127,7 @@ namespace TankWars3000
 
                 if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
                 {
-                    Bullet bullet = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadUInt32(), incmsg.ReadUInt32()) );
+                    Bullet bullet     = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadUInt32(), incmsg.ReadUInt32()) );
                     bullets.Add(bullet);
                 }
             }
@@ -120,7 +135,7 @@ namespace TankWars3000
 
         public void Input(OldNewInput input, ContentManager content)
         {
-            if (IsAlive == true)
+            if (IsAlive                   == true)
             {
                 NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
 
@@ -153,7 +168,7 @@ namespace TankWars3000
 
                 if (input.newKey.IsKeyDown(Keys.D))
                 {
-                    angle += MathHelper.Pi / 20;
+                    angle       += MathHelper.Pi / 20;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
                     // divide to smaller pieces for less turn each button press
@@ -170,7 +185,7 @@ namespace TankWars3000
                 }
                 if (input.newKey.IsKeyDown(Keys.A))
                 {
-                    angle -= MathHelper.Pi / 20;
+                    angle       -= MathHelper.Pi / 20;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
                     // divide to smaller pieces for less turn each button press
