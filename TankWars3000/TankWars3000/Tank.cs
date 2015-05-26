@@ -23,7 +23,7 @@ namespace TankWars3000
 
         float angle;//angle in radians
 
-        Vector2 speed, position, spawnPos, direction, textureOrigin;
+        Vector2 speed, position, spawnPos, direction, textureOrigin, explositionPos;
 
         Color color             = new Color();
 
@@ -81,6 +81,13 @@ namespace TankWars3000
                         tank.angle      = incmsg.ReadFloat();
                         tank.position.X = incmsg.ReadInt32();
                         tank.position.Y = incmsg.ReadInt32();
+                        try
+                        {
+                            tank.explositionPos.X = incmsg.ReadInt32();
+                            tank.explositionPos.Y = incmsg.ReadInt32();
+                        }
+                        catch (Exception ex)
+                        { }
                     }
                 }
 

@@ -91,26 +91,44 @@ namespace TankWars3000
                     switch (incommsg.MessageType)
                     {
                         case NetIncomingMessageType.Data:
-                            if (incommsg.ReadByte() == (byte)PacketTypes.TEST)
+                            switch (incommsg.ReadByte())
                             {
-                                // Read message
-                                string testMsg = incommsg.ReadString();
-                                Debug.WriteLine("Cl-Test message received, connection working");
-                                connected = true;
-                                // Add players and stuff
-                                canStart = true;
+                                case (byte)PacketTypes.TEST:
+                                    // Read message
+                                    string testMsg = incommsg.ReadString();
+                                    Debug.WriteLine("Cl-Test message received, connection working");
+                                    Notify.NewMessage("Connected!", Color.Lime);
+                                    connected = true;
+                                    // Add players and stuff
+                                    canStart = true;
+                                    break;
+                                case (byte)PacketTypes.DISCONNECTREASON:
+                                    Debug.WriteLine("Cl-Deny packet received");
+                                    Notify.NewMessage("Disconnect reason: " + incommsg.ReadString(), Color.Purple);
+                                    canStart = true;
+                                    Disconnect();
+                                    break;
+                                default:
+                                    break;
                             }
                             break;
+                        case NetIncomingMessageType.WarningMessage:
+                            string msgW = incommsg.ReadString();
+                            Debug.WriteLine("Cl-" + incommsg.MessageType + " - " + msgW);
+                            Notify.NewMessage("Warning: " + msgW, Color.Purple);
+                            break;
                         default:
-                            Debug.WriteLine("Cl-" + incommsg.MessageType + " - " + incommsg.ReadString());
+                            string msg = incommsg.ReadString();
+                            Debug.WriteLine("Cl-" + incommsg.MessageType + " - " + msg);
                             break;
                     }
                 }
 
                 loopCount++;
-                if (loopCount > 200000000) // Keeps it from freezing alltogether when not being able to connect.. A timeout i guess
+                if (loopCount > 100000000) // Keeps it from freezing alltogether when not being able to connect.. A timeout i guess
                 {
                     Debug.WriteLine("Cl-Timeout, can't connect");
+                    Notify.NewMessage("Connection failed, timeout :(", Color.Red);
                     Disconnect();
                     break;
                 }
@@ -130,11 +148,16 @@ namespace TankWars3000
             colorBtn.Enabled = false;
 
             connected = false;
+
+            playerList.Clear();
+
+            Notify.NewMessage("Disconnected!", Color.Orange);
         }
 
         public void ReadyChanged()
         {
             // Send ready to server
+            //Debug.WriteLine("Cl-Sending ready");
 
             NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
 
@@ -150,6 +173,8 @@ namespace TankWars3000
         public void ColorChange()
         {
             // Send the new color
+            //Debug.WriteLine("Cl-Sending color");
+
             NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
 
             outmsg.Write((byte)PacketTypes.COLOR);
@@ -179,6 +204,11 @@ namespace TankWars3000
             connectBtn.Update(input);
             disconnectBtn.Update(input);
             exitBtn.Update(input);
+            playerList.ForEach(p => p.Update());
+
+            // STOP THE MUSIC
+            if (input.SingleKey(Keys.M))
+                background.PlayMusic = false;
 
             NetIncomingMessage incom;
             if (connected && (incom = Game1.Client.ReadMessage()) != null) // Are there any new messanges?
@@ -190,20 +220,30 @@ namespace TankWars3000
                         case (byte)PacketTypes.LOBBYPLAYERLIST:
                             Debug.WriteLine("Cl-Received the playerlist");
 
-                            playerList.Clear(); // Clear the "old" data
-
-                            int incommingPlayers = incom.ReadInt32();
-                            for (int k = 1; k <= incommingPlayers; k++)
+                            bool animate = playerList.Count == 0 ? true : false;
+                            if (playerList.Count == 0 || playerList[0].Statee == PlayerListItem.State.NONE) // To keep the game from removing the initial animation
                             {
-                                string name = incom.ReadString();
-                                Color color = new Color(incom.ReadByte(), incom.ReadByte(), incom.ReadByte());
-                                bool ready = incom.ReadBoolean();
+                                playerList.Clear(); // Clear the "old" data
 
-                                playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, k * 40), name, color, ready));
+                                int incommingPlayers = incom.ReadInt32();
+                                for (int k = 1; k <= incommingPlayers; k++)
+                                {
+                                    string name = incom.ReadString();
+                                    Color color = new Color(incom.ReadByte(), incom.ReadByte(), incom.ReadByte());
+                                    bool ready = incom.ReadBoolean();
+
+                                    playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, k * 40), name, color, ready, animate));
+                                }
+                                for (int i = incommingPlayers + 1; i <= 8; i++)
+                                {
+                                    playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, i * 40), animate));
+                                }
                             }
                             break;
                         case (byte)PacketTypes.GAMESTATE:
                             Debug.WriteLine("Cl-Reveiced gamestate change");
+                            background.PlayMusic = false;
+                            Notify.NewMessage("Starting Game!", Color.LightBlue);
                             Game1.gameState = (GameStates)incom.ReadByte();
                             break;
                         default:
