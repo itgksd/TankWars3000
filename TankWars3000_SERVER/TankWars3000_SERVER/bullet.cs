@@ -20,6 +20,14 @@ namespace TankWars3000_SERVER
             name = n;
         }
 
+        public float Angle
+        {
+            get
+            {
+                return angle;
+            }
+        }
+
         public Rectangle Rect
         {
             get

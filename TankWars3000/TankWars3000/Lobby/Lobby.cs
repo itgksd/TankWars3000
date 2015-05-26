@@ -37,7 +37,7 @@ namespace TankWars3000
             // Buttons
             nameBtn  = new TextButton  (content, new Vector2(50, 50),  "UserName", TextButtonType.UserName, "Player");
             ipBtn    = new TextButton  (content, new Vector2(50, 110), "IP",       TextButtonType.IP,       "127.0.0.1");
-            colorBtn = new ColorButton (content, new Vector2(50, 170), "Tank Color");
+            colorBtn = new ColorButton (content, new Vector2(50, 170), "Tank Color", ColorChange);
             colorBtn.Enabled = false;
             readyBtn = new BoolButton  (content, new Vector2(50, 230), "Ready?", false, ReadyChanged);
             readyBtn.Enabled = false;
@@ -147,6 +147,22 @@ namespace TankWars3000
             Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
         }
 
+        public void ColorChange()
+        {
+            // Send the new color
+            NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
+
+            outmsg.Write((byte)PacketTypes.COLOR);
+
+            outmsg.Write(nameBtn.Text); // Name
+
+            outmsg.Write(colorBtn.SelectedColor.R); // Color R
+            outmsg.Write(colorBtn.SelectedColor.G); // Color G
+            outmsg.Write(colorBtn.SelectedColor.B); // Color B
+
+            Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
         public void Exit()
         {
             Environment.Exit(9);
@@ -169,21 +185,29 @@ namespace TankWars3000
             {
                 if (incom.MessageType == NetIncomingMessageType.Data) // Is it a "data" message?
                 {
-                    if (incom.ReadByte() == (byte)PacketTypes.LOBBYPLAYERLIST) // Does it contain a LobbyPlayerList?
+                    switch (incom.ReadByte())
                     {
-                        Debug.WriteLine("Cl-Received the playerlist");
+                        case (byte)PacketTypes.LOBBYPLAYERLIST:
+                            Debug.WriteLine("Cl-Received the playerlist");
 
-                        playerList.Clear(); // Clear the "old" data
+                            playerList.Clear(); // Clear the "old" data
 
-                        // TODO: LOOP though every player
-                        for (int i = 1; i <= 10; i++)
-                        {
-                            // if a player with i index exists draw his name 
-                            //
-                            // else draw empty lobby list item
-                            Random r = new Random(); // TEMP!!
-                            playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, i * 40)));
-                        }
+                            int incommingPlayers = incom.ReadInt32();
+                            for (int k = 1; k <= incommingPlayers; k++)
+                            {
+                                string name = incom.ReadString();
+                                Color color = new Color(incom.ReadByte(), incom.ReadByte(), incom.ReadByte());
+                                bool ready = incom.ReadBoolean();
+
+                                playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 350, k * 40), name, color, ready));
+                            }
+                            break;
+                        case (byte)PacketTypes.GAMESTATE:
+                            Debug.WriteLine("Cl-Reveiced gamestate change");
+                            Game1.gameState = (GameStates)incom.ReadByte();
+                            break;
+                        default:
+                            break;
                     }
                 }
             }

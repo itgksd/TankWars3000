@@ -11,7 +11,8 @@ using Microsoft.Xna.Framework.Media;
 using Lidgren.Network;
 using System.Threading;
 using System.Diagnostics;
-namespace TankWars3000_SERVER{
+namespace TankWars3000_SERVER
+{
 
     enum GameStates
     {
@@ -26,7 +27,10 @@ namespace TankWars3000_SERVER{
         MOVE,
         SHOOT,
         TEST,
-        LOBBYPLAYERLIST
+        LOBBYPLAYERLIST,
+        COLOR,
+        GAMESTATE,
+        DEATH
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -47,8 +51,7 @@ namespace TankWars3000_SERVER{
         bool canCountTime = true;
 
         List<bullet> bullets = new List<bullet>();
-
-        List<Tank> tanks;
+        Dictionary<string, Tank> tanks;
 
         public Game1()
         {
@@ -80,9 +83,9 @@ namespace TankWars3000_SERVER{
             // Start it
             Server.Start();
 
-            tanks = new List<Tank>();
+            tanks = new Dictionary<string, Tank>();
 
-        
+
             base.Initialize();
         }
 
@@ -90,8 +93,8 @@ namespace TankWars3000_SERVER{
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
-           
+
+
         }
 
         protected override void UnloadContent()
@@ -104,7 +107,7 @@ namespace TankWars3000_SERVER{
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
-            
+
             while (true)
             {
                 if (gameState == GameStates.Lobby)
@@ -127,9 +130,9 @@ namespace TankWars3000_SERVER{
                                     // godkänner klienten, detta måste tydligen göras
                                     incomingMessage.SenderConnection.Approve();
                                     connectionAmount++;
-                                    
+
                                     // skapa ny Tank och lägg det i en lista
-                                    tanks.Add(new Tank(name));
+                                    tanks.Add(name, new Tank(name));
 
                                     Debug.WriteLine("Sv-Sending test message");
                                     // Skicka ett test paket för att låta klienten veta att anslutningen fungerar.. "Ni" kan nog ta bort den senare om den inte behövs längre
@@ -141,19 +144,44 @@ namespace TankWars3000_SERVER{
                                 break;
                             case NetIncomingMessageType.Data:
 
-                                if (incomingMessage.ReadByte() == (byte)PacketTypes.READY)
-                                {
-                                    // markera Tanken/klienten som redo
-                                    
-                                    string playerName = incomingMessage.ReadString();
-                                    bool playerReady = incomingMessage.ReadBoolean();
 
-                                    Debug.WriteLine("Sv-Received ready packet. Name:" + playerName + "|Ready:" + playerReady);
+                                switch (incomingMessage.ReadByte())
+                                {
+                                    case (byte)PacketTypes.READY:
+                                        // markera Tanken/klienten som redo
+
+                                        string playerName = incomingMessage.ReadString();
+                                        bool playerReady = incomingMessage.ReadBoolean();
+
+                                        tanks[playerName].Ready = playerReady;
+
+                                        Debug.WriteLine("Sv-Received ready packet. Name:" + playerName + "|Ready:" + playerReady);
+                                        break;
+                                    case (byte)PacketTypes.COLOR:
+                                        // Ändra färgen på tanken
+
+                                        playerName = incomingMessage.ReadString();
+                                        Color playerColor = new Color(incomingMessage.ReadByte(), incomingMessage.ReadByte(), incomingMessage.ReadByte());
+
+                                        tanks[playerName].TankColor = playerColor;
+                                        break;
                                 }
 
                                 // Send list of player to all everytime somebody sends anything to the server
-                                NetOutgoingMessage outMsg =  Server.CreateMessage();
+                                NetOutgoingMessage outMsg = Server.CreateMessage();
                                 outMsg.Write((byte)PacketTypes.LOBBYPLAYERLIST);
+
+                                // Packa ner viktigaste informationen om alla spelarna
+                                outMsg.Write(tanks.Count); // Send the amount of players that will be send
+                                foreach (KeyValuePair<string, Tank> tank in tanks)
+                                {
+                                    outMsg.Write(tank.Key); // Name
+                                    outMsg.Write(tank.Value.TankColor.R); // Color R
+                                    outMsg.Write(tank.Value.TankColor.G); // Color G
+                                    outMsg.Write(tank.Value.TankColor.B); // Color B
+                                    outMsg.Write(tank.Value.Ready); // Ready
+                                }
+
                                 Server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
                                 Debug.WriteLine("Sv-Send lobby-player-list to all");
 
@@ -163,12 +191,21 @@ namespace TankWars3000_SERVER{
                                 break;
                         }
                     }
-                    if (connectionAmount == amountOfPlayers)
-                    {
-                        // lobbyn full och spelet kan börja
-                        gameState = GameStates.Ingame;
-                    }
 
+                    // Check if we can start
+                    int readyCount = 0;
+                    foreach (KeyValuePair<string, Tank> tank in tanks)
+                        if (tank.Value.Ready)
+                            readyCount++;
+                    if (tanks.Count > 1 && (float)Decimal.Divide(readyCount, tanks.Count) > 0.7f)
+                    {
+                        gameState = GameStates.Ingame;
+
+                        NetOutgoingMessage outmsg = Server.CreateMessage();
+                        outmsg.Write((byte)PacketTypes.GAMESTATE);
+                        outmsg.Write((byte)GameStates.Ingame);
+                        Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    }
                 }
 
 
@@ -179,55 +216,75 @@ namespace TankWars3000_SERVER{
                         // uppdatera bullet
                         nextUpdate = DateTime.Now.AddMilliseconds(100);
                     }
-                  
-                    
 
-                    
+                    foreach(KeyValuePair<string,Tank> tank in tanks) 
+                    {
+                        if (tank.Value.Health <= 0)
+                        {
+                            NetOutgoingMessage outmsg = Server.CreateMessage();
+                            outmsg.Write((byte)PacketTypes.DEATH);
+                            Random r = new Random();
+                            while (true)
+                            {
+                                int x = r.Next(1366);
+                                int y = r.Next(768);
+                                
+                                break;
+                            }
+                        
+
+                            Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+                        }
+                    }
+
+
                     if ((incomingMessage = Server.ReadMessage()) != null)
                     {
-                       if(incomingMessage.ReadByte() == (byte)PacketTypes.MOVE) {
-                           //Spara värden Server fick från client
-                           String name = incomingMessage.ReadString();
-                           int x = incomingMessage.ReadInt32();
-                           int y = incomingMessage.ReadInt32();
-                           float angle = incomingMessage.ReadFloat();
-           
+                        if (incomingMessage.ReadByte() == (byte)PacketTypes.MOVE)
+                        {
+                            //Spara värden Server fick från client
+                            String name = incomingMessage.ReadString();
+                            int x = incomingMessage.ReadInt32();
+                            int y = incomingMessage.ReadInt32();
+                            float angle = incomingMessage.ReadFloat();
 
-                           // kollision här tack
-                           Collision(angle);
 
-                           //Skicka alla värden till alla Clients
-                           NetOutgoingMessage outmsg = Server.CreateMessage();
-                           outmsg.Write((byte)PacketTypes.MOVE);
-                           outmsg.Write(name);
-                           outmsg.Write(angle);
-                           outmsg.Write(x);
-                           outmsg.Write(y);
-                           Server.SendToAll(outmsg,NetDeliveryMethod.ReliableOrdered);
-                       }
+                            // kollision här tack
+                            Collision(angle);
 
-                       if (incomingMessage.ReadByte() == (byte)PacketTypes.SHOOT)
-                       {
-                           string name = incomingMessage.ReadString();
-                           int x = incomingMessage.ReadInt32();
-                           int y = incomingMessage.ReadInt32();
-                           float angle = incomingMessage.ReadFloat();
+                            //Skicka alla värden till alla Clients
+                            NetOutgoingMessage outmsg = Server.CreateMessage();
+                            outmsg.Write((byte)PacketTypes.MOVE);
+                            outmsg.Write(name);
+                            outmsg.Write(angle);
+                            outmsg.Write(x);
+                            outmsg.Write(y);
+                            outmsg.Write(bulletCollision());
+                            Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+                        }
 
-                           bullets.Add(new bullet(x, y, angle, name));
+                        if (incomingMessage.ReadByte() == (byte)PacketTypes.SHOOT)
+                        {
+                            string name = incomingMessage.ReadString();
+                            int x = incomingMessage.ReadInt32();
+                            int y = incomingMessage.ReadInt32();
+                            float angle = incomingMessage.ReadFloat();
 
-                           NetOutgoingMessage outmsg = Server.CreateMessage();
-                           outmsg.Write((byte)PacketTypes.SHOOT);
-                           outmsg.Write(name);
-                           outmsg.Write(x);
-                           outmsg.Write(y);
-                           Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
-                       }
+                            bullets.Add(new bullet(x, y, angle, name));
+
+                            NetOutgoingMessage outmsg = Server.CreateMessage();
+                            outmsg.Write((byte)PacketTypes.SHOOT);
+                            outmsg.Write(name);
+                            outmsg.Write(x);
+                            outmsg.Write(y);
+                            Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+                        }
                     }
 
 
                 }
-                
-                
+
+
                 if (gameState == GameStates.Scoreboard)
                 {
 
@@ -248,40 +305,62 @@ namespace TankWars3000_SERVER{
 
         private void Collision(float angle)
         {
-            foreach (Tank tank1 in tanks)
+            foreach (KeyValuePair<string, Tank> tank1 in tanks)
             {
-                foreach (Tank tank2 in tanks)
+                foreach (KeyValuePair<string, Tank> tank2 in tanks)
                 {
-                    if (tank1.Name != tank2.Name)
+                    if (tank1.Key != tank2.Key)
                     {
-                        if (tank1.Tankrect.Intersects(tank2.Tankrect))
+                        if (tank1.Value.Tankrect.Intersects(tank2.Value.Tankrect))
                         {
                             Vector2 collisionPosition1 = new Vector2();
-                            collisionPosition1.X = tank1.Position.X + ((float)Math.Cos(angle + Math.PI));
-                            collisionPosition1.Y = tank1.Position.Y + ((float)Math.Sin(angle + Math.PI));
+                            collisionPosition1.X = tank1.Value.Position.X + ((float)Math.Cos(angle + Math.PI));
+                            collisionPosition1.Y = tank1.Value.Position.Y + ((float)Math.Sin(angle + Math.PI));
 
-                            tank1.Position = collisionPosition1;
+                            tank1.Value.Position = collisionPosition1;
 
                             Vector2 collisionPosition2 = new Vector2();
-                            collisionPosition2.X = tank2.Position.X + ((float)Math.Cos(angle));
-                            collisionPosition2.Y = tank2.Position.Y + ((float)Math.Sin(angle));
+                            collisionPosition2.X = tank2.Value.Position.X + ((float)Math.Cos(angle));
+                            collisionPosition2.Y = tank2.Value.Position.Y + ((float)Math.Sin(angle));
 
-                            tank2.Position = collisionPosition2;
+                            tank2.Value.Position = collisionPosition2;
 
                         }
                     }
                 }
             }
         }
-        private void bulletCollision()
+        private bool bulletCollision()
         {
-            foreach (bullet bullet in bullets)
+            for (int i = 0; i <= bullets.Count - 1; )
             {
-                foreach (Tank tank in tanks)
+                foreach (KeyValuePair<string, Tank> tank in tanks)
                 {
-                    if ()
+                    if (bullets[i].Name != tank.Value.Name)
+                    {
+                        if (bullets[i].Rect.Intersects(tank.Value.Tankrect))
+                        {
+
+                            tank.Value.Health--;
+
+                            Vector2 bulletcollisionposition = new Vector2();
+                            bulletcollisionposition.X = tank.Value.Position.X + ((float)Math.Cos(bullets[i].Angle));
+                            bulletcollisionposition.Y = tank.Value.Position.Y + ((float)Math.Sin(bullets[i].Angle));
+                            tank.Value.Position = bulletcollisionposition;
+
+                            bullets.RemoveAt(i);
+                            return true;
+                        }
+                        else
+                        {
+                            i++;
+                            return false;
+                        }
+                    }
+                    else return false;
                 }
             }
+            return false;
         }
     }
 }

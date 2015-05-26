@@ -12,7 +12,7 @@ using Lidgren.Network;
 
 namespace TankWars3000
 {
-    enum GameStates
+    public enum GameStates
     {
         Lobby,
         Ingame,
@@ -26,7 +26,9 @@ namespace TankWars3000
         MOVE,
         SHOOT,
         TEST,
-        LOBBYPLAYERLIST
+        LOBBYPLAYERLIST,
+        COLOR,
+        GAMESTATE
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -34,7 +36,7 @@ namespace TankWars3000
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        GameStates gameState;
+        public static GameStates gameState;
 
         // Client Object
         public static NetClient Client;
@@ -104,7 +106,7 @@ namespace TankWars3000
             if (gameState == GameStates.Ingame)
             {
                 // The player
-                    tank.Update(graphics, tanks);
+                    tank.Update(Content, graphics, tanks);
                     tank.Input(input, Content);
             }
             if (gameState == GameStates.Scoreboard)
@@ -131,7 +133,7 @@ namespace TankWars3000
                 {
                     spriteBatch.Begin();
 
-                    tank.Draw(spriteBatch);
+                    tank.Draw(spriteBatch, tanks);
 
                     spriteBatch.End();
                 }
