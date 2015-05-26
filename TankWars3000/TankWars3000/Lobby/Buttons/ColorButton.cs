@@ -40,7 +40,8 @@ namespace TankWars3000
         {
             base.Update(input);
 
-            if (enabled && input.MouseRec.Intersects(insideRec) && input.newMouse.LeftButton == ButtonState.Pressed)
+            // Last bit is to stop it from sending data way to often
+            if (enabled && input.MouseRec.Intersects(insideRec) && input.newMouse.LeftButton == ButtonState.Pressed && input.oldMouse.LeftButton == ButtonState.Released)
             {
                 selectedX = input.newMouse.X;
 

@@ -23,18 +23,23 @@ namespace TankWars3000
     {
         LOGIN,
         READY,
+        START,
         MOVE,
         SHOOT,
         TEST,
         LOBBYPLAYERLIST,
         COLOR,
-        GAMESTATE
+        DEATH,
+        GAMESTATE,
+        DISCONNECTREASON,
+        HEARTBEAT,
+        STARTPOS
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        SpriteBatch           spriteBatch;
 
         public static GameStates gameState;
 
@@ -43,13 +48,13 @@ namespace TankWars3000
 
         // The Player
         Tank tank;
-        List<Tank> tanks = new List<Tank>();
+        List<Tank> tanks  = new List<Tank>();
 
         OldNewInput input = new OldNewInput();
 
         Lobby lobby;
 
-        static Rectangle screenRec;
+        static        Rectangle screenRec;
         static public Rectangle ScreenRec
         {
             get { return screenRec; }
@@ -57,20 +62,20 @@ namespace TankWars3000
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            graphics              = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
-            tank = new Tank(Content);
+            tank      = new Tank(Content);
             gameState = GameStates.Lobby;
 
-            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            graphics.PreferredBackBufferWidth  = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
-            IsMouseVisible = true;
+            IsMouseVisible                     = true;
 
             screenRec = new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height);
 
@@ -83,6 +88,7 @@ namespace TankWars3000
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             lobby = new Lobby(Content);
+            Notify.LoadContent(Content);
         }
 
         protected override void UnloadContent()
@@ -92,27 +98,28 @@ namespace TankWars3000
 
         protected override void Update(GameTime gameTime)
         {
-            //// Allows the game to exit
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                this.Exit();
-
-            input.newKey = Keyboard.GetState();
+            input.newKey   = Keyboard.GetState();
             input.newMouse = Mouse.GetState();
 
-            if (gameState == GameStates.Lobby)
+            if (gameState  == GameStates.Lobby)
             {
                 lobby.Update(input);
             }
-            if (gameState == GameStates.Ingame)
+            if (gameState  == GameStates.Ingame)
             {
                 // The player
+                foreach (Tank tank in tanks)
+                {
                     tank.Update(Content, graphics, tanks);
                     tank.Input(input, Content);
+                }
             }
             if (gameState == GameStates.Scoreboard)
             {
 
             }
+
+            Notify.Update(gameTime);
 
             input.SetOldKey();
             input.SetOldMouse();
@@ -127,19 +134,26 @@ namespace TankWars3000
                 {
                     spriteBatch.Begin();
                     lobby.Draw(spriteBatch);
+                    Notify.Draw(spriteBatch);
                     spriteBatch.End();
                 }
                 if (gameState == GameStates.Ingame)
                 {
                     spriteBatch.Begin();
 
+                    foreach (Tank tank in tanks)
                     tank.Draw(spriteBatch, tanks);
+
+                    Notify.Draw(spriteBatch);
 
                     spriteBatch.End();
                 }
                 if (gameState == GameStates.Scoreboard)
                 {
                     spriteBatch.Begin();
+
+
+                    Notify.Draw(spriteBatch);
 
                     spriteBatch.End();
                 }

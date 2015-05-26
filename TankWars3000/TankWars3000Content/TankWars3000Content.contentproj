@@ -103,15 +103,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tank\TankTest.png">
-      <Name>TankTest</Name>
+    <Compile Include="Tank\Bullet.png">
+      <Name>Bullet</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tank\Bullet.png">
-      <Name>Bullet</Name>
+    <Compile Include="Tank\Tank.png">
+      <Name>Tank</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
