@@ -78,7 +78,7 @@ namespace TankWars3000
             {
                 pixelTx = content.Load<Texture2D>("pixel");
                 font = content.Load<SpriteFont>("DefFont");
-                tankTx = content.Load<Texture2D>("Tank/tanktest");
+                tankTx = content.Load<Texture2D>("Tank/Tank");
             }
 
             this.rectangle = new Rectangle((int)position.X, (int)position.Y, 300, 30);
