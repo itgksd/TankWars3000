@@ -23,6 +23,7 @@ namespace TankWars3000_SERVER{
     {
         LOGIN,
         READY,
+        START,
         MOVE,
         SHOOT,
         TEST,
@@ -86,7 +87,7 @@ namespace TankWars3000_SERVER{
         
             base.Initialize();
 
-            timer = new System.Timers.Timer(1000);
+            timer = new System.Timers.Timer(5000);
             timer.Elapsed += timer_Elapsed;
             timer.Enabled = true;
         }
@@ -97,15 +98,7 @@ namespace TankWars3000_SERVER{
             NetOutgoingMessage outmsg = Server.CreateMessage();
             outmsg.Write((byte)PacketTypes.HEARTBEAT);
             Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
-
-            Thread.Sleep(500);
-
-            // Check for messages
-            NetIncomingMessage inmsg;
-            while ((inmsg = Server.ReadMessage()) != null)
-            {
-                
-            }
+            Debug.WriteLine("Sv-Sending heartbeat");
         }
 
         protected override void LoadContent()
@@ -208,6 +201,11 @@ namespace TankWars3000_SERVER{
 
                                         tanks[playerName].TankColor = playerColor;
                                         break;
+                                    case (byte)PacketTypes.HEARTBEAT:
+                                        string name = incomingMessage.ReadString();
+                                        tanks[name].LastBeat = DateTime.Now;
+                                        Debug.WriteLine("HeartBeat respons for " + name);
+                                        break;
                                 }
                                 break;
                             default:
@@ -303,6 +301,21 @@ namespace TankWars3000_SERVER{
                 if (gameState == GameStates.Scoreboard)
                 {
 
+                }
+
+
+                // Ta bort gammla anslutningar
+                List<string> tmpKeys = new List<string>();
+                foreach (KeyValuePair<string, Tank> tank in tanks)
+                {
+                    if ((DateTime.Now - tank.Value.LastBeat).TotalSeconds >= 31)
+                    {
+                        tmpKeys.Add(tank.Value.Name);
+                    }
+                }
+                foreach (string item in tmpKeys)
+                {
+                    tanks.Remove(item);
                 }
             }
             base.Update(gameTime);

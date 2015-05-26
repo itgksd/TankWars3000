@@ -18,6 +18,13 @@ namespace TankWars3000_SERVER
         Vector2 pos;
         Vector2 spawnPos;
 
+        DateTime lastBeat;
+        public DateTime LastBeat
+        {
+            get { return lastBeat; }
+            set { lastBeat = value; }
+        }
+
         Color tankColor = Color.White;
        public Color TankColor
         {
@@ -45,6 +52,8 @@ namespace TankWars3000_SERVER
         {
             name = n;
             health = 3;
+
+            lastBeat = DateTime.Now;
         }
        
         
