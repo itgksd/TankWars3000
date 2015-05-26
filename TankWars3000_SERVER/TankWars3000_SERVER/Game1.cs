@@ -295,6 +295,7 @@ namespace TankWars3000_SERVER
                     {
                         // uppdatera bullet
                         nextUpdate = DateTime.Now.AddMilliseconds(100);
+                        UpdateAndSendBullets();
                     }
                     
                     foreach(KeyValuePair<string,Tank> tank in tanks) 
@@ -388,7 +389,15 @@ namespace TankWars3000_SERVER
             base.Update(gameTime);
         }
 
+        public void UpdateAndSendBullets()
+        {
+            foreach (bullet bullet in bullets)
+            {
+                // update bullet pos and send
 
+                
+            }
+        }
 
         protected override void Draw(GameTime gameTime)
         {
