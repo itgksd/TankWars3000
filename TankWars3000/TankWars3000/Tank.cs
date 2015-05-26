@@ -21,7 +21,7 @@ namespace TankWars3000
 
         int health = 3;
 
-        float angle;//angle in radians
+        float angle = 0;//angle in radians
 
         Vector2 speed, position, spawnPos, direction, textureOrigin, explositionPos;
 
@@ -62,7 +62,7 @@ namespace TankWars3000
             {
                 if ((incmsg = Game1.Client.ReadMessage()) != null)
                 {
-                    if (incmsg.ReadByte() == (byte)PacketTypes.START)
+                    if (incmsg.ReadByte() == (byte)PacketTypes.STARTPOS)
                     {
                         foreach (Tank tank in tanks)
                         {

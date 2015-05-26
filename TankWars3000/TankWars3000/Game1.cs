@@ -23,7 +23,7 @@ namespace TankWars3000
     {
         LOGIN,
         READY,
-        START,
+        STARTPOS,
         MOVE,
         SHOOT,
         TEST,
