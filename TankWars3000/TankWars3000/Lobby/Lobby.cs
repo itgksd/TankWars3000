@@ -28,7 +28,15 @@ namespace TankWars3000
         NormalButton disconnectBtn;
         NormalButton connectBtn;
 
+        // Setting Buttons
+        NormalButton muteMusicBtn;
+        NormalButton fullScreenBtn;
+
         List<PlayerListItem> playerList = new List<PlayerListItem>();
+
+        DateTime lastBeat = DateTime.MaxValue;
+
+        bool connectionConfirmed = false;
 
         public Lobby(ContentManager content)
         {
@@ -49,11 +57,18 @@ namespace TankWars3000
             exitBtn  = new NormalButton(content, new Vector2(50, 350), "Exit", Exit);
             exitBtn.TitleColor = Color.Red;
 
+            muteMusicBtn = new NormalButton(content, new Vector2(50, Game1.ScreenRec.Height - 100), "Mute Music", MuteMusic, true);
+            muteMusicBtn.TitleColor = Color.LightGray;
+            fullScreenBtn = new NormalButton(content, new Vector2(255 + 50, Game1.ScreenRec.Height - 100), "Fullscreen", Fullscreen, true);
+            fullScreenBtn.TitleColor = Color.LightGray;
+
             this.content = content;
         }
 
         public void Connect()
         {
+            Notify.NewMessage("Connecting...", Color.LightBlue);
+
             nameBtn.Enabled = false;
             ipBtn.Enabled = false;
             readyBtn.IsTrue = false;
@@ -76,65 +91,9 @@ namespace TankWars3000
 
             Game1.Client.Connect(ipBtn.Text, 14242, outmsg);
 
-            #region Wait for test connection
-            // Wait for aproval.. might freeze the game tho
-            bool canStart = false;
-
-            // Message that will contain the aproval msg (or something else)
-            NetIncomingMessage incommsg;
-            long loopCount = 0; // Used to break if it takes to long
-
             connected = true;
-            while (!canStart)
-            {
-                if ((incommsg = Game1.Client.ReadMessage()) != null)
-                {
-                    switch (incommsg.MessageType)
-                    {
-                        case NetIncomingMessageType.Data:
-                            switch (incommsg.ReadByte())
-                            {
-                                case (byte)PacketTypes.TEST:
-                                    // Read message
-                                    string testMsg = incommsg.ReadString();
-                                    Debug.WriteLine("Cl-Test message received, connection working");
-                                    Notify.NewMessage("Connected!", Color.Lime);
-                                    connected = true;
-                                    // Add players and stuff
-                                    canStart = true;
-                                    break;
-                                case (byte)PacketTypes.DISCONNECTREASON:
-                                    Debug.WriteLine("Cl-Deny packet received");
-                                    Notify.NewMessage("Disconnect reason: " + incommsg.ReadString(), Color.Purple);
-                                    canStart = true;
-                                    Disconnect();
-                                    break;
-                                default:
-                                    break;
-                            }
-                            break;
-                        case NetIncomingMessageType.WarningMessage:
-                            string msgW = incommsg.ReadString();
-                            Debug.WriteLine("Cl-" + incommsg.MessageType + " - " + msgW);
-                            Notify.NewMessage("Warning: " + msgW, Color.Purple);
-                            break;
-                        default:
-                            string msg = incommsg.ReadString();
-                            Debug.WriteLine("Cl-" + incommsg.MessageType + " - " + msg);
-                            break;
-                    }
-                }
 
-                loopCount++;
-                if (loopCount > 100000000) // Keeps it from freezing alltogether when not being able to connect.. A timeout i guess
-                {
-                    Debug.WriteLine("Cl-Timeout, can't connect");
-                    Notify.NewMessage("Connection failed, timeout :(", Color.Red);
-                    Disconnect();
-                    break;
-                }
-            }
-            #endregion
+            lastBeat = DateTime.Now;
         }
 
         public void Disconnect()
@@ -149,6 +108,9 @@ namespace TankWars3000
             colorBtn.Enabled = false;
 
             connected = false;
+
+            lastBeat = DateTime.MaxValue;
+            connectionConfirmed = false;
 
             playerList.Clear();
 
@@ -194,17 +156,29 @@ namespace TankWars3000
             Environment.Exit(9);
         }
 
+        public void MuteMusic()
+        {
+            background.PlayMusic = background.PlayMusic ? false : true;
+        }
+
+        public void Fullscreen()
+        {
+            Game1.Fullscreen = Game1.Fullscreen ? false : true;
+        }
+
         public void Update(OldNewInput input)
         {
             background.Update();
 
-            ipBtn.Update(input);
+            ipBtn.Update(input); // Orkar inte bry mig om polyformism..
             nameBtn.Update(input);
             colorBtn.Update(input);
             readyBtn.Update(input);
             connectBtn.Update(input);
             disconnectBtn.Update(input);
             exitBtn.Update(input);
+            muteMusicBtn.Update(input);
+            fullScreenBtn.Update(input);
             playerList.ForEach(p => p.Update());
 
             // STOP THE MUSIC
@@ -240,12 +214,16 @@ namespace TankWars3000
                                     playerList.Add(new PlayerListItem(content, new Vector2(Game1.ScreenRec.Width - 450, i * 50), animate));
                                 }
                             }
+
+                            ConfirmConnection();
                             break;
                         case (byte)PacketTypes.GAMESTATE:
                             Debug.WriteLine("Cl-Reveiced gamestate change");
                             background.PlayMusic = false;
                             Notify.NewMessage("Starting Game!", Color.LightBlue);
                             Game1.gameState = (GameStates)incom.ReadByte();
+
+                            ConfirmConnection();
                             break;
                         case (byte)PacketTypes.HEARTBEAT:
                             Debug.WriteLine("Cl-Received heartbeat, responding");
@@ -253,11 +231,36 @@ namespace TankWars3000
                             outmsg.Write((byte)PacketTypes.HEARTBEAT);
                             outmsg.Write(nameBtn.Text);
                             Game1.Client.SendMessage(outmsg, incom.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+                            ConfirmConnection();
+                            break;
+                        case (byte)PacketTypes.DISCONNECTREASON:
+                            Debug.WriteLine("Cl-Deny packet received");
+                            Notify.NewMessage("Disconnect reason: " + incom.ReadString(), Color.Purple);
+                            Disconnect();
                             break;
                         default:
                             break;
                     }
+
+                    lastBeat = DateTime.Now;
                 }
+            }
+
+            // HeartBeat
+            TimeSpan timeSinceLastBeat = DateTime.Now.Subtract(lastBeat);
+            if (connected && timeSinceLastBeat.TotalSeconds > 10)
+            {
+                Notify.NewMessage("Connection lost, no respons in the last 10 seconds.", Color.Red);
+                Disconnect();
+            }
+        }
+
+        public void ConfirmConnection()
+        {
+            if (!connectionConfirmed)
+            {
+                connectionConfirmed = true;
+                Notify.NewMessage("Connected!", Color.Lime);
             }
         }
 
@@ -272,6 +275,8 @@ namespace TankWars3000
             connectBtn.Draw(spriteBatch);
             disconnectBtn.Draw(spriteBatch);
             exitBtn.Draw(spriteBatch);
+            muteMusicBtn.Draw(spriteBatch);
+            fullScreenBtn.Draw(spriteBatch);
 
             playerList.ForEach(p => p.Draw(spriteBatch));
         }
