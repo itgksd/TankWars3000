@@ -53,7 +53,7 @@ namespace TankWars3000_SERVER
         int connectionAmount = 0;
 
         bool canCountTime = true;
-        bool sendStartPos;
+        bool sendStartPos = true;
 
         List<bullet> bullets = new List<bullet>();
         Dictionary<string, Tank> tanks;
