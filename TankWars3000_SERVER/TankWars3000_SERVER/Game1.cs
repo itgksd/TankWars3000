@@ -257,7 +257,7 @@ namespace TankWars3000_SERVER
                             readyCount++;
                     if (tanks.Count > 1 && (float)Decimal.Divide(readyCount, tanks.Count) > 0.7f)
                     {
-                        gameState = GameStates.Ingame;
+                        gameState = GameStates.Ingame; //Spelet lämnar lobby och startar
                         Debug.WriteLine("Sv-Sending ingame message");
                         NetOutgoingMessage outmsg = Server.CreateMessage();
                         outmsg.Write((byte)PacketTypes.GAMESTATE);
@@ -266,8 +266,8 @@ namespace TankWars3000_SERVER
                     }
                 }
 
-
-                if (gameState == GameStates.Ingame) //Spelet lämnar lobby och startar
+                //Spelet lämnar lobby och startar
+                if (gameState == GameStates.Ingame) 
                 {
                     if (sendStartPos) //Skicka startpositioner
                     {
