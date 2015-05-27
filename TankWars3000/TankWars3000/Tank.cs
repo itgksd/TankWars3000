@@ -107,28 +107,31 @@ namespace TankWars3000
 
             if ((incmsg = Game1.Client.ReadMessage()) != null)
             {
-                if(incmsg.ReadByte()              == (byte)PacketTypes.MOVE)
+                switch (incmsg.ReadByte())
                 {
-                    foreach (Tank tank in tanks)
-                    {
-                        tank.name                 = incmsg.ReadString();
-                        tank.angle                = incmsg.ReadFloat();
-                        tank.position.X           = incmsg.ReadInt32();
-                        tank.position.Y           = incmsg.ReadInt32();
-                        try
+                    case (byte)PacketTypes.MOVE:
+                        foreach (Tank tank in tanks)
                         {
-                            tank.explositionPos.X = incmsg.ReadInt32();
-                            tank.explositionPos.Y = incmsg.ReadInt32();
+                            tank.name = incmsg.ReadString();
+                            tank.angle = incmsg.ReadFloat();
+                            tank.position.X = incmsg.ReadInt32();
+                            tank.position.Y = incmsg.ReadInt32();
+                            try
+                            {
+                                tank.explositionPos.X = incmsg.ReadInt32();
+                                tank.explositionPos.Y = incmsg.ReadInt32();
+                            }
+                            catch (Exception ex)
+                            { }
                         }
-                        catch (Exception ex)
-                        { }
-                    }
-                }
+                        break;
 
-                if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
-                {
-                    Bullet bullet     = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadUInt32(), incmsg.ReadUInt32()) );
-                    bullets.Add(bullet);
+                    case (byte)PacketTypes.SHOOT:
+                        Bullet bullet = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadUInt32(), incmsg.ReadUInt32()));
+                        bullets.Add(bullet);
+                        break;
+                    default:
+                        break;
                 }
             }
         }

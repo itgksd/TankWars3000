@@ -255,7 +255,7 @@ namespace TankWars3000_SERVER
                     foreach (KeyValuePair<string, Tank> tank in tanks)
                         if (tank.Value.Ready)
                             readyCount++;
-                    if (tanks.Count > 1 && (float)Decimal.Divide(readyCount, tanks.Count) > 0.7f)
+                    if (tanks.Count > 0 && (float)Decimal.Divide(readyCount, tanks.Count) > 0.7f) // > 1 !!!
                     {
                         gameState = GameStates.Ingame; //Spelet lämnar lobby och startar
                         Debug.WriteLine("Sv-Sending ingame message");

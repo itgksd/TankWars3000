@@ -112,7 +112,7 @@ namespace TankWars3000
 
             if (gameState  == GameStates.Lobby)
             {
-                lobby.Update(input);
+                lobby.Update(input, tanks);
             }
             if (gameState  == GameStates.Ingame)
             {

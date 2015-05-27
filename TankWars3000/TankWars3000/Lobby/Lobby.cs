@@ -175,7 +175,7 @@ namespace TankWars3000
             Game1.Fullscreen = Game1.Fullscreen ? false : true;
         }
 
-        public void Update(OldNewInput input)
+        public void Update(OldNewInput input, List<Tank> tanks)
         {
             background.Update();
 
@@ -228,6 +228,13 @@ namespace TankWars3000
                             background.PlayMusic = false;
                             Notify.NewMessage("Starting Game!", Color.LightBlue);
                             Game1.gameState = (GameStates)incom.ReadByte();
+
+                            // Skapa alla tank klasserna
+                            foreach (PlayerListItem player in playerList)
+	                        {
+                                if (player.Name != "")
+                                    tanks.Add(new Tank(content, player.Name, player.TankColor));
+	                        }
 
                             ConfirmConnection();
                             break;
