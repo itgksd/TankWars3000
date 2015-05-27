@@ -16,7 +16,7 @@ namespace TankWars3000
 
         Vector2 speed, position, spawnPos, direction, textureOrigin, explositionPos;
 
-        Color color             = new Color();
+        Color tankcolor             = new Color();
 
         TimeSpan reloadTime     = new TimeSpan(0, 0, 4);
 
@@ -222,7 +222,7 @@ namespace TankWars3000
                 {
                     foreach (Tank tank in tanks)
                     {
-                        spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, Color.White, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
                     }
                 }
             }
@@ -236,6 +236,12 @@ namespace TankWars3000
             direction     = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
             speed         = new Vector2(2, 2);
+        }
+
+        public Tank(String name, Color color)
+        {
+            this.name = name;
+            tankcolor = color;
         }
         #endregion
     }
