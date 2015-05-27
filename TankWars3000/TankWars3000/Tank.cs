@@ -125,11 +125,11 @@ namespace TankWars3000
                     }
                 }
 
-                /*if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
+                if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
                 {
                     Bullet bullet     = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadUInt32(), incmsg.ReadUInt32()) );
                     bullets.Add(bullet);
-                }*/
+                }
             }
         }
 
