@@ -143,7 +143,7 @@ namespace TankWars3000
 
         public void Input(OldNewInput input, ContentManager content)
         {
-            if (IsAlive                   == true)
+            if (IsAlive == true)
             {
                 NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
 
