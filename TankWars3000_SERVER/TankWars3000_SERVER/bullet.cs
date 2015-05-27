@@ -46,5 +46,19 @@ namespace TankWars3000_SERVER
                 return name;
             }
         }
+        public int XPos
+        {
+            get
+            {
+                return xPos;
+            }
+        }
+        public int YPos
+        {
+            get
+            {
+                return yPos;
+            }
+        }
     }
 }

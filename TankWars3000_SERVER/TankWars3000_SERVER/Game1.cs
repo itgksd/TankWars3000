@@ -292,16 +292,13 @@ namespace TankWars3000_SERVER
 
                         sendStartPos = false;
                     }
-
-
-
                     if (DateTime.Now > nextUpdate)
                     {
                         // uppdatera bullet
                         nextUpdate = DateTime.Now.AddMilliseconds(100);
                         UpdateAndSendBullets();
                     }
-
+                    
                     // kolla om någon är död
                     foreach (KeyValuePair<string, Tank> tank in tanks)
                     {
@@ -309,21 +306,26 @@ namespace TankWars3000_SERVER
                         {
                             NetOutgoingMessage outmsg = Server.CreateMessage();
                             outmsg.Write((byte)PacketTypes.DEATH);
+                            outmsg.Write(tank.Value.Name);
                             Random r = new Random();
+                            int x;
+                            int y;
                             while (true)
                             {
-                                int x = r.Next(1366);
-                                int y = r.Next(768);
+                                x = r.Next(1366);
+                                y = r.Next(768);
 
-                                break;
+                                Rectangle temp = new Rectangle(x, y, 136, 76);
+                                if (tank.Value.Tankrect.Intersects(temp))
+                                {
+                                    break;
+                                }
                             }
-
-
+                            outmsg.Write(x);
+                            outmsg.Write(y);
                             Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                         }
                     }
-
-
                     if ((incomingMessage = Server.ReadMessage()) != null)
                     {
                         switch (incomingMessage.MessageType)
@@ -359,7 +361,6 @@ namespace TankWars3000_SERVER
                                         outmsg.Write(x);
                                         outmsg.Write(y);
                                         outmsg.Write(bulletCollision());
-                                        Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                                         if (bulletCollision() == true)
                                         {
                                             outmsg.Write(explosionPosition.X);
@@ -384,7 +385,6 @@ namespace TankWars3000_SERVER
                                         outmsg.Write(y);
                                         Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                                         break;
-
                                 }
                                 break;
                         }
@@ -421,8 +421,12 @@ namespace TankWars3000_SERVER
             foreach (bullet bullet in bullets)
             {
                 // update bullet pos and send
+                Vector2 bulletPos = new Vector2(bullet.XPos, bullet.YPos);
+                float x = (float)Math.Cos((double)(bullet.Angle));
+                float y = (float)Math.Sin((double)(bullet.Angle));
 
-
+                Vector2 velocity = new Vector2(x * 5, y * 5);
+                bulletPos += velocity;
             }
         }
 
