@@ -22,18 +22,18 @@ namespace TankWars3000_SERVER
     }
     enum PacketTypes
     {
-        LOGIN,
-        READY,
+        LOGIN,            // <- Used by the lobby to send a connection request
+        READY,            // <- Used by the lobby to change the "ready" status
         START,
         MOVE,
         SHOOT,
-        TEST,
-        LOBBYPLAYERLIST,
-        COLOR,
+        LOBBYPLAYERLIST,  // <- Currently used by the lobby to send all the players to all of the clients
+        COLOR,            // <- Lobby uses this to send a new tank color
         DEATH,
-        GAMESTATE,
-        DISCONNECTREASON,
-        HEARTBEAT,
+        GAMESTATE,        // <- Ingame/Lobby/Scoreboard change
+        DISCONNECTREASON, // <- Disconnect with reason. e.g. tell the client that the server is full
+        DISCONNECT,       // <- Used to disconnect without reason. Used only when a client disconnects itself. Has to include a name!
+        HEARTBEAT,        // <- Used to see if the client/server is still alive
         STARTPOS
     }
 
@@ -106,7 +106,7 @@ namespace TankWars3000_SERVER
             NetOutgoingMessage outmsg = Server.CreateMessage();
             outmsg.Write((byte)PacketTypes.HEARTBEAT);
             Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
-            Debug.WriteLine("Sv-Sending heartbeat");
+            //Debug.WriteLine("Sv-Sending heartbeat");
         }
 
         protected override void LoadContent()
@@ -154,7 +154,7 @@ namespace TankWars3000_SERVER
                                         Debug.WriteLine("Sv-Sending deny reason. Name already exist.");
                                         NetOutgoingMessage outmsg = Server.CreateMessage();
                                         outmsg.Write((byte)PacketTypes.DISCONNECTREASON);
-                                        outmsg.Write("Your name is already used on this server!");
+                                        //outmsg.Write("Your name is already used on this server!");
                                         Server.SendMessage(outmsg, incomingMessage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
                                         incomingMessage.SenderConnection.Deny("Name already exists in the server!");
                                         break;
@@ -215,6 +215,13 @@ namespace TankWars3000_SERVER
                                         string name = incomingMessage.ReadString();
                                         tanks[name].LastBeat = DateTime.Now;
                                         Debug.WriteLine("Sv-HeartBeat respons for " + name);
+                                        break;
+                                        
+                                    case (byte)PacketTypes.DISCONNECT:
+                                        name = incomingMessage.ReadString(); // Get name
+                                        tanks.Remove(name); // Remove its tank
+                                        incomingMessage.SenderConnection.Disconnect("Disconnect.By.Request"); // Disconnect the connection
+                                        Debug.WriteLine("Sv-Disconnect By Request: " + name);
                                         break;
                                 }
                                 break;

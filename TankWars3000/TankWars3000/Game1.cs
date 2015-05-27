@@ -21,18 +21,18 @@ namespace TankWars3000
 
     enum PacketTypes
     {
-        LOGIN,
-        READY,
+        LOGIN,            // <- Used by the lobby to send a connection request
+        READY,            // <- Used by the lobby to change the "ready" status
         START,
         MOVE,
         SHOOT,
-        TEST,
-        LOBBYPLAYERLIST,
-        COLOR,
+        LOBBYPLAYERLIST,  // <- Currently used by the lobby to send all the players to all of the clients
+        COLOR,            // <- Lobby uses this to send a new tank color
         DEATH,
-        GAMESTATE,
-        DISCONNECTREASON,
-        HEARTBEAT,
+        GAMESTATE,        // <- Ingame/Lobby/Scoreboard change
+        DISCONNECTREASON, // <- Disconnect with reason. e.g. tell the client that the server is full
+        DISCONNECT,       // <- Used to disconnect without reason. Used only when a client disconnects itself. Has to include a name!
+        HEARTBEAT,        // <- Used to see if the client/server is still alive
         STARTPOS
     }
 
@@ -54,6 +54,13 @@ namespace TankWars3000
 
         Lobby lobby;
 
+        static bool fullscreen = false;
+        static public bool Fullscreen
+        {
+            get { return fullscreen; }
+            set { fullscreen = value; }
+        }
+
         static        Rectangle screenRec;
         static public Rectangle ScreenRec
         {
@@ -71,9 +78,11 @@ namespace TankWars3000
             tank      = new Tank(Content);
             gameState = GameStates.Lobby;
 
+            //trail = new TankTrack(Content); Emil! Du har inte inkluderat själva klassen i din commit! Kolla i untracked files!
+
             graphics.PreferredBackBufferWidth  = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
             IsMouseVisible                     = true;
 
@@ -125,6 +134,14 @@ namespace TankWars3000
             input.SetOldMouse();
 
             base.Update(gameTime);
+
+
+            // Fullscreen
+            if (graphics.IsFullScreen != fullscreen)
+            {
+                graphics.IsFullScreen = fullscreen;
+                graphics.ApplyChanges();
+            }
         }
         protected override void Draw(GameTime gameTime)
         {
@@ -141,7 +158,7 @@ namespace TankWars3000
                 {
                     spriteBatch.Begin();
 
-                    foreach (Tank tank in tanks)
+                    foreach (Tank tank in  tanks)
                     tank.Draw(spriteBatch, tanks);
 
                     Notify.Draw(spriteBatch);

@@ -28,6 +28,10 @@ namespace TankWars3000
         NormalButton disconnectBtn;
         NormalButton connectBtn;
 
+        // Setting Buttons
+        NormalButton muteMusicBtn;
+        NormalButton fullScreenBtn;
+
         List<PlayerListItem> playerList = new List<PlayerListItem>();
 
         DateTime lastBeat = DateTime.MaxValue;
@@ -52,6 +56,11 @@ namespace TankWars3000
             disconnectBtn.Enabled = false;
             exitBtn  = new NormalButton(content, new Vector2(50, 350), "Exit", Exit);
             exitBtn.TitleColor = Color.Red;
+
+            muteMusicBtn = new NormalButton(content, new Vector2(50, Game1.ScreenRec.Height - 100), "Mute Music", MuteMusic, true);
+            muteMusicBtn.TitleColor = Color.LightGray;
+            fullScreenBtn = new NormalButton(content, new Vector2(255 + 50, Game1.ScreenRec.Height - 100), "Fullscreen", Fullscreen, true);
+            fullScreenBtn.TitleColor = Color.LightGray;
 
             this.content = content;
         }
@@ -89,8 +98,16 @@ namespace TankWars3000
 
         public void Disconnect()
         {
+            // Send a message that we are leaving the server
+            NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
+            outmsg.Write((byte)PacketTypes.DISCONNECT); // Tell the server that we want to disconnect
+            outmsg.Write(nameBtn.Text); // Tell the server who this came from, this can be massively abused by hackers xD
+            Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+
+            // Disconnect
             Game1.Client.Disconnect("Disconnect.By.User");
-            // Disconnect code
+
+            // Reset some stuff
             nameBtn.Enabled = true;
             ipBtn.Enabled = true;
             readyBtn.Enabled = false;
@@ -115,13 +132,11 @@ namespace TankWars3000
 
             NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
 
-            outmsg.Write((byte)PacketTypes.READY);
+            outmsg.Write((byte)PacketTypes.READY); // Ready type
+            outmsg.Write(nameBtn.Text); // Name
+            outmsg.Write(readyBtn.IsTrue); // Ready status from button
 
-            outmsg.Write(nameBtn.Text);
-
-            outmsg.Write(readyBtn.IsTrue);
-
-            Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+            Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered); // Send
         }
 
         public void ColorChange()
@@ -131,50 +146,61 @@ namespace TankWars3000
 
             NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
 
-            outmsg.Write((byte)PacketTypes.COLOR);
+            outmsg.Write((byte)PacketTypes.COLOR); // Tell the server to expect color data
 
             outmsg.Write(nameBtn.Text); // Name
 
+            // Most convenient way of sending colors :P
             outmsg.Write(colorBtn.SelectedColor.R); // Color R
             outmsg.Write(colorBtn.SelectedColor.G); // Color G
             outmsg.Write(colorBtn.SelectedColor.B); // Color B
 
-            Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+            Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered); // Send
         }
 
         public void Exit()
         {
+            Disconnect();
             Environment.Exit(9);
+        }
+
+        public void MuteMusic()
+        {
+            background.PlayMusic = background.PlayMusic ? false : true;
+            Notify.NewMessage("Music is now turned " + (background.PlayMusic ? "on" : "off"), Color.Black);
+        }
+
+        public void Fullscreen()
+        {
+            Game1.Fullscreen = Game1.Fullscreen ? false : true;
         }
 
         public void Update(OldNewInput input)
         {
             background.Update();
 
-            ipBtn.Update(input);
+            ipBtn.Update(input); // Orkar inte bry mig om polyformism..
             nameBtn.Update(input);
             colorBtn.Update(input);
             readyBtn.Update(input);
             connectBtn.Update(input);
             disconnectBtn.Update(input);
             exitBtn.Update(input);
+            muteMusicBtn.Update(input);
+            fullScreenBtn.Update(input);
             playerList.ForEach(p => p.Update());
 
-            // STOP THE MUSIC
-            if (input.SingleKey(Keys.M))
-                background.PlayMusic = false;
-
-            NetIncomingMessage incom;
+            NetIncomingMessage incom; // MEssage that will contain the message comming from the server
             if (connected && (incom = Game1.Client.ReadMessage()) != null) // Are there any new messanges?
             {
                 if (incom.MessageType == NetIncomingMessageType.Data) // Is it a "data" message?
                 {
                     switch (incom.ReadByte())
                     {
-                        case (byte)PacketTypes.LOBBYPLAYERLIST:
+                        case (byte)PacketTypes.LOBBYPLAYERLIST: // Handle a list of players (right side)
                             Debug.WriteLine("Cl-Received the playerlist");
 
-                            bool animate = playerList.Count == 0 ? true : false;
+                            bool animate = playerList.Count == 0 ? true : false; // Animate if the playerlist is new and empty
                             if (playerList.Count == 0 || playerList[0].Statee == PlayerListItem.State.NONE) // To keep the game from removing the initial animation
                             {
                                 playerList.Clear(); // Clear the "old" data
@@ -196,6 +222,7 @@ namespace TankWars3000
 
                             ConfirmConnection();
                             break;
+
                         case (byte)PacketTypes.GAMESTATE:
                             Debug.WriteLine("Cl-Reveiced gamestate change");
                             background.PlayMusic = false;
@@ -204,7 +231,9 @@ namespace TankWars3000
 
                             ConfirmConnection();
                             break;
+
                         case (byte)PacketTypes.HEARTBEAT:
+                            // Respond to the Heartbeat request of the server
                             Debug.WriteLine("Cl-Received heartbeat, responding");
                             NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
                             outmsg.Write((byte)PacketTypes.HEARTBEAT);
@@ -212,16 +241,18 @@ namespace TankWars3000
                             Game1.Client.SendMessage(outmsg, incom.SenderConnection, NetDeliveryMethod.ReliableOrdered);
                             ConfirmConnection();
                             break;
+
                         case (byte)PacketTypes.DISCONNECTREASON:
                             Debug.WriteLine("Cl-Deny packet received");
                             Notify.NewMessage("Disconnect reason: " + incom.ReadString(), Color.Purple);
                             Disconnect();
                             break;
+
                         default:
                             break;
                     }
 
-                    lastBeat = DateTime.Now;
+                    lastBeat = DateTime.Now; // Se alla anslutningar som en heartbeat
                 }
             }
 
@@ -229,7 +260,7 @@ namespace TankWars3000
             TimeSpan timeSinceLastBeat = DateTime.Now.Subtract(lastBeat);
             if (connected && timeSinceLastBeat.TotalSeconds > 10)
             {
-                Notify.NewMessage("Connection lost, no respons in the last 10 seconds.", Color.Red);
+                Notify.NewMessage("Connection lost", Color.Red);
                 Disconnect();
             }
         }
@@ -254,6 +285,8 @@ namespace TankWars3000
             connectBtn.Draw(spriteBatch);
             disconnectBtn.Draw(spriteBatch);
             exitBtn.Draw(spriteBatch);
+            muteMusicBtn.Draw(spriteBatch);
+            fullScreenBtn.Draw(spriteBatch);
 
             playerList.ForEach(p => p.Draw(spriteBatch));
         }
