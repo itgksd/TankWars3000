@@ -125,11 +125,11 @@ namespace TankWars3000
                     }
                 }
 
-                if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
+                /*if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
                 {
                     Bullet bullet     = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadUInt32(), incmsg.ReadUInt32()) );
                     bullets.Add(bullet);
-                }
+                }*/
             }
         }
 
@@ -230,18 +230,18 @@ namespace TankWars3000
                 bullet.Draw(spriteBatch);
         }
 
-        public Tank(ContentManager content)
+        public Tank(ContentManager content, string name, Color color)
         {
             texture       = content.Load<Texture2D>("Tank/Tank");
             direction     = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
             speed         = new Vector2(2, 2);
-        }
-
-        public Tank(String name, Color color)
-        {
             this.name = name;
             tankcolor = color;
+        }
+        public Tank()
+        {
+
         }
         #endregion
     }

@@ -75,7 +75,7 @@ namespace TankWars3000
 
         protected override void Initialize()
         {
-            tank      = new Tank(Content);
+            tank      = new Tank();
             gameState = GameStates.Lobby;
 
             //trail = new TankTrack(Content); Emil! Du har inte inkluderat själva klassen i din commit! Kolla i untracked files!
