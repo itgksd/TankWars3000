@@ -114,7 +114,7 @@ namespace TankWars3000
             {
                 lobby.Update(input, tanks);
             }
-            if (gameState  == GameStates.Ingame)
+            else if (gameState  == GameStates.Ingame)
             {
                 // The player
                 foreach (Tank tank in tanks)
@@ -123,7 +123,7 @@ namespace TankWars3000
                     tank.Input(input, Content);
                 }
             }
-            if (gameState == GameStates.Scoreboard)
+            else if (gameState == GameStates.Scoreboard)
             {
 
             }
@@ -145,16 +145,16 @@ namespace TankWars3000
         }
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+                GraphicsDevice.Clear(Color.Black);
 
-             if (gameState == GameStates.Lobby)
+                if (gameState == GameStates.Lobby)
                 {
                     spriteBatch.Begin();
                     lobby.Draw(spriteBatch);
                     Notify.Draw(spriteBatch);
                     spriteBatch.End();
                 }
-                if (gameState == GameStates.Ingame)
+                else if (gameState == GameStates.Ingame)
                 {
                     spriteBatch.Begin();
 
@@ -165,7 +165,7 @@ namespace TankWars3000
 
                     spriteBatch.End();
                 }
-                if (gameState == GameStates.Scoreboard)
+                else if (gameState == GameStates.Scoreboard)
                 {
                     spriteBatch.Begin();
 
