@@ -36,6 +36,7 @@ namespace TankWars3000
 
         bool bulletFired        = false;
         bool IsAlive            = true;
+        bool startPos           = false;
 
         int health              = 3;
 
@@ -64,7 +65,7 @@ namespace TankWars3000
             #endregion
 
             #region start position
-            if (position == null)
+            if (!startPos)
             {
                 if ((incmsg                 = Game1.Client.ReadMessage()) != null)
                 {
@@ -77,6 +78,7 @@ namespace TankWars3000
                             tank.position.X = incmsg.ReadInt32();
                             tank.position.Y = incmsg.ReadInt32();
                         }
+                        startPos = true;
                     }
                 }
             }
