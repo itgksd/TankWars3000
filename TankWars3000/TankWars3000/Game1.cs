@@ -21,18 +21,18 @@ namespace TankWars3000
 
     enum PacketTypes
     {
-        LOGIN,
-        READY,
+        LOGIN,            // <- Used by the lobby to send a connection request
+        READY,            // <- Used by the lobby to change the "ready" status
         START,
         MOVE,
         SHOOT,
-        TEST,
-        LOBBYPLAYERLIST,
-        COLOR,
+        LOBBYPLAYERLIST,  // <- Currently used by the lobby to send all the players to all of the clients
+        COLOR,            // <- Lobby uses this to send a new tank color
         DEATH,
-        GAMESTATE,
-        DISCONNECTREASON,
-        HEARTBEAT,
+        GAMESTATE,        // <- Ingame/Lobby/Scoreboard change
+        DISCONNECTREASON, // <- Disconnect with reason. e.g. tell the client that the server is full
+        DISCONNECT,       // <- Used to disconnect without reason. Used only when a client disconnects itself. Has to include a name!
+        HEARTBEAT,        // <- Used to see if the client/server is still alive
         STARTPOS
     }
 
@@ -49,6 +49,8 @@ namespace TankWars3000
         // The Player
         Tank tank;
         List<Tank> tanks  = new List<Tank>();
+
+        List<TankTrack> tracks = new List<TankTrack>();
 
         OldNewInput input = new OldNewInput();
 
@@ -75,10 +77,10 @@ namespace TankWars3000
 
         protected override void Initialize()
         {
-            tank      = new Tank(Content);
+            tank      = new Tank();
             gameState = GameStates.Lobby;
 
-            trail = new TankTrack(Content);
+            //trail = new TankTrack(Content); Emil! Du har inte inkluderat själva klassen i din commit! Kolla i untracked files!
 
             graphics.PreferredBackBufferWidth  = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
@@ -112,18 +114,29 @@ namespace TankWars3000
 
             if (gameState  == GameStates.Lobby)
             {
-                lobby.Update(input);
+                lobby.Update(input, tanks);
             }
-            if (gameState  == GameStates.Ingame)
+            else if (gameState  == GameStates.Ingame)
             {
                 // The player
                 foreach (Tank tank in tanks)
                 {
-                    tank.Update(Content, graphics, tanks);
+                    tank.Update(Content, graphics, tanks, tracks);
                     tank.Input(input, Content);
                 }
+
+                // TankTrack
+                for (int i = 0; i < tracks.Count; i++)
+                {
+                    tracks[i].Update();
+                    if (tracks[i].Alpha <= 0)
+                    {
+                        tracks.RemoveAt(i);
+                        i--;
+                    }
+                }
             }
-            if (gameState == GameStates.Scoreboard)
+            else if (gameState == GameStates.Scoreboard)
             {
 
             }
@@ -145,16 +158,16 @@ namespace TankWars3000
         }
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+                GraphicsDevice.Clear(Color.Black);
 
-             if (gameState == GameStates.Lobby)
+                if (gameState == GameStates.Lobby)
                 {
                     spriteBatch.Begin();
                     lobby.Draw(spriteBatch);
                     Notify.Draw(spriteBatch);
                     spriteBatch.End();
                 }
-                if (gameState == GameStates.Ingame)
+                else if (gameState == GameStates.Ingame)
                 {
                     spriteBatch.Begin();
 
@@ -165,7 +178,7 @@ namespace TankWars3000
 
                     spriteBatch.End();
                 }
-                if (gameState == GameStates.Scoreboard)
+                else if (gameState == GameStates.Scoreboard)
                 {
                     spriteBatch.Begin();
 
