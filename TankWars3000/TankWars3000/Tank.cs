@@ -14,6 +14,8 @@ namespace TankWars3000
     {
         #region Atributes
 
+        static SpriteFont testfont;
+
         static Vector2 textureOrigin;
 
         static Texture2D texture;
@@ -64,6 +66,10 @@ namespace TankWars3000
         public Texture2D Texture
         {
             get { return texture; }
+        }
+        public SpriteFont TestFont
+        {
+            get { return testfont; }
         }
         #endregion
 
@@ -242,7 +248,11 @@ namespace TankWars3000
                 tank.collisionRect = new Rectangle((int)tank.position.X, (int)tank.position.Y, tank.Texture.Width, tank.Texture.Height);
                 //give values to the rectangle here because it needs to be up-to-date every time the tank is drawn
                 spriteBatch.Draw(tank.Texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None,1f);
+
+                spriteBatch.DrawString(tank.TestFont, tank.position.ToString(), new Vector2(tank.position.X + 200, tank.position.Y), Color.Wheat);
+            
             }
+            
             foreach (Bullet bullet in bullets)
                 bullet.Draw(spriteBatch);
         }
@@ -250,6 +260,7 @@ namespace TankWars3000
         public Tank(ContentManager content, string name, Color color)
         {
             texture       = content.Load<Texture2D>("Tank/Tank");
+            testfont      = content.Load<SpriteFont>("Testfont");
             direction     = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
             speed         = new Vector2(5, 5);
