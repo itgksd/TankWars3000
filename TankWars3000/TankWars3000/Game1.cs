@@ -114,7 +114,6 @@ namespace TankWars3000
 
         protected override void Update(GameTime gameTime)
         {
-            tank_startpos.Update(incmsg, tanks);
 
             input.newKey   = Keyboard.GetState();
             input.newMouse = Mouse.GetState();
@@ -125,12 +124,13 @@ namespace TankWars3000
             }
             else if (gameState  == GameStates.Ingame)
             {
+                tank_startpos.Update(incmsg, tanks);
                 // The player
-                foreach (Tank tank in tanks)
-                {
+                //foreach (Tank tank in tanks)
+                //{
                     tank.Update(Content, graphics, tanks, tracks);
                     tank.Input(input, Content);
-                }
+                //}
 
                 // TankTrack
                 for (int i = 0; i < tracks.Count; i++)

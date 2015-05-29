@@ -14,7 +14,7 @@ namespace TankWars3000
     {
         #region Atributes
 
-        Vector2 speed, position, spawnPos, direction, textureOrigin, explositionPos;
+        Vector2 speed, position, direction, textureOrigin, explositionPos;
 
         Color tankcolor             = new Color();
 
