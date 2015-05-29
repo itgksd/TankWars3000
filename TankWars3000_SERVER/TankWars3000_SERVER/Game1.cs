@@ -284,7 +284,7 @@ namespace TankWars3000_SERVER
 
                             NetOutgoingMessage outmsg = Server.CreateMessage();
                             outmsg.Write((byte)PacketTypes.STARTPOS);
-                            outmsg.Write(tank.Value.Name);
+                            //outmsg.Write(tank.Value.Name);
 
 
                             x = (int)((Math.Cos(deg)) * 350) + (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2);

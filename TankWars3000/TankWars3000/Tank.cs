@@ -146,6 +146,7 @@ namespace TankWars3000
                 #region Movment
                 if (input.newKey.IsKeyDown(Keys.W))
                 {
+                    outmsg = Game1.Client.CreateMessage();
                     position += direction * speed;
                     //update position, then send it to the server
 
@@ -159,6 +160,7 @@ namespace TankWars3000
 
                 if (input.newKey.IsKeyDown(Keys.S))
                 {
+                    outmsg = Game1.Client.CreateMessage();
                     position -= direction * speed;
                     //update position, then send it to the server
 
@@ -170,8 +172,9 @@ namespace TankWars3000
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
-                if (input.newKey.IsKeyDown(Keys.D))
+                if (input.newKey.IsKeyDown(Keys.D) && input.oldKey.IsKeyUp(Keys.D) && input.newKey.IsKeyUp(Keys.A))
                 {
+                    outmsg = Game1.Client.CreateMessage();
                     angle       += MathHelper.Pi / 20;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
@@ -187,8 +190,9 @@ namespace TankWars3000
                     outmsg.Write(angle);
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
-                if (input.newKey.IsKeyDown(Keys.A))
+                if (input.newKey.IsKeyDown(Keys.A) && input.oldKey.IsKeyUp(Keys.A) && input.newKey.IsKeyUp(Keys.D))
                 {
+                    outmsg = Game1.Client.CreateMessage();
                     angle       -= MathHelper.Pi / 20;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
@@ -237,7 +241,7 @@ namespace TankWars3000
             texture       = content.Load<Texture2D>("Tank/Tank");
             direction     = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
-            speed         = new Vector2(2, 2);
+            speed         = new Vector2(5, 5);
             this.name = name;
             tankcolor = color;
         }
