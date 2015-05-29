@@ -217,6 +217,7 @@ namespace TankWars3000
                 #region shoot
                 if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
                 {
+                    outmsg = Game1.Client.CreateMessage();
                     outmsg.Write((byte)PacketTypes.SHOOT);
                     outmsg.Write(name);
                     outmsg.Write(position.X);
