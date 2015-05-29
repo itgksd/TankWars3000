@@ -225,6 +225,7 @@ namespace TankWars3000
             foreach (Tank tank in tanks)
             {
                 tank.collisionRect =  new Rectangle((int)tank.position.X, (int)tank.position.Y, tank.Texture.Width, tank.Texture.Height);
+                //give values to the rectangle here because it needs to be up-to-date every time the tank is drawn
                 spriteBatch.Draw(tank.Texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
             }
             foreach (Bullet bullet in bullets)
