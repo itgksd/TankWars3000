@@ -51,19 +51,20 @@ namespace TankWars3000
         {
 
             #region start position
-            if (!startPos)
+            if (!startPos)  //We receive all start positions from the server, so nothing will get drawn before this packet is received.
             {
                 if ((incmsg = Game1.Client.ReadMessage()) != null)
                 {
                     if (incmsg.ReadByte() == (byte)PacketTypes.STARTPOS)
                     {
-                        foreach (Tank tank in tanks)
+                        /*foreach (Tank tank in tanks)
                         {
                             tank.name = incmsg.ReadString();
                             tank.angle = incmsg.ReadFloat();
                             tank.position.X = incmsg.ReadInt32();
                             tank.position.Y = incmsg.ReadInt32();
-                        }
+                        }*/
+                        
                         startPos = true;
                     }
                 }
@@ -130,7 +131,7 @@ namespace TankWars3000
                                 tank.angle = incmsg.ReadFloat();
                                 tank.position.X = incmsg.ReadInt32();
                                 tank.position.Y = incmsg.ReadInt32();
-                                try
+                                try     //Server will not always send position for explosion
                                 {
                                     tank.explositionPos.X = incmsg.ReadInt32();
                                     tank.explositionPos.Y = incmsg.ReadInt32();
