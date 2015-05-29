@@ -214,13 +214,22 @@ namespace TankWars3000
         {
             if ((incmsg               = Game1.Client.ReadMessage()) != null)
             {
-                if (incmsg.ReadByte() == (byte)PacketTypes.MOVE)
+                switch (incmsg.ReadByte())
                 {
-                    foreach (Tank tank in tanks)
-                    {
-                        spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
-                        
-                    }
+                    case (byte)PacketTypes.MOVE:
+                        foreach (Tank tank in tanks)
+                        {
+                            spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                        }
+                        break;
+                    case (byte)PacketTypes.STARTPOS:
+                        foreach (Tank tank in tanks)
+                        {
+                            spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
             foreach (Bullet bullet in bullets)
