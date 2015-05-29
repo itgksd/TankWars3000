@@ -51,6 +51,8 @@ namespace TankWars3000
         Tank tank;
         List<Tank> tanks  = new List<Tank>();
 
+        NetIncomingMessage incmsg;
+
         List<TankTrack> tracks = new List<TankTrack>();
 
         OldNewInput input = new OldNewInput();
@@ -112,7 +114,7 @@ namespace TankWars3000
 
         protected override void Update(GameTime gameTime)
         {
-            tank_startpos.Update();
+            tank_startpos.Update(incmsg, tanks);
 
             input.newKey   = Keyboard.GetState();
             input.newMouse = Mouse.GetState();

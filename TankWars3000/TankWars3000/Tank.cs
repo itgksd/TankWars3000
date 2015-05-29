@@ -43,6 +43,24 @@ namespace TankWars3000
 
         float angle             = 0;//angle in radians
 
+        public string Name
+        {
+            get {return name;}
+            set { name = value; }
+        }
+        public float Angle
+        {
+            get { return angle; }
+            set { angle = value; }
+        }
+        public Vector2 Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
+
+
+
         #endregion
 
         #region Methods
