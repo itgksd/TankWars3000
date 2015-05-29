@@ -14,15 +14,20 @@ namespace TankWars3000
     {
         List<ScoreBoardItem> scoreBoardItems;
         ContentManager content;
+        LobbyBackground background;
 
         public ScoreBoard(ContentManager content)
         {
             this.content = content;
             scoreBoardItems = new List<ScoreBoardItem>();
+            background = new LobbyBackground(content);
+            background.LeftGlowX = 0 - background.LeftGlowWidth;
         }
 
         public void Update()
         {
+            background.Update();
+
             NetIncomingMessage incom; // MEssage that will contain the message comming from the server
             if ((incom = Game1.Client.ReadMessage()) != null) // Are there any new messanges?
             {
@@ -40,8 +45,14 @@ namespace TankWars3000
                             ///   Player Color R
                             ///   Player Color G
                             ///   Player Color B
-
-                            for (int i = 0; i < incom.ReadInt32(); i++)
+                            
+                            
+                            scoreBoardItems.Clear();
+                            
+                            Debug.WriteLine("Cl-Recevied final scoreboard");
+                            
+                            int count = incom.ReadInt32();
+                            for (int i = 0; i < count; i++)
                             {
                                 Vector2 pos;
                                 if (scoreBoardItems.Count > 0)
@@ -69,6 +80,7 @@ namespace TankWars3000
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            background.Draw(spriteBatch);
             scoreBoardItems.ForEach(s => s.Draw(spriteBatch));
         }
     }
