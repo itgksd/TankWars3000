@@ -55,12 +55,6 @@ namespace TankWars3000_SERVER
 
             lastBeat = DateTime.Now;
         }
-       
-        
-        public void Update()
-        {
-
-        }
 
         public int Health
         {

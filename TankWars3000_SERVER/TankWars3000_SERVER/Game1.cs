@@ -258,9 +258,9 @@ namespace TankWars3000_SERVER
                     foreach (KeyValuePair<string, Tank> tank in tanks)
                         if (tank.Value.Ready)
                             readyCount++;
-                    if (tanks.Count > 1 && (float)Decimal.Divide(readyCount, tanks.Count) > 0.7f)
+                    if (tanks.Count > 0 && (float)Decimal.Divide(readyCount, tanks.Count) > 0.7f) // > 1 !!!
                     {
-                        gameState = GameStates.Ingame;
+                        gameState = GameStates.Ingame; //Spelet lämnar lobby och startar
                         Debug.WriteLine("Sv-Sending ingame message");
                         NetOutgoingMessage outmsg = Server.CreateMessage();
                         outmsg.Write((byte)PacketTypes.GAMESTATE);
@@ -269,10 +269,10 @@ namespace TankWars3000_SERVER
                     }
                 }
 
-
+                //Spelet lämnar lobby och startar
                 if (gameState == GameStates.Ingame)
                 {
-                    if (sendStartPos)
+                    if (sendStartPos) //Skicka startpositioner
                     {
                         int y;
                         int x;
@@ -340,7 +340,7 @@ namespace TankWars3000_SERVER
                             Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                         }
                     }
-                    if ((incomingMessage = Server.ReadMessage()) != null)
+                    if ((incomingMessage = Server.ReadMessage()) != null) //Ta emot meddelanden och hantering av dessa
                     {
                         switch (incomingMessage.MessageType)
                         {
@@ -356,7 +356,7 @@ namespace TankWars3000_SERVER
                                         Debug.WriteLine("Sv-HeartBeat respons for " + name);
                                         break;
 
-                                    case (byte)PacketTypes.MOVE:
+                                    case (byte)PacketTypes.MOVE: //Kolla om en tank rör sig
                                         //Spara värden Server fick från client
                                         name = incomingMessage.ReadString();
                                         int x = incomingMessage.ReadInt32();
@@ -382,7 +382,7 @@ namespace TankWars3000_SERVER
                                         outmsg.Write(x);
                                         outmsg.Write(y);
                                         outmsg.Write(bulletCollision());
-                                        if (bulletCollision() == true)
+                                        if (bulletCollision() == true) //Kolla om en tank blev träffad och då skicka positionen om vad som hände
                                         {
                                             outmsg.Write(explosionPosition.X);
                                             outmsg.Write(explosionPosition.Y);
@@ -391,13 +391,13 @@ namespace TankWars3000_SERVER
                                         Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                                         break;
 
-                                    case (byte)PacketTypes.SHOOT:
+                                    case (byte)PacketTypes.SHOOT: //INformation om en tank sköt
                                         name = incomingMessage.ReadString();
                                         x = incomingMessage.ReadInt32();
                                         y = incomingMessage.ReadInt32();
                                         angle = incomingMessage.ReadFloat();
 
-                                        bullets.Add(new bullet(x, y, angle, name));
+                                        bullets.Add(new bullet(x, y, angle, name)); //Skapa bullet
 
                                         outmsg = Server.CreateMessage();
                                         outmsg.Write((byte)PacketTypes.SHOOT);
@@ -413,7 +413,7 @@ namespace TankWars3000_SERVER
                     }
                 }
 
-
+                //Spelet slutar och clienten hamnar på Scoreboard
                 if (gameState == GameStates.Scoreboard)
                 {
 

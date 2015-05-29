@@ -14,9 +14,9 @@ namespace TankWars3000
     {
         #region Atributes
 
-        Vector2 speed, position, spawnPos, direction, textureOrigin, explositionPos;
+        Vector2 speed, position, direction, textureOrigin, explositionPos;
 
-        Color color             = new Color();
+        Color tankcolor             = new Color();
 
         TimeSpan reloadTime     = new TimeSpan(0, 0, 4);
 
@@ -28,9 +28,10 @@ namespace TankWars3000
 
         List<Bullet> bullets    = new List<Bullet>();
 
-        // Trail
-        TankTrack trail;
-        List<TankTrack> trails  = new List<TankTrack>();
+        // Track
+        TankTrack track;
+        Vector2   trackpos;
+        bool      lastRightTrack;
 
         string name;
 
@@ -41,101 +42,96 @@ namespace TankWars3000
 
         float angle             = 0;//angle in radians
 
+        public string Name
+        {
+            get {return name;}
+            set { name = value; }
+        }
+        public float Angle
+        {
+            get { return angle; }
+            set { angle = value; }
+        }
+        public Vector2 Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
+
+
+
         #endregion
 
         #region Methods
 
-        public void Update(ContentManager content, GraphicsDeviceManager graphics, List<Tank> tanks)
+        public void Update(ContentManager content, GraphicsDeviceManager graphics, List<Tank> tanks, List<TankTrack> tracks)
         {
-            #region Bullet
-            foreach (Bullet bullet in bullets)
-                bullet.Update(graphics);
+                #region Bullet
+                foreach (Bullet bullet in bullets)
+                    bullet.Update(graphics);
 
-            // Remove bullet
-            for (int i = 0; i < bullets.Count; i++)
-            {
-                bullets[i].Update(graphics);     // Update
-                if (bullets[i].IsAlive == false) // Remove if dead
+                // Remove bullet
+                for (int i = 0; i < bullets.Count; i++)
                 {
-                    bullets.RemoveAt(i);
-                    i--; // Fix index
-                }
-            }
-            #endregion
-
-            #region start position
-            if (position == null)
-            {
-                if ((incmsg                 = Game1.Client.ReadMessage()) != null)
-                {
-                    if (incmsg.ReadByte()   == (byte)PacketTypes.STARTPOS)
+                    bullets[i].Update(graphics);     // Update
+                    if (bullets[i].IsAlive == false) // Remove if dead
                     {
-                        foreach (Tank tank in tanks)
-                        {
-                            tank.name       = incmsg.ReadString();
-                            tank.angle      = incmsg.ReadFloat();
-                            tank.position.X = incmsg.ReadInt32();
-                            tank.position.Y = incmsg.ReadInt32();
-                        }
+                        bullets.RemoveAt(i);
+                        i--; // Fix index
+                    }
+                }
+                #endregion
+
+                #region Window update
+                if (position.X >= graphics.GraphicsDevice.Viewport.Width)
+                    position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
+
+                if (position.Y >= graphics.GraphicsDevice.Viewport.Height)
+                    position.Y = graphics.GraphicsDevice.Viewport.Height - texture.Height;
+
+                if (position.X < 0)
+                    position.X = 0;
+
+                if (position.Y < 0)
+                    position.Y = 0;
+                #endregion
+
+                if ((incmsg = Game1.Client.ReadMessage()) != null)
+                {
+                    switch (incmsg.ReadByte())
+                    {
+                        case (byte)PacketTypes.MOVE:
+                            foreach (Tank tank in tanks)
+                            {
+                                tank.name       = incmsg.ReadString();
+                                tank.angle      = incmsg.ReadFloat();
+                                tank.position.X = incmsg.ReadInt32();
+                                tank.position.Y = incmsg.ReadInt32();
+                                try     //Server will not always send position for explosion
+                                {
+                                    tank.explositionPos.X = incmsg.ReadInt32();
+                                    tank.explositionPos.Y = incmsg.ReadInt32();
+
+                                    Track(tracks, content);
+                                }
+                                catch (Exception ex)
+                                { }
+                            }
+                            break;
+
+                        case (byte)PacketTypes.SHOOT:
+                            Bullet bullet = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadUInt32(), incmsg.ReadUInt32()));
+                            bullets.Add(bullet);
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
-            #endregion
-
-            #region Window update
-            if (position.X >= graphics.GraphicsDevice.Viewport.Width)
-                position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
-
-            if (position.Y >= graphics.GraphicsDevice.Viewport.Height)
-                position.Y = graphics.GraphicsDevice.Viewport.Height - texture.Height;
-
-            if (position.X < 0)
-                position.X = 0;
-
-            if (position.Y < 0)
-                position.Y = 0;
-            #endregion
-
-            #region Trail
-            // Trail is going to be here \\\///
-
-
-            /*foreach (TankTrack trail in trails)
-                trail.Update();
-            */
-            #endregion
-
-            if ((incmsg = Game1.Client.ReadMessage()) != null)
-            {
-                if(incmsg.ReadByte()              == (byte)PacketTypes.MOVE)
-                {
-                    foreach (Tank tank in tanks)
-                    {
-                        tank.name                 = incmsg.ReadString();
-                        tank.angle                = incmsg.ReadFloat();
-                        tank.position.X           = incmsg.ReadInt32();
-                        tank.position.Y           = incmsg.ReadInt32();
-                        try
-                        {
-                            tank.explositionPos.X = incmsg.ReadInt32();
-                            tank.explositionPos.Y = incmsg.ReadInt32();
-                        }
-                        catch (Exception ex)
-                        { }
-                    }
-                }
-
-                if (incmsg.ReadByte() == (byte)PacketTypes.SHOOT)
-                {
-                    Bullet bullet     = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadUInt32(), incmsg.ReadUInt32()) );
-                    bullets.Add(bullet);
-                }
-            }
-        }
 
         public void Input(OldNewInput input, ContentManager content)
         {
-            if (IsAlive                   == true)
+            if (IsAlive == true)
             {
                 NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
 
@@ -222,7 +218,8 @@ namespace TankWars3000
                 {
                     foreach (Tank tank in tanks)
                     {
-                        spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, Color.White, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                        
                     }
                 }
             }
@@ -230,12 +227,33 @@ namespace TankWars3000
                 bullet.Draw(spriteBatch);
         }
 
-        public Tank(ContentManager content)
+        public Tank(ContentManager content, string name, Color color)
         {
             texture       = content.Load<Texture2D>("Tank/Tank");
             direction     = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
             speed         = new Vector2(2, 2);
+            this.name = name;
+            tankcolor = color;
+        }
+        public Tank() {}
+
+        private void Track(List<TankTrack> tracks ,ContentManager content)
+        {
+            if (Vector2.Distance(trackpos, position) > 40)
+        {
+                Vector2 footStepPos;
+                if (lastRightTrack)
+                    footStepPos = Vector2.Transform(textureOrigin + /*offset>*/new Vector2(-50, -73), Matrix.CreateRotationZ(angle)) + position;
+                else
+                    footStepPos = Vector2.Transform(textureOrigin + /*offset>*/new Vector2(-50, -33), Matrix.CreateRotationZ(angle)) + position;
+
+                lastRightTrack = lastRightTrack ? false : true; // Toggle
+
+                tracks.Add(new TankTrack(content, trackpos, angle)); // Add
+
+                trackpos = position;
+            }
         }
         #endregion
     }
