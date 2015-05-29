@@ -22,7 +22,7 @@ namespace TankWars3000
 
         Texture2D texture;
 
-        Rectangle collisionRect = new Rectangle();
+        Rectangle collisionRect = new Rectangle(0,0,100,100);
 
         NetIncomingMessage incmsg;
 
@@ -212,20 +212,20 @@ namespace TankWars3000
 
         public void Draw(SpriteBatch spriteBatch, List<Tank> tanks)
         {
-            if ((incmsg               = Game1.Client.ReadMessage()) != null)
+            if ((incmsg = Game1.Client.ReadMessage()) != null)
             {
                 switch (incmsg.ReadByte())
                 {
                     case (byte)PacketTypes.MOVE:
                         foreach (Tank tank in tanks)
                         {
-                            spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                            spriteBatch.Draw(tank.texture, /*tank.position*/ new Vector2(250, 250), tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
                         }
                         break;
                     case (byte)PacketTypes.STARTPOS:
                         foreach (Tank tank in tanks)
                         {
-                            spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                            spriteBatch.Draw(tank.texture, /*tank.position*/ new Vector2(250,250), tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
                         }
                         break;
                     default:
