@@ -108,21 +108,26 @@ namespace TankWars3000
                     switch (incmsg.ReadByte())
                     {
                         case (byte)PacketTypes.MOVE:
-                            foreach (Tank tank in tanks)
+                             string incmsg_name = incmsg.ReadString();
+                            for (int i  = 0; i < tanks.Count; i++ )
                             {
-                                tank.name       = incmsg.ReadString();
-                                tank.angle      = incmsg.ReadFloat();
-                                tank.position.X = incmsg.ReadInt32();
-                                tank.position.Y = incmsg.ReadInt32();
-                                try     //Server will not always send position for explosion
-                                {
-                                    tank.explositionPos.X = incmsg.ReadInt32();
-                                    tank.explositionPos.Y = incmsg.ReadInt32();
+                                if (tanks[i].Name == incmsg_name)
+                               {
+                                    tanks[i].Angle    = incmsg.ReadFloat();
+                                    tanks[i].Position = new Vector2(incmsg.ReadInt32(), incmsg.ReadInt32());
+                                    bool tempcollisionbool = incmsg.ReadBoolean();
+                                    try     //Server will not always send position for explosion so try to read it
+                                    {
+                                        tanks[i].explositionPos.X = incmsg.ReadInt32();
+                                        tanks[i].explositionPos.Y = incmsg.ReadInt32();
 
-                                    Track(tracks, content);
-                                }
-                                catch (Exception ex)
-                                { }
+                                        Track(tracks, content);
+                                    }
+                                    catch (Exception ex)
+                                    { }
+                               }
+                            
+                                
                             }
                             break;
 
@@ -146,6 +151,7 @@ namespace TankWars3000
                 #region Movment
                 if (input.newKey.IsKeyDown(Keys.W))
                 {
+                    outmsg = Game1.Client.CreateMessage();
                     position += direction * speed;
                     //update position, then send it to the server
 
@@ -159,6 +165,7 @@ namespace TankWars3000
 
                 if (input.newKey.IsKeyDown(Keys.S))
                 {
+                    outmsg = Game1.Client.CreateMessage();
                     position -= direction * speed;
                     //update position, then send it to the server
 
@@ -170,8 +177,9 @@ namespace TankWars3000
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
-                if (input.newKey.IsKeyDown(Keys.D))
+                if (input.newKey.IsKeyDown(Keys.D) && input.oldKey.IsKeyUp(Keys.D) && input.newKey.IsKeyUp(Keys.A))
                 {
+                    outmsg = Game1.Client.CreateMessage();
                     angle       += MathHelper.Pi / 20;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
@@ -187,8 +195,9 @@ namespace TankWars3000
                     outmsg.Write(angle);
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
-                if (input.newKey.IsKeyDown(Keys.A))
+                if (input.newKey.IsKeyDown(Keys.A) && input.oldKey.IsKeyUp(Keys.A) && input.newKey.IsKeyUp(Keys.D))
                 {
+                    outmsg = Game1.Client.CreateMessage();
                     angle       -= MathHelper.Pi / 20;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
@@ -209,6 +218,7 @@ namespace TankWars3000
                 #region shoot
                 if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
                 {
+                    outmsg = Game1.Client.CreateMessage();
                     outmsg.Write((byte)PacketTypes.SHOOT);
                     outmsg.Write(name);
                     outmsg.Write(position.X);
@@ -237,7 +247,7 @@ namespace TankWars3000
             texture       = content.Load<Texture2D>("Tank/Tank");
             direction     = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
-            speed         = new Vector2(2, 2);
+            speed         = new Vector2(5, 5);
             this.name = name;
             tankcolor = color;
         }
