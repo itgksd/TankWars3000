@@ -410,14 +410,38 @@ namespace TankWars3000_SERVER
                                 }
                                 break;
                         }
-
                     }
+                    NetOutgoingMessage outtmsg = Server.CreateMessage();
+                    outtmsg.Write((byte)PacketTypes.FINALSCOREBOARD);
+                    outtmsg.Write(tanks.Count);
+                    foreach (KeyValuePair<string, Tank> tank in tanks)
+                    {
+                        outtmsg.Write(tank.Value.Name);
+                        outtmsg.Write(tank.Value.Kills);
+                        outtmsg.Write(tank.Value.Deaths);
+                        outtmsg.Write(tank.Value.TankColor.R);
+                        outtmsg.Write(tank.Value.TankColor.G);
+                        outtmsg.Write(tank.Value.TankColor.B);
+                    }
+                    Server.SendToAll(outtmsg, NetDeliveryMethod.ReliableOrdered);
+                    Debug.WriteLine("Sv-Sending final scoreboard");
                 }
 
                 //Spelet slutar och clienten hamnar på Scoreboard
                 if (gameState == GameStates.Scoreboard)
                 {
-
+                    NetOutgoingMessage outmsg = Server.CreateMessage();
+                    outmsg.Write((byte)PacketTypes.FINALSCOREBOARD);
+                    outmsg.Write(tanks.Count);
+                    foreach (KeyValuePair<string, Tank> tank in tanks)
+                    {
+                        outmsg.Write(tank.Value.Name);
+                        outmsg.Write(tank.Value.Kills);
+                        outmsg.Write(tank.Value.Deaths);
+                        outmsg.Write(tank.Value.TankColor.R);
+                        outmsg.Write(tank.Value.TankColor.G);
+                        outmsg.Write(tank.Value.TankColor.B);
+                    }
                 }
 
 

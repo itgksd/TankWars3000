@@ -46,45 +46,45 @@ namespace TankWars3000
 
 
             // Rectangles
-            int height = 50;
+            int height = 40, gap = 5;
             posRect      = new Rectangle((int)position.X, (int)position.Y, 136, height);
             leftLineRect = new Rectangle(posRect.X, posRect.Y, 4, posRect.Height);
-            playerRect   = new Rectangle(posRect.X + posRect.Width + 10, (int)position.Y, 500, height);
+            playerRect   = new Rectangle(posRect.X + posRect.Width + gap, (int)position.Y, 500, height);
             tankRect     = new Rectangle(0,0,10,10); // Ändra senare
-            scoreRect    = new Rectangle(playerRect.X + playerRect.Width + 10, playerRect.Y, 60, height);
-            killsRect    = new Rectangle(scoreRect.X + scoreRect.Width + 10, scoreRect.Y, 60, height);
-            deathsRect   = new Rectangle(killsRect.X + killsRect.Width + 10, killsRect.Y, 60, height);
+            scoreRect    = new Rectangle(playerRect.X + playerRect.Width + gap, playerRect.Y, 60, height);
+            killsRect    = new Rectangle(scoreRect.X + scoreRect.Width + gap, scoreRect.Y, 60, height);
+            deathsRect   = new Rectangle(killsRect.X + killsRect.Width + gap, killsRect.Y, 60, height);
 
             // Text positions
-            posPos    = new Vector2(posRect.X + 6, posRect.Y);
-            playerPos = new Vector2(playerRect.X + 50, playerRect.Y);
-            scorePos  = new Vector2(scoreRect.X + 5, scoreRect.Y);
-            killsPos  = new Vector2(killsRect.X + 5, killsRect.Y);
-            deathsPos = new Vector2(deathsRect.X + 5, deathsRect.Y);
+            posPos    = new Vector2(posRect.X + 6, posRect.Y + 5);
+            playerPos = new Vector2(playerRect.X + 50, playerRect.Y + 5);
+            scorePos  = new Vector2(scoreRect.X + 5, scoreRect.Y + 5);
+            killsPos  = new Vector2(killsRect.X + 5, killsRect.Y + 5);
+            deathsPos = new Vector2(deathsRect.X + 5, deathsRect.Y + 5);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             // Position
-            spriteBatch.Draw(pixel, posRect, Color.White);
+            spriteBatch.Draw(pixel, posRect, new Color(100, 100, 100, 0));
             spriteBatch.Draw(pixel, leftLineRect, Color.Blue);
-            spriteBatch.DrawString(font, ""+score, posPos, Color.White);
+            spriteBatch.DrawString(font, "" + score, posPos, new Color(100, 100, 100, 0));
 
             // Player
-            spriteBatch.Draw(pixel, playerRect, Color.White);
+            spriteBatch.Draw(pixel, playerRect, new Color(100, 100, 100, 0));
             // Draw tank
             // Draw name
 
             // Score
-            spriteBatch.Draw(pixel, scoreRect, Color.White);
+            spriteBatch.Draw(pixel, scoreRect, new Color(100, 100, 100, 0));
             // Draw score
 
             // Kills
-            spriteBatch.Draw(pixel, killsRect, Color.White);
+            spriteBatch.Draw(pixel, killsRect, new Color(100, 100, 100, 0));
             // Draw kills
 
             // Deaths
-            spriteBatch.Draw(pixel, deathsRect, Color.White);
+            spriteBatch.Draw(pixel, deathsRect, new Color(100, 100, 100, 0));
             // Draw deaths
         }
     }
