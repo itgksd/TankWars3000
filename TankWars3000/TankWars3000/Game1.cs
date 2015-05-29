@@ -126,11 +126,8 @@ namespace TankWars3000
             {
                 tank_startpos.Update(incmsg, tanks);
                 // The player
-                //foreach (Tank tank in tanks)
-                //{
                     tank.Update(Content, graphics, tanks, tracks);
                     tank.Input(input, Content);
-                //}
 
                 // TankTrack
                 for (int i = 0; i < tracks.Count; i++)
@@ -178,7 +175,6 @@ namespace TankWars3000
                 {
                     spriteBatch.Begin();
 
-                    foreach (Tank tank in  tanks)
                     tank.Draw(spriteBatch, tanks);
 
                     tracks.ForEach(f => f.Draw(spriteBatch));
