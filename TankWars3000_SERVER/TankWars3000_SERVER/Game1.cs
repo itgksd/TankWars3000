@@ -43,6 +43,9 @@ namespace TankWars3000_SERVER
         SpriteBatch spriteBatch;
         GameStates gameState;
 
+        int tankWidth = 136;
+        int tankHeight = 76;
+
         // Server object
         static NetServer Server;
         // Configuration object
@@ -290,6 +293,9 @@ namespace TankWars3000_SERVER
 
                             float angle = (float)(deg + Math.PI);
 
+                            tank.Value.Tankrect = new Rectangle(x, y, tankWidth, tankHeight);
+                            tank.Value.Angle = angle;
+
                             outmsg.Write(tank.Value.Name);
                             outmsg.Write(angle);
                             outmsg.Write(x);
@@ -304,6 +310,7 @@ namespace TankWars3000_SERVER
                         // uppdatera bullet
                         nextUpdate = DateTime.Now.AddMilliseconds(100);
                         UpdateAndSendBullets();
+
                     }
                     
                     // kolla om någon är död
@@ -356,7 +363,14 @@ namespace TankWars3000_SERVER
                                         int y = incomingMessage.ReadInt32();
                                         float angle = incomingMessage.ReadFloat();
 
-
+                                        foreach (KeyValuePair<string, Tank> tank in tanks)
+                                        {
+                                            if (tank.Key == name)
+                                            {
+                                                tank.Value.Tankrect = new Rectangle(x, y, tankWidth, tankHeight);
+                                                tank.Value.Angle = angle;
+                                            }
+                                        }
                                         // kollision här tack
                                         Collision(angle);
 
