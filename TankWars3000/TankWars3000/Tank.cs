@@ -28,10 +28,10 @@ namespace TankWars3000
 
         List<Bullet> bullets    = new List<Bullet>();
 
-        // Trail
+        // Track
         TankTrack traxck;
-        Vector2 trackpos;
-        bool lastRightTrack;
+        Vector2   trackpos;
+        bool      lastRightTrack;
 
         string name;
 
