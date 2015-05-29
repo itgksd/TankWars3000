@@ -34,7 +34,8 @@ namespace TankWars3000_SERVER
         DISCONNECTREASON, // <- Disconnect with reason. e.g. tell the client that the server is full
         DISCONNECT,       // <- Used to disconnect without reason. Used only when a client disconnects itself. Has to include a name!
         HEARTBEAT,        // <- Used to see if the client/server is still alive
-        STARTPOS
+        STARTPOS,
+        FINALSCOREBOARD
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game

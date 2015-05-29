@@ -33,7 +33,8 @@ namespace TankWars3000
         DISCONNECTREASON, // <- Disconnect with reason. e.g. tell the client that the server is full
         DISCONNECT,       // <- Used to disconnect without reason. Used only when a client disconnects itself. Has to include a name!
         HEARTBEAT,        // <- Used to see if the client/server is still alive
-        STARTPOS
+        STARTPOS,
+        FINALSCOREBOARD
     }
 
     public class Game1 : Microsoft.Xna.Framework.Game
@@ -58,6 +59,7 @@ namespace TankWars3000
         OldNewInput input      = new OldNewInput();
 
         Lobby lobby;
+        ScoreBoard scoreboard;
 
         static bool fullscreen = false;
         static public bool Fullscreen
@@ -104,7 +106,9 @@ namespace TankWars3000
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             lobby = new Lobby(Content);
+            scoreboard = new ScoreBoard(Content);
             Notify.LoadContent(Content);
+            
         }
 
         protected override void UnloadContent()
@@ -142,7 +146,14 @@ namespace TankWars3000
             }
             else if (gameState == GameStates.Scoreboard)
             {
+                scoreboard.Update();
+            }
 
+            // TEMP
+            if (input.SingleKey(Keys.O))
+            {
+                gameState = GameStates.Scoreboard;
+                Notify.NewMessage("Scoreboard", Color.LightBlue);
             }
 
             Notify.Update(gameTime);
@@ -187,7 +198,7 @@ namespace TankWars3000
                 {
                     spriteBatch.Begin();
 
-
+                    scoreboard.Draw(spriteBatch);
                     Notify.Draw(spriteBatch);
 
                     spriteBatch.End();
