@@ -108,21 +108,25 @@ namespace TankWars3000
                     switch (incmsg.ReadByte())
                     {
                         case (byte)PacketTypes.MOVE:
-                            foreach (Tank tank in tanks)
+                             string incmsg_name = incmsg.ReadString();
+                            for (int i  = 0; i < tanks.Count; i++ )
                             {
-                                tank.name       = incmsg.ReadString();
-                                tank.angle      = incmsg.ReadFloat();
-                                tank.position.X = incmsg.ReadInt32();
-                                tank.position.Y = incmsg.ReadInt32();
-                                try     //Server will not always send position for explosion
-                                {
-                                    tank.explositionPos.X = incmsg.ReadInt32();
-                                    tank.explositionPos.Y = incmsg.ReadInt32();
+                                if (tanks[i].Name == incmsg_name)
+                               {
+                                    tanks[i].Angle    = incmsg.ReadFloat();
+                                    tanks[i].Position = new Vector2(incmsg.ReadInt32(), incmsg.ReadInt32());
+                                    try     //Server will not always send position for explosion so try to read it
+                                    {
+                                        tanks[i].explositionPos.X = incmsg.ReadInt32();
+                                        tanks[i].explositionPos.Y = incmsg.ReadInt32();
 
-                                    Track(tracks, content);
-                                }
-                                catch (Exception ex)
-                                { }
+                                        Track(tracks, content);
+                                    }
+                                    catch (Exception ex)
+                                    { }
+                               }
+                            
+                                
                             }
                             break;
 
