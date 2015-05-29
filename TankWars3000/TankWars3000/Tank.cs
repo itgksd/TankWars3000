@@ -102,13 +102,13 @@ namespace TankWars3000
                     position.Y = 0;
                 #endregion
 
-                #region request action from server
+                #region recieve action from server
                 if ((incmsg = Game1.Client.ReadMessage()) != null)
                 {
                     switch (incmsg.ReadByte())
                     {
                         case (byte)PacketTypes.MOVE:
-                             string incmsg_name = incmsg.ReadString();
+                            string incmsg_name = incmsg.ReadString();
                             for (int i  = 0; i < tanks.Count; i++ )
                             {
                                 if (tanks[i].Name == incmsg_name)
@@ -152,6 +152,7 @@ namespace TankWars3000
                 if (input.newKey.IsKeyDown(Keys.W))
                 {
                     outmsg = Game1.Client.CreateMessage();
+                    //needs to CreateMessage() every time a button is pressed, which means more that once some updates
                     position += direction * speed;
                     //update position, then send it to the server
 
@@ -166,6 +167,7 @@ namespace TankWars3000
                 if (input.newKey.IsKeyDown(Keys.S))
                 {
                     outmsg = Game1.Client.CreateMessage();
+                    //needs to CreateMessage() every time a button is pressed, which means more that once some updates
                     position -= direction * speed;
                     //update position, then send it to the server
 
@@ -177,10 +179,11 @@ namespace TankWars3000
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
-                if (input.newKey.IsKeyDown(Keys.D) && input.oldKey.IsKeyUp(Keys.D) && input.newKey.IsKeyUp(Keys.A))
+                if (input.newKey.IsKeyDown(Keys.D) /*&& input.oldKey.IsKeyUp(Keys.D) && input.newKey.IsKeyUp(Keys.A)bortkommenterat för test*/)
                 {
                     outmsg = Game1.Client.CreateMessage();
-                    angle       += MathHelper.Pi / 20;
+                    //needs to CreateMessage() every time a button is pressed, which means more that once some updates
+                    angle += MathHelper.Pi / 20;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
                     // divide to smaller pieces for less turn each button press
@@ -195,10 +198,11 @@ namespace TankWars3000
                     outmsg.Write(angle);
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
-                if (input.newKey.IsKeyDown(Keys.A) && input.oldKey.IsKeyUp(Keys.A) && input.newKey.IsKeyUp(Keys.D))
+                if (input.newKey.IsKeyDown(Keys.A) /*&& input.oldKey.IsKeyUp(Keys.A) && input.newKey.IsKeyUp(Keys.D) bortkommenterat för test*/)
                 {
                     outmsg = Game1.Client.CreateMessage();
-                    angle       -= MathHelper.Pi / 20;
+                    //needs to CreateMessage() every time a button is pressed, which means more that once some updates
+                    angle -= MathHelper.Pi / 20;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
                     // divide to smaller pieces for less turn each button press
@@ -219,6 +223,7 @@ namespace TankWars3000
                 if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
                 {
                     outmsg = Game1.Client.CreateMessage();
+                    //needs to CreateMessage() every time a button is pressed, which means more that once some updates
                     outmsg.Write((byte)PacketTypes.SHOOT);
                     outmsg.Write(name);
                     outmsg.Write(position.X);
@@ -234,9 +239,9 @@ namespace TankWars3000
         {
             foreach (Tank tank in tanks)
             {
-                tank.collisionRect =  new Rectangle((int)tank.position.X, (int)tank.position.Y, tank.Texture.Width, tank.Texture.Height);
+                tank.collisionRect = new Rectangle((int)tank.position.X, (int)tank.position.Y, tank.Texture.Width, tank.Texture.Height);
                 //give values to the rectangle here because it needs to be up-to-date every time the tank is drawn
-                spriteBatch.Draw(tank.Texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(tank.Texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None,1f);
             }
             foreach (Bullet bullet in bullets)
                 bullet.Draw(spriteBatch);
