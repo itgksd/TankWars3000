@@ -97,6 +97,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Tank.cs" />
     <Compile Include="TankTrack.cs" />
+    <Compile Include="Tank_startpos.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
