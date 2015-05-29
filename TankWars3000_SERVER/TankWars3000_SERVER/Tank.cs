@@ -10,6 +10,11 @@ namespace TankWars3000_SERVER
     {
         int health;
         int damage;
+        bool alive;
+        bool fired;
+
+        int kills;
+        int deaths;
 
         float direction;
         TimeSpan bulletRate;
@@ -42,11 +47,7 @@ namespace TankWars3000_SERVER
         private String name;
         private Rectangle rect;
 
-        bool alive;
-        bool fired;
-
-        private int kills;
-        private int deaths;
+       
         
         public Tank(String n)
         {

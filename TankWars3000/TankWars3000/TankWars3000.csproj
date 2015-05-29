@@ -95,6 +95,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="ScoreBoard.cs" />
+    <Compile Include="ScoreBoardItem.cs" />
     <Compile Include="Tank.cs" />
     <Compile Include="TankTrack.cs" />
   </ItemGroup>
