@@ -49,28 +49,6 @@ namespace TankWars3000
 
         public void Update(ContentManager content, GraphicsDeviceManager graphics, List<Tank> tanks, List<TankTrack> tracks)
         {
-
-            #region start position
-            if (!startPos)
-            {
-                if ((incmsg = Game1.Client.ReadMessage()) != null)
-                {
-                    if (incmsg.ReadByte() == (byte)PacketTypes.STARTPOS)
-                    {
-                        foreach (Tank tank in tanks)
-                        {
-                            tank.name = incmsg.ReadString();
-                            tank.angle = incmsg.ReadFloat();
-                            tank.position.X = incmsg.ReadInt32();
-                            tank.position.Y = incmsg.ReadInt32();
-                        }
-                        startPos = true;
-                    }
-                }
-            }
-            #endregion
-            else
-            {
                 #region Bullet
                 foreach (Bullet bullet in bullets)
                     bullet.Update(graphics);
@@ -130,7 +108,6 @@ namespace TankWars3000
                             break;
                         default:
                             break;
-                    }
                 }
             }
         }

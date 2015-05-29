@@ -47,6 +47,7 @@ namespace TankWars3000
         public static NetClient Client;
 
         // The Player
+        Tank_startpos tank_startpos;
         Tank tank;
         List<Tank> tanks  = new List<Tank>();
 
@@ -78,6 +79,8 @@ namespace TankWars3000
         protected override void Initialize()
         {
             tank      = new Tank();
+            tank_startpos = new Tank_startpos();
+
             gameState = GameStates.Lobby;
 
             //trail = new TankTrack(Content); Emil! Du har inte inkluderat själva klassen i din commit! Kolla i untracked files!
@@ -109,6 +112,8 @@ namespace TankWars3000
 
         protected override void Update(GameTime gameTime)
         {
+            tank_startpos.Update();
+
             input.newKey   = Keyboard.GetState();
             input.newMouse = Mouse.GetState();
 
