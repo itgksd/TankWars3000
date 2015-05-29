@@ -16,12 +16,12 @@ namespace TankWars3000
                 {
                     if (incmsg.ReadByte() == (byte)PacketTypes.STARTPOS)
                     {
-                        incmsg_name =incmsg.ReadString();
-                        for (int i = 0; i < tanks.Count; i++ )
+                        incmsg_name = incmsg.ReadString();
+                        for (int i  = 0; i < tanks.Count; i++ )
                         {
                             if (tanks[i].Name == incmsg_name)
                             {
-                                tanks[i].Angle = incmsg.ReadFloat();
+                                tanks[i].Angle    = incmsg.ReadFloat();
                                 tanks[i].Position = new Vector2(incmsg.ReadInt32(), incmsg.ReadInt32());
                             }
                             

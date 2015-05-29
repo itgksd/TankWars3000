@@ -49,13 +49,13 @@ namespace TankWars3000
         // The Player
         Tank_startpos tank_startpos;
         Tank tank;
-        List<Tank> tanks  = new List<Tank>();
+        List<Tank> tanks       = new List<Tank>();
 
         NetIncomingMessage incmsg;
 
         List<TankTrack> tracks = new List<TankTrack>();
 
-        OldNewInput input = new OldNewInput();
+        OldNewInput input      = new OldNewInput();
 
         Lobby lobby;
 
@@ -80,7 +80,7 @@ namespace TankWars3000
 
         protected override void Initialize()
         {
-            tank      = new Tank();
+            tank          = new Tank();
             tank_startpos = new Tank_startpos();
 
             gameState = GameStates.Lobby;

@@ -14,6 +14,15 @@ namespace TankWars3000
     {
         Texture2D backGlow, leftGlow;
         int leftGlowX;
+        public int LeftGlowX
+        {
+            get { return leftGlowX; }
+            set { leftGlowX = value; }
+        }
+        public int LeftGlowWidth
+        {
+            get { return leftGlow.Width; }
+        }
         //Rectangle f1, f2, r1, r2;
         Video video;
         VideoPlayer player;
