@@ -37,7 +37,6 @@ namespace TankWars3000
 
         bool bulletFired        = false;
         bool IsAlive            = true;
-        bool startPos           = false;
 
         int health              = 3;
 
@@ -108,7 +107,7 @@ namespace TankWars3000
                                 tank.angle      = incmsg.ReadFloat();
                                 tank.position.X = incmsg.ReadInt32();
                                 tank.position.Y = incmsg.ReadInt32();
-                                try
+                                try     //Server will not always send position for explosion
                                 {
                                     tank.explositionPos.X = incmsg.ReadInt32();
                                     tank.explositionPos.Y = incmsg.ReadInt32();
@@ -126,9 +125,9 @@ namespace TankWars3000
                             break;
                         default:
                             break;
+                    }
                 }
             }
-        }
 
         public void Input(OldNewInput input, ContentManager content)
         {
@@ -242,7 +241,7 @@ namespace TankWars3000
         private void Track(List<TankTrack> tracks ,ContentManager content)
         {
             if (Vector2.Distance(trackpos, position) > 40)
-            {
+        {
                 Vector2 footStepPos;
                 if (lastRightTrack)
                     footStepPos = Vector2.Transform(textureOrigin + /*offset>*/new Vector2(-50, -73), Matrix.CreateRotationZ(angle)) + position;
