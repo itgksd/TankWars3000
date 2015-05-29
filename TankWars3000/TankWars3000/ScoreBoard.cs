@@ -15,18 +15,27 @@ namespace TankWars3000
         List<ScoreBoardItem> scoreBoardItems;
         ContentManager content;
         LobbyBackground background;
+        NormalButton toLobbyBtn;
 
         public ScoreBoard(ContentManager content)
         {
             this.content = content;
             scoreBoardItems = new List<ScoreBoardItem>();
             background = new LobbyBackground(content);
-            background.LeftGlowX = 0 - background.LeftGlowWidth;
+            background.LeftGlowX = 800 - background.LeftGlowWidth;
+
+            toLobbyBtn = new NormalButton(content, new Vector2(50, Game1.ScreenRec.Height - 100), "Return to lobby", ReturnToLobby, true);
         }
 
-        public void Update()
+        public void ReturnToLobby()
+        {
+            Game1.gameState = GameStates.Lobby;
+        }
+
+        public void Update(OldNewInput input)
         {
             background.Update();
+            toLobbyBtn.Update(input);
 
             NetIncomingMessage incom; // MEssage that will contain the message comming from the server
             if ((incom = Game1.Client.ReadMessage()) != null) // Are there any new messanges?
@@ -81,6 +90,8 @@ namespace TankWars3000
         public void Draw(SpriteBatch spriteBatch)
         {
             background.Draw(spriteBatch);
+            toLobbyBtn.Draw(spriteBatch);
+
             scoreBoardItems.ForEach(s => s.Draw(spriteBatch));
         }
     }

@@ -139,14 +139,14 @@ namespace TankWars3000
                     spriteBatch.Draw(pixelTx, rectangle, new Color(100, 100, 100, 0)); // The "backplate"
                     spriteBatch.Draw(tankTx, tankRec, tankColor);
                     spriteBatch.Draw(pixelTx, readyRec, ready ? Color.Lime : Color.Red);
-                    spriteBatch.DrawString(font, name, new Vector2(rectangle.X + 60, rectangle.Y + 5), Color.White);
+                    spriteBatch.DrawString(font, name, new Vector2(rectangle.X + 62, rectangle.Y + 5), Color.White);
                 }
                 else
                 {
                     spriteBatch.Draw(pixelTx, rectangle, new Color(100, 100, 100, 0) * 0.6f); // The "backplate"
                     spriteBatch.Draw(pixelTx, readyRec, Color.Blue * 0.3f);
                     spriteBatch.Draw(tankTx, tankRec, Color.Black * 0.3f);
-                    spriteBatch.DrawString(font, "Open", new Vector2(rectangle.X + 60, rectangle.Y + 5), Color.White * 0.3f);
+                    spriteBatch.DrawString(font, "Open", new Vector2(rectangle.X + 62, rectangle.Y + 5), Color.White * 0.3f);
                 }
             }
 

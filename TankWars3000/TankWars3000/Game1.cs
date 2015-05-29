@@ -146,14 +146,14 @@ namespace TankWars3000
             }
             else if (gameState == GameStates.Scoreboard)
             {
-                scoreboard.Update();
+                scoreboard.Update(input);
             }
 
             // TEMP
             if (input.SingleKey(Keys.O))
             {
                 gameState = GameStates.Scoreboard;
-                Notify.NewMessage("Scoreboard", Color.LightBlue);
+                Notify.NewMessage("End of game! Scoreboard below!", Color.LightBlue);
             }
 
             Notify.Update(gameTime);

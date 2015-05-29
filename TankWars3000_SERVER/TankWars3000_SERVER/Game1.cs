@@ -424,7 +424,7 @@ namespace TankWars3000_SERVER
                         outtmsg.Write(tank.Value.TankColor.B);
                     }
                     Server.SendToAll(outtmsg, NetDeliveryMethod.ReliableOrdered);
-                    Debug.WriteLine("Sv-Sending final scoreboard");
+                    Debug.WriteLine("Sv-Sending final scoreboard from ingame");
                 }
 
                 //Spelet slutar och clienten hamnar på Scoreboard
@@ -442,6 +442,8 @@ namespace TankWars3000_SERVER
                         outmsg.Write(tank.Value.TankColor.G);
                         outmsg.Write(tank.Value.TankColor.B);
                     }
+                    Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Debug.WriteLine("Sv-Sending final scoreboard");
                 }
 
 
