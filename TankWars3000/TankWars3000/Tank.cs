@@ -101,6 +101,7 @@ namespace TankWars3000
                     position.Y = 0;
                 #endregion
 
+                #region request action from server
                 if ((incmsg = Game1.Client.ReadMessage()) != null)
                 {
                     switch (incmsg.ReadByte())
@@ -132,7 +133,8 @@ namespace TankWars3000
                             break;
                     }
                 }
-            }
+                #endregion
+        }
 
         public void Input(OldNewInput input, ContentManager content)
         {
@@ -203,6 +205,7 @@ namespace TankWars3000
                 }
                 #endregion
 
+                #region shoot
                 if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
                 {
                     outmsg.Write((byte)PacketTypes.SHOOT);
@@ -212,6 +215,7 @@ namespace TankWars3000
                     outmsg.Write(angle);
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
+                #endregion
             }
         }
 
@@ -233,7 +237,9 @@ namespace TankWars3000
             this.name = name;
             tankcolor = color;
         }
-        public Tank() {}
+        public Tank() {} //need to make one tank that is empty to run through the tank list
+                         //since i have integrated the List<Tank> with the tank class.
+                         //this is to make Game1 cleaner.
 
         private void Track(List<TankTrack> tracks ,ContentManager content)
         {
