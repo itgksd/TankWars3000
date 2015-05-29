@@ -174,6 +174,8 @@ namespace TankWars3000
                     foreach (Tank tank in  tanks)
                     tank.Draw(spriteBatch, tanks);
 
+                    tracks.ForEach(f => f.Draw(spriteBatch));
+
                     Notify.Draw(spriteBatch);
 
                     spriteBatch.End();

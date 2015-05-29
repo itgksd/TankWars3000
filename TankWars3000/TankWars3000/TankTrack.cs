@@ -26,6 +26,10 @@ namespace TankWars3000
         {
             alpha -= 0.001f;
         }
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(texture, position, Color.White);
+        }
 
         public TankTrack(ContentManager content, Vector2 position, float angle)
         {
