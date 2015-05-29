@@ -14,16 +14,17 @@ namespace TankWars3000
     {
         #region Atributes
 
-        Vector2 speed, position, direction, explositionPos;
         static Vector2 textureOrigin;
+
+        static Texture2D texture;
+
+        Vector2 speed, position, direction, explositionPos;
 
         Color tankcolor             = new Color();
 
         TimeSpan reloadTime     = new TimeSpan(0, 0, 4);
 
-        static Texture2D texture;
-
-        Rectangle collisionRect = new Rectangle(0,0,100,100);
+        Rectangle collisionRect = new Rectangle();
 
         NetIncomingMessage incmsg;
 
@@ -42,7 +43,9 @@ namespace TankWars3000
         int health              = 3;
 
         float angle             = 0;//angle in radians
+        #endregion
 
+        #region properties
         public string Name
         {
             get {return name;}
@@ -62,10 +65,8 @@ namespace TankWars3000
         {
             get { return texture; }
         }
-
-
-
         #endregion
+
 
         #region Methods
 
@@ -222,8 +223,10 @@ namespace TankWars3000
         public void Draw(SpriteBatch spriteBatch, List<Tank> tanks)
         {
             foreach (Tank tank in tanks)
+            {
+                tank.collisionRect =  new Rectangle((int)tank.position.X, (int)tank.position.Y, tank.Texture.Width, tank.Texture.Height);
                 spriteBatch.Draw(tank.Texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
-        
+            }
             foreach (Bullet bullet in bullets)
                 bullet.Draw(spriteBatch);
         }
