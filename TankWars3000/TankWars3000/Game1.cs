@@ -47,8 +47,11 @@ namespace TankWars3000
         public static NetClient Client;
 
         // The Player
+        Tank_startpos tank_startpos;
         Tank tank;
         List<Tank> tanks  = new List<Tank>();
+
+        NetIncomingMessage incmsg;
 
         List<TankTrack> tracks = new List<TankTrack>();
 
@@ -78,6 +81,8 @@ namespace TankWars3000
         protected override void Initialize()
         {
             tank      = new Tank();
+            tank_startpos = new Tank_startpos();
+
             gameState = GameStates.Lobby;
 
             //trail = new TankTrack(Content); Emil! Du har inte inkluderat själva klassen i din commit! Kolla i untracked files!
@@ -109,6 +114,7 @@ namespace TankWars3000
 
         protected override void Update(GameTime gameTime)
         {
+
             input.newKey   = Keyboard.GetState();
             input.newMouse = Mouse.GetState();
 
@@ -118,12 +124,10 @@ namespace TankWars3000
             }
             else if (gameState  == GameStates.Ingame)
             {
+                tank_startpos.Update(incmsg, tanks);
                 // The player
-                foreach (Tank tank in tanks)
-                {
                     tank.Update(Content, graphics, tanks, tracks);
                     tank.Input(input, Content);
-                }
 
                 // TankTrack
                 for (int i = 0; i < tracks.Count; i++)
@@ -171,8 +175,9 @@ namespace TankWars3000
                 {
                     spriteBatch.Begin();
 
-                    foreach (Tank tank in  tanks)
                     tank.Draw(spriteBatch, tanks);
+
+                    tracks.ForEach(f => f.Draw(spriteBatch));
 
                     Notify.Draw(spriteBatch);
 

@@ -10,8 +10,13 @@ namespace TankWars3000_SERVER
     {
         int health;
         int damage;
+        bool alive;
+        bool fired;
 
-        float direction;
+        int kills;
+        int deaths;
+
+        float angle;
         TimeSpan bulletRate;
 
         Vector2 speed;
@@ -42,11 +47,7 @@ namespace TankWars3000_SERVER
         private String name;
         private Rectangle rect;
 
-        bool alive;
-        bool fired;
-
-        private int kills;
-        private int deaths;
+       
         
         public Tank(String n)
         {
@@ -121,6 +122,11 @@ namespace TankWars3000_SERVER
            {
                deaths = value;
            }
+       }
+       public float Angle
+       {
+           get { return angle; }
+           set { angle = value; }
        }
     }
 }

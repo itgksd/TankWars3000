@@ -43,6 +43,9 @@ namespace TankWars3000_SERVER
         SpriteBatch spriteBatch;
         GameStates gameState;
 
+        int tankWidth = 136;
+        int tankHeight = 76;
+
         // Server object
         static NetServer Server;
         // Configuration object
@@ -267,7 +270,7 @@ namespace TankWars3000_SERVER
                 }
 
                 //Spelet lämnar lobby och startar
-                if (gameState == GameStates.Ingame) 
+                if (gameState == GameStates.Ingame)
                 {
                     if (sendStartPos) //Skicka startpositioner
                     {
@@ -290,6 +293,9 @@ namespace TankWars3000_SERVER
 
                             float angle = (float)(deg + Math.PI);
 
+                            tank.Value.Tankrect = new Rectangle(x, y, tankWidth, tankHeight);
+                            tank.Value.Angle = angle;
+
                             outmsg.Write(tank.Value.Name);
                             outmsg.Write(angle);
                             outmsg.Write(x);
@@ -304,6 +310,7 @@ namespace TankWars3000_SERVER
                         // uppdatera bullet
                         nextUpdate = DateTime.Now.AddMilliseconds(100);
                         UpdateAndSendBullets();
+
                     }
                     
                     // kolla om någon är död
@@ -356,7 +363,16 @@ namespace TankWars3000_SERVER
                                         int y = incomingMessage.ReadInt32();
                                         float angle = incomingMessage.ReadFloat();
 
-                                        Collision(angle);// kollisions hantering
+                                        foreach (KeyValuePair<string, Tank> tank in tanks)
+                                        {
+                                            if (tank.Key == name)
+                                            {
+                                                tank.Value.Tankrect = new Rectangle(x, y, tankWidth, tankHeight);
+                                                tank.Value.Angle = angle;
+                                            }
+                                        }
+                                        // kollision här tack
+                                        Collision(angle);
 
                                         //Skicka alla värden till alla Clients
                                         NetOutgoingMessage outmsg = Server.CreateMessage();
@@ -489,6 +505,9 @@ namespace TankWars3000_SERVER
                             bulletcollisionposition.X = tank.Value.Position.X + ((float)Math.Cos(bullets[i].Angle));
                             bulletcollisionposition.Y = tank.Value.Position.Y + ((float)Math.Sin(bullets[i].Angle));
                             tank.Value.Position = bulletcollisionposition; //Tank blir flyttad av kollisionen med bullet
+
+                            tanks[bullets[i].Name].Kills++;
+                            tank.Value.Deaths++;
 
                             bullets.RemoveAt(i); // Bullet "förstörs" vid kollisionen
                             return true; // Att kollisionen hände skickas till client och skickar då explosionposition
