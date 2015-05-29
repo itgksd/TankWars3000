@@ -506,6 +506,9 @@ namespace TankWars3000_SERVER
                             bulletcollisionposition.Y = tank.Value.Position.Y + ((float)Math.Sin(bullets[i].Angle));
                             tank.Value.Position = bulletcollisionposition; //Tank blir flyttad av kollisionen med bullet
 
+                            tanks[bullets[i].Name].Kills++;
+                            tank.Value.Deaths++;
+
                             bullets.RemoveAt(i); // Bullet "förstörs" vid kollisionen
                             return true; // Att kollisionen hände skickas till client och skickar då explosionposition
                         }
