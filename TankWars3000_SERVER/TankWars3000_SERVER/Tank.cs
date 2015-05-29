@@ -16,7 +16,7 @@ namespace TankWars3000_SERVER
         int kills;
         int deaths;
 
-        float direction;
+        float angle;
         TimeSpan bulletRate;
 
         Vector2 speed;
@@ -122,6 +122,11 @@ namespace TankWars3000_SERVER
            {
                deaths = value;
            }
+       }
+       public float Angle
+       {
+           get { return angle; }
+           set { angle = value; }
        }
     }
 }

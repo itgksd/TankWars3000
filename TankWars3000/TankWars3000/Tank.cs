@@ -14,7 +14,7 @@ namespace TankWars3000
     {
         #region Atributes
 
-        Vector2 speed, position, spawnPos, direction, textureOrigin, explositionPos;
+        Vector2 speed, position, direction, textureOrigin, explositionPos;
 
         Color tankcolor             = new Color();
 
@@ -29,7 +29,7 @@ namespace TankWars3000
         List<Bullet> bullets    = new List<Bullet>();
 
         // Track
-        TankTrack traxck;
+        TankTrack track;
         Vector2   trackpos;
         bool      lastRightTrack;
 
@@ -37,11 +37,28 @@ namespace TankWars3000
 
         bool bulletFired        = false;
         bool IsAlive            = true;
-        bool startPos           = false;
 
         int health              = 3;
 
         float angle             = 0;//angle in radians
+
+        public string Name
+        {
+            get {return name;}
+            set { name = value; }
+        }
+        public float Angle
+        {
+            get { return angle; }
+            set { angle = value; }
+        }
+        public Vector2 Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
+
+
 
         #endregion
 
@@ -49,28 +66,6 @@ namespace TankWars3000
 
         public void Update(ContentManager content, GraphicsDeviceManager graphics, List<Tank> tanks, List<TankTrack> tracks)
         {
-
-            #region start position
-            if (!startPos)
-            {
-                if ((incmsg = Game1.Client.ReadMessage()) != null)
-                {
-                    if (incmsg.ReadByte() == (byte)PacketTypes.STARTPOS)
-                    {
-                        foreach (Tank tank in tanks)
-                        {
-                            tank.name = incmsg.ReadString();
-                            tank.angle = incmsg.ReadFloat();
-                            tank.position.X = incmsg.ReadInt32();
-                            tank.position.Y = incmsg.ReadInt32();
-                        }
-                        startPos = true;
-                    }
-                }
-            }
-            #endregion
-            else
-            {
                 #region Bullet
                 foreach (Bullet bullet in bullets)
                     bullet.Update(graphics);
@@ -101,24 +96,6 @@ namespace TankWars3000
                     position.Y = 0;
                 #endregion
 
-                #region Track
-                // track
-                if (Vector2.Distance(trackpos, position) > 40)
-                {
-                    Vector2 footStepPos;
-                    if (lastRightTrack)
-                        footStepPos = Vector2.Transform(textureOrigin + /*offset>*/new Vector2(-50, -73), Matrix.CreateRotationZ(angle)) + position;
-                    else
-                        footStepPos = Vector2.Transform(textureOrigin + /*offset>*/new Vector2(-50, -33), Matrix.CreateRotationZ(angle)) + position;
-
-                    lastRightTrack = lastRightTrack ? false : true; // Toggle
-
-                    tracks.Add(new TankTrack(content, trackpos, angle)); // Add
-
-                    trackpos = position;
-                }
-                #endregion
-
                 if ((incmsg = Game1.Client.ReadMessage()) != null)
                 {
                     switch (incmsg.ReadByte())
@@ -126,14 +103,16 @@ namespace TankWars3000
                         case (byte)PacketTypes.MOVE:
                             foreach (Tank tank in tanks)
                             {
-                                tank.name = incmsg.ReadString();
-                                tank.angle = incmsg.ReadFloat();
+                                tank.name       = incmsg.ReadString();
+                                tank.angle      = incmsg.ReadFloat();
                                 tank.position.X = incmsg.ReadInt32();
                                 tank.position.Y = incmsg.ReadInt32();
-                                try
+                                try     //Server will not always send position for explosion
                                 {
                                     tank.explositionPos.X = incmsg.ReadInt32();
                                     tank.explositionPos.Y = incmsg.ReadInt32();
+
+                                    Track(tracks, content);
                                 }
                                 catch (Exception ex)
                                 { }
@@ -149,7 +128,6 @@ namespace TankWars3000
                     }
                 }
             }
-        }
 
         public void Input(OldNewInput input, ContentManager content)
         {
@@ -236,12 +214,22 @@ namespace TankWars3000
         {
             if ((incmsg               = Game1.Client.ReadMessage()) != null)
             {
-                if (incmsg.ReadByte() == (byte)PacketTypes.MOVE)
+                switch (incmsg.ReadByte())
                 {
-                    foreach (Tank tank in tanks)
-                    {
-                        spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
-                    }
+                    case (byte)PacketTypes.MOVE:
+                        foreach (Tank tank in tanks)
+                        {
+                            spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                        }
+                        break;
+                    case (byte)PacketTypes.STARTPOS:
+                        foreach (Tank tank in tanks)
+                        {
+                            spriteBatch.Draw(tank.texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
             foreach (Bullet bullet in bullets)
@@ -257,9 +245,24 @@ namespace TankWars3000
             this.name = name;
             tankcolor = color;
         }
-        public Tank()
-        {
+        public Tank() {}
 
+        private void Track(List<TankTrack> tracks ,ContentManager content)
+        {
+            if (Vector2.Distance(trackpos, position) > 40)
+        {
+                Vector2 footStepPos;
+                if (lastRightTrack)
+                    footStepPos = Vector2.Transform(textureOrigin + /*offset>*/new Vector2(-50, -73), Matrix.CreateRotationZ(angle)) + position;
+                else
+                    footStepPos = Vector2.Transform(textureOrigin + /*offset>*/new Vector2(-50, -33), Matrix.CreateRotationZ(angle)) + position;
+
+                lastRightTrack = lastRightTrack ? false : true; // Toggle
+
+                tracks.Add(new TankTrack(content, trackpos, angle)); // Add
+
+                trackpos = position;
+            }
         }
         #endregion
     }
