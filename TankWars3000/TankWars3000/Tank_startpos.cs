@@ -11,6 +11,7 @@ namespace TankWars3000
     {
         string incmsg_name;
         bool startposbool = true;
+        int count = 0;
         public void Update(NetIncomingMessage incmsg, List<Tank> tanks)
         {
             while (startposbool)
@@ -26,12 +27,14 @@ namespace TankWars3000
                                 {
                                     tanks[i].Angle = incmsg.ReadFloat();
                                     tanks[i].Position = new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat());
+                                    count++;
                                 }
 
                             }
                         }
                  }
-                startposbool = false;
+                if(count == tanks.Count)
+                    startposbool = false;
              }
         }
     }
