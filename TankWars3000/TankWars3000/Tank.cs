@@ -156,7 +156,7 @@ namespace TankWars3000
         {
             if (IsAlive == true)
             {
-                NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
+                NetOutgoingMessage outmsg;
 
                 for (int i = 0; i < tanks.Count; i++ )
                 {
@@ -184,7 +184,7 @@ namespace TankWars3000
 
                 if (input.newKey.IsKeyDown(Keys.S))
                 {
-                    //TEMP outmsg = Game1.Client.CreateMessage();
+                    outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     position -= direction * speed;
                     //update position, then send it to the server
