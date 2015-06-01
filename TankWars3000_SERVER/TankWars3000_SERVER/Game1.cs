@@ -275,8 +275,8 @@ namespace TankWars3000_SERVER
                 {
                     if (sendStartPos) //Skicka startpositioner
                     {
-                        int y;
-                        int x;
+                        float y;
+                        float x;
                         double degSum = (2 * Math.PI) / tanks.Count;
                         double deg = 0;
 
@@ -288,13 +288,13 @@ namespace TankWars3000_SERVER
                             //outmsg.Write(tank.Value.Name);
 
 
-                            x = (int)((Math.Cos(deg)) * 350) + (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2);
-                            y = (int)((Math.Sin(deg)) * 350) + (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2);
+                            x = (float)((Math.Cos(deg)) * 350) + (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2);
+                            y = (float)((Math.Sin(deg)) * 350) + (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2);
                             deg += degSum;
 
                             float angle = (float)(deg + Math.PI);
 
-                            tank.Value.Tankrect = new Rectangle(x, y, tankWidth, tankHeight);
+                            tank.Value.Tankrect = new Rectangle((int) x,(int) y, tankWidth, tankHeight);
                             tank.Value.Angle = angle;
 
                             outmsg.Write(tank.Value.Name);
@@ -374,6 +374,7 @@ namespace TankWars3000_SERVER
                                                 tank.Value.Position = new Vector2(x, y);
                                             }
                                         }
+
                                         // kollision här tack
                                         if (!Collision())
                                         {
