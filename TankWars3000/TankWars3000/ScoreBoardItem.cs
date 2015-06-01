@@ -70,7 +70,7 @@ namespace TankWars3000
             // Position
             spriteBatch.Draw(pixel, posRect, new Color(100, 100, 100, 0));
             spriteBatch.Draw(pixel, leftLineRect, Color.Blue);
-            spriteBatch.DrawString(font, "" + score, posPos, Color.White);
+            spriteBatch.DrawString(font, ""+pos, posPos, Color.White);
 
             // Player
             spriteBatch.Draw(pixel, playerRect, new Color(100, 100, 100, 0));

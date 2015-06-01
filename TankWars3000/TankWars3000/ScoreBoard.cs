@@ -61,6 +61,23 @@ namespace TankWars3000
                             Debug.WriteLine("Cl-Recevied final scoreboard");
                             
                             int count = incom.ReadInt32();
+                            List<TempPlayerContainer> tmpPCs = new List<TempPlayerContainer>();
+                            for (int i = 0; i < count; i++)
+                            {
+                                //
+                                TempPlayerContainer tmpPC = new TempPlayerContainer();
+                                tmpPC.name   = incom.ReadString();
+                                tmpPC.kills  = incom.ReadInt32();
+                                tmpPC.deaths = incom.ReadInt32();
+                                tmpPC.color  = new Color(incom.ReadByte(), incom.ReadByte(), incom.ReadByte());
+                                tmpPC.score  = (tmpPC.kills * 2) - tmpPC.deaths;
+                                tmpPCs.Add(tmpPC);
+                            }
+
+                            // Sortera
+                            tmpPCs = tmpPCs.OrderBy(o => o.score).ToList();
+
+                            // Skapa listan som kommer ritas ut
                             for (int i = 0; i < count; i++)
                             {
                                 Vector2 pos;
@@ -69,19 +86,7 @@ namespace TankWars3000
                                 else
                                     pos = new Vector2(50, 50);
 
-                                string name = incom.ReadString();
-                                int kills   = incom.ReadInt32();
-                                int deaths  = incom.ReadInt32();
-                                Color color = new Color(incom.ReadByte(), incom.ReadByte(), incom.ReadByte());
-                                int score   = (kills * 2) - deaths;
-                                TempPlayerContainer tmpPC = new TempPlayerContainer();
-                                tmpPC.name = incom.ReadString();
-                                tmpPC.kills = incom.ReadInt32();
-                                tmpPC.deaths = incom.ReadInt32();
-                                tmpPC.color = new Color(incom.ReadByte(), incom.ReadByte(), incom.ReadByte());
-                                //tmpPC.score =  (tmpPC.kills * 2)
-
-                                scoreBoardItems.Add(new ScoreBoardItem(content, pos, kills, deaths, i, score, name, color));
+                                scoreBoardItems.Add(new ScoreBoardItem(content, pos, tmpPCs[i].kills, tmpPCs[i].deaths, i + 1, tmpPCs[i].score, tmpPCs[i].name, tmpPCs[i].color));
                             }
 
                             break;
