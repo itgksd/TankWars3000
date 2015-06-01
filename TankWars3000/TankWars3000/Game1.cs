@@ -128,10 +128,10 @@ namespace TankWars3000
             }
             else if (gameState  == GameStates.Ingame)
             {
-                tank_startpos.Update(incmsg, tanks);
                 // The player
-                    tank.Update(Content, graphics, tanks, tracks);
-                    tank.Input(input, Content);
+                tank_startpos.Update(incmsg, tanks);
+                tank.Update(Content, graphics, tanks, tracks);
+                tank.Input(input, Content);
 
                 // TankTrack
                 for (int i = 0; i < tracks.Count; i++)

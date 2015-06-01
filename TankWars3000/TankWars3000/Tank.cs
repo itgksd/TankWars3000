@@ -93,7 +93,7 @@ namespace TankWars3000
                     }
                 }
                 #endregion
-
+            /*
                 #region Window update
                 if (position.X >= graphics.GraphicsDevice.Viewport.Width)
                     position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
@@ -107,7 +107,7 @@ namespace TankWars3000
                 if (position.Y < 0)
                     position.Y = 0;
                 #endregion
-
+            */
                 #region recieve action from server
                 if ((incmsg = Game1.Client.ReadMessage()) != null)
                 {
@@ -150,7 +150,7 @@ namespace TankWars3000
 
         public void Input(OldNewInput input, ContentManager content)
         {
-            if (IsAlive == true)
+            if (/* temp IsAlive == */true)
             {
                 NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
 
@@ -158,7 +158,7 @@ namespace TankWars3000
                 if (input.newKey.IsKeyDown(Keys.W))
                 {
                     outmsg = Game1.Client.CreateMessage();
-                    //needs to CreateMessage() every time a button is pressed, which means more that once some updates
+                    //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     position += direction * speed;
                     //update position, then send it to the server
 
@@ -173,7 +173,7 @@ namespace TankWars3000
                 if (input.newKey.IsKeyDown(Keys.S))
                 {
                     outmsg = Game1.Client.CreateMessage();
-                    //needs to CreateMessage() every time a button is pressed, which means more that once some updates
+                    //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     position -= direction * speed;
                     //update position, then send it to the server
 
@@ -188,7 +188,7 @@ namespace TankWars3000
                 if (input.newKey.IsKeyDown(Keys.D) /*&& input.oldKey.IsKeyUp(Keys.D) && input.newKey.IsKeyUp(Keys.A)bortkommenterat för test*/)
                 {
                     outmsg = Game1.Client.CreateMessage();
-                    //needs to CreateMessage() every time a button is pressed, which means more that once some updates
+                    //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     angle += MathHelper.Pi / 20;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
@@ -207,7 +207,7 @@ namespace TankWars3000
                 if (input.newKey.IsKeyDown(Keys.A) /*&& input.oldKey.IsKeyUp(Keys.A) && input.newKey.IsKeyUp(Keys.D) bortkommenterat för test*/)
                 {
                     outmsg = Game1.Client.CreateMessage();
-                    //needs to CreateMessage() every time a button is pressed, which means more that once some updates
+                    //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     angle -= MathHelper.Pi / 20;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
@@ -229,7 +229,7 @@ namespace TankWars3000
                 if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
                 {
                     outmsg = Game1.Client.CreateMessage();
-                    //needs to CreateMessage() every time a button is pressed, which means more that once some updates
+                    //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     outmsg.Write((byte)PacketTypes.SHOOT);
                     outmsg.Write(name);
                     outmsg.Write(position.X);
@@ -246,9 +246,11 @@ namespace TankWars3000
             foreach (Tank tank in tanks)
             {
                 tank.collisionRect = new Rectangle((int)tank.position.X, (int)tank.position.Y, tank.Texture.Width, tank.Texture.Height);
+                
                 //give values to the rectangle here because it needs to be up-to-date every time the tank is drawn
                 spriteBatch.Draw(tank.Texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None,1f);
-
+                
+                //writes the value of the tanks vector2 position, the spritefonts' position has an offset of 200 on the x-axis
                 spriteBatch.DrawString(tank.TestFont, tank.position.ToString(), new Vector2(tank.position.X + 200, tank.position.Y), Color.Wheat);
             
             }

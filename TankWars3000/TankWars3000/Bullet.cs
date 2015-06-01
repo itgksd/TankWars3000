@@ -51,7 +51,7 @@ namespace TankWars3000
             //spriteBatch.Draw(texture, position, collisionRect, Color.White, angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
         }
 
-        //need angle to draw bullet, direction to make it move the right way
+        //need direction to make it move the right way, don't need angle anymore because of the texture
         public Bullet(ContentManager content,string newname, Vector2 newposition)
         {
             texture       = content.Load<Texture2D>("Tank/Bullet");
