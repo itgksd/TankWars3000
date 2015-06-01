@@ -73,7 +73,13 @@ namespace TankWars3000
                                 int kills   = incom.ReadInt32();
                                 int deaths  = incom.ReadInt32();
                                 Color color = new Color(incom.ReadByte(), incom.ReadByte(), incom.ReadByte());
-                                int score = kills - deaths;
+                                int score   = (kills * 2) - deaths;
+                                TempPlayerContainer tmpPC = new TempPlayerContainer();
+                                tmpPC.name = incom.ReadString();
+                                tmpPC.kills = incom.ReadInt32();
+                                tmpPC.deaths = incom.ReadInt32();
+                                tmpPC.color = new Color(incom.ReadByte(), incom.ReadByte(), incom.ReadByte());
+                                //tmpPC.score =  (tmpPC.kills * 2)
 
                                 scoreBoardItems.Add(new ScoreBoardItem(content, pos, kills, deaths, i, score, name, color));
                             }
@@ -93,6 +99,13 @@ namespace TankWars3000
             toLobbyBtn.Draw(spriteBatch);
 
             scoreBoardItems.ForEach(s => s.Draw(spriteBatch));
+        }
+
+        class TempPlayerContainer
+        {
+            public string name;
+            public int kills, deaths, score;
+            public Color color;
         }
     }
 }
