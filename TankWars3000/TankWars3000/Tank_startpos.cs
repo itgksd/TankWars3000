@@ -10,23 +10,28 @@ namespace TankWars3000
     class Tank_startpos
     {
         string incmsg_name;
+        bool startposbool = true;
         public void Update(NetIncomingMessage incmsg, List<Tank> tanks)
         {
+            while (startposbool)
+            {
                 if ((incmsg = Game1.Client.ReadMessage()) != null)
                 {
-                    if (incmsg.ReadByte() == (byte)PacketTypes.STARTPOS)
-                    {
-                        incmsg_name = incmsg.ReadString();
-                        for (int i  = 0; i < tanks.Count; i++ )
+                        if (incmsg.ReadByte() == (byte)PacketTypes.STARTPOS)
                         {
-                            if (tanks[i].Name == incmsg_name)
+                            incmsg_name = incmsg.ReadString();
+                            for (int i = 0; i < tanks.Count; i++)
                             {
-                                tanks[i].Angle    = incmsg.ReadFloat();
-                                tanks[i].Position = new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat());
+                                if (tanks[i].Name == incmsg_name)
+                                {
+                                    tanks[i].Angle = incmsg.ReadFloat();
+                                    tanks[i].Position = new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat());
+                                }
+
                             }
-                            
-                        }           
+                        }
                  }
+                startposbool = false;
              }
         }
     }

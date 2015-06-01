@@ -52,6 +52,8 @@ namespace TankWars3000
         Tank tank;
         List<Tank> tanks       = new List<Tank>();
 
+        bool startposbool;
+
         NetIncomingMessage incmsg;
 
         List<TankTrack> tracks = new List<TankTrack>();
