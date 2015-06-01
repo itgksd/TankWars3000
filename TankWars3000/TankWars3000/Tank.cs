@@ -93,7 +93,7 @@ namespace TankWars3000
                     }
                 }
                 #endregion
-            /*
+            
                 #region Window update
                 if (position.X >= graphics.GraphicsDevice.Viewport.Width)
                     position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
@@ -107,7 +107,7 @@ namespace TankWars3000
                 if (position.Y < 0)
                     position.Y = 0;
                 #endregion
-            */
+            
                 #region recieve action from server
                 if ((incmsg = Game1.Client.ReadMessage()) != null)
                 {
