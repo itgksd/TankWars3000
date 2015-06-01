@@ -502,11 +502,11 @@ namespace TankWars3000_SERVER
                         if (tank1.Value.Tankrect.Intersects(tank2.Value.Tankrect)) //Själva kollisionen
                         {
                             
-                            Vector2 collisionPosition1 = new Vector2();
+                            Vector2 collisionPosition1 = new Vector2(); //Ändra positionen av Tank1
                             collisionPosition1.X = tank1.Value.Position.X + ((float)Math.Cos(tank1.Value.Angle + Math.PI));
                             collisionPosition1.Y = tank1.Value.Position.Y + ((float)Math.Sin(tank1.Value.Angle + Math.PI));
 
-                            NetOutgoingMessage outmsg = Server.CreateMessage();
+                            NetOutgoingMessage outmsg = Server.CreateMessage(); //Skapa meddelande till Client för ändring av Tank1
                             outmsg.Write((byte)PacketTypes.MOVE);
                             outmsg.Write(tank1.Key);
                             outmsg.Write(tank1.Value.Angle);
@@ -521,11 +521,11 @@ namespace TankWars3000_SERVER
 
                             Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
 
-                            Vector2 collisionPosition2 = new Vector2();
+                            Vector2 collisionPosition2 = new Vector2(); //Ändra position av Tank 2
                             collisionPosition2.X = tank2.Value.Position.X + ((float)Math.Cos(tank1.Value.Angle));
                             collisionPosition2.Y = tank2.Value.Position.Y + ((float)Math.Sin(tank1.Value.Angle));
 
-                            outmsg = Server.CreateMessage();
+                            outmsg = Server.CreateMessage(); //Skapa meddelande till Client för ändring av Tank2
                             outmsg.Write((byte)PacketTypes.MOVE);
                             outmsg.Write(tank2.Key);
                             outmsg.Write(tank2.Value.Angle);
@@ -537,6 +537,8 @@ namespace TankWars3000_SERVER
                                 outmsg.Write(explosionPosition.X);
                                 outmsg.Write(explosionPosition.Y);
                             }
+
+                            Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                             return true;
                         }
                     }
