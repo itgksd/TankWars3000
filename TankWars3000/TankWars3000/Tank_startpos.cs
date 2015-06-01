@@ -22,7 +22,7 @@ namespace TankWars3000
                             if (tanks[i].Name == incmsg_name)
                             {
                                 tanks[i].Angle    = incmsg.ReadFloat();
-                                tanks[i].Position = new Vector2(incmsg.ReadInt32(), incmsg.ReadInt32());
+                                tanks[i].Position = new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat());
                             }
                             
                         }           

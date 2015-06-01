@@ -120,12 +120,12 @@ namespace TankWars3000
                                 if (tanks[i].Name == incmsg_name)
                                {
                                     tanks[i].Angle    = incmsg.ReadFloat();
-                                    tanks[i].Position = new Vector2(incmsg.ReadInt32(), incmsg.ReadInt32());
+                                    tanks[i].Position = new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat());
                                     bool tempcollisionbool = incmsg.ReadBoolean();
                                     try     //Server will not always send position for explosion so try to read it
                                     {
-                                        tanks[i].explositionPos.X = incmsg.ReadInt32();
-                                        tanks[i].explositionPos.Y = incmsg.ReadInt32();
+                                        tanks[i].explositionPos.X = incmsg.ReadFloat();
+                                        tanks[i].explositionPos.Y = incmsg.ReadFloat();
 
                                         Track(tracks, content);
                                     }
@@ -138,7 +138,7 @@ namespace TankWars3000
                             break;
 
                         case (byte)PacketTypes.SHOOT:
-                            Bullet bullet = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadUInt32(), incmsg.ReadUInt32()));
+                            Bullet bullet = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat()));
                             bullets.Add(bullet);
                             break;
                         default:
@@ -157,7 +157,7 @@ namespace TankWars3000
                 #region Movment
                 if (input.newKey.IsKeyDown(Keys.W))
                 {
-                    outmsg = Game1.Client.CreateMessage();
+                    //TEMP outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     position += direction * speed;
                     //update position, then send it to the server
