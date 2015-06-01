@@ -52,7 +52,7 @@ namespace TankWars3000
         Tank tank;
         List<Tank> tanks       = new List<Tank>();
 
-        bool startposbool;
+        static public string tankname;
 
         NetIncomingMessage incmsg;
 
@@ -130,10 +130,12 @@ namespace TankWars3000
             }
             else if (gameState  == GameStates.Ingame)
             {
+                if (tank.Name == null)
+                    tank.Name = tankname;
                 // The player
                 tank_startpos.Update(incmsg, tanks);
                 tank.Update(Content, graphics, tanks, tracks);
-                tank.Input(input, Content);
+                tank.Input(input, Content, tanks);
 
                 // TankTrack
                 for (int i = 0; i < tracks.Count; i++)

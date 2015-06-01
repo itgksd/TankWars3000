@@ -228,6 +228,7 @@ namespace TankWars3000
 							background.PlayMusic = false;
 							Notify.NewMessage("Starting Game!", Color.LightBlue);
 							Game1.gameState = (GameStates)incom.ReadByte();
+                            Game1.tankname = nameBtn.Text;
 
 							// Skapa alla tank klasserna
 							foreach (PlayerListItem player in playerList)

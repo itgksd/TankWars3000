@@ -20,9 +20,11 @@ namespace TankWars3000
 
         static Texture2D texture;
 
-        Vector2 speed, position, direction, explositionPos;
+        Vector2 position, direction, explositionPos;
+        
+        Vector2 speed           = new Vector2(5, 5);
 
-        Color tankcolor             = new Color();
+        Color tankcolor         = new Color();
 
         TimeSpan reloadTime     = new TimeSpan(0, 0, 4);
 
@@ -148,16 +150,24 @@ namespace TankWars3000
                 #endregion
         }
 
-        public void Input(OldNewInput input, ContentManager content)
+        public void Input(OldNewInput input, ContentManager content, List<Tank> tanks)
         {
-            if (/* temp IsAlive == */true)
+            if (IsAlive == true)
             {
                 NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
+
+                for (int i = 0; i < tanks.Count; i++ )
+                {
+                    if (name == tanks[i].name)
+                        position = tanks[i].position;
+                }
+
 
                 #region Movment
                 if (input.newKey.IsKeyDown(Keys.W))
                 {
                     outmsg = Game1.Client.CreateMessage();
+
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     position += direction * speed;
                     //update position, then send it to the server
@@ -265,7 +275,6 @@ namespace TankWars3000
             testfont      = content.Load<SpriteFont>("Testfont");
             direction     = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
-            speed         = new Vector2(5, 5);
             this.name = name;
             tankcolor = color;
         }
