@@ -157,7 +157,7 @@ namespace TankWars3000
                 #region Movment
                 if (input.newKey.IsKeyDown(Keys.W))
                 {
-                    //TEMP outmsg = Game1.Client.CreateMessage();
+                    outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     position += direction * speed;
                     //update position, then send it to the server
@@ -187,7 +187,7 @@ namespace TankWars3000
 
                 if (input.newKey.IsKeyDown(Keys.D) /*&& input.oldKey.IsKeyUp(Keys.D) && input.newKey.IsKeyUp(Keys.A)bortkommenterat för test*/)
                 {
-                    //TEMP outmsg = Game1.Client.CreateMessage();
+                    outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     angle += MathHelper.Pi / 20;
                     //MathHelper.Pi * 2 is a full turn
@@ -206,7 +206,7 @@ namespace TankWars3000
                 }
                 if (input.newKey.IsKeyDown(Keys.A) /*&& input.oldKey.IsKeyUp(Keys.A) && input.newKey.IsKeyUp(Keys.D) bortkommenterat för test*/)
                 {
-                    //TEMP outmsg = Game1.Client.CreateMessage();
+                    outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     angle -= MathHelper.Pi / 20;
                     //MathHelper.Pi * 2 is a full turn
@@ -228,7 +228,7 @@ namespace TankWars3000
                 #region shoot
                 if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
                 {
-                    //TEMP outmsg = Game1.Client.CreateMessage();
+                    outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     outmsg.Write((byte)PacketTypes.SHOOT);
                     outmsg.Write(name);
