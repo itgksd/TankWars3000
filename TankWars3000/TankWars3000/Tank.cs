@@ -20,7 +20,9 @@ namespace TankWars3000
 
         static Texture2D texture;
 
-        Vector2 position, direction, explositionPos;
+        Vector2 position, explositionPos;
+
+        Vector2 direction       = new Vector2(1, 0);
         
         Vector2 speed           = new Vector2(5, 5);
 
@@ -273,7 +275,6 @@ namespace TankWars3000
         {
             texture       = content.Load<Texture2D>("Tank/Tank");
             testfont      = content.Load<SpriteFont>("Testfont");
-            direction     = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
             this.name = name;
             tankcolor = color;
