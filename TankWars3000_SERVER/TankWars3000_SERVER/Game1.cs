@@ -74,7 +74,7 @@ namespace TankWars3000_SERVER
 
         protected override void Initialize()
         {
-            this.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 120.0f);
+            this.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 480.0f);
             // TODO: Add your initialization logic here
             gameState = GameStates.Lobby;
 

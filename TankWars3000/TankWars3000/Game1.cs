@@ -153,13 +153,6 @@ namespace TankWars3000
                 scoreboard.Update(input);
             }
 
-            // TEMP
-            if (input.SingleKey(Keys.O))
-            {
-                gameState = GameStates.Scoreboard;
-                Notify.NewMessage("End of game! Scoreboard below!", Color.LightBlue);
-            }
-
             Notify.Update(gameTime);
 
             input.SetOldKey();
