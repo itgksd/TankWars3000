@@ -33,7 +33,7 @@ namespace TankWars3000
         //
         float timer;
 
-        float timerlimit = 12;
+        float timerlimit = 500;
         //the limit is so that you need only update one float instead of everywhere it is used
 
         NetIncomingMessage incmsg;
@@ -205,7 +205,7 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.UnreliableSequenced);
                 }
 
                 if (input.newKey.IsKeyDown(Keys.S) && timer >= timerlimit)
@@ -220,7 +220,7 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.UnreliableSequenced);
                 }
 
                 if (input.newKey.IsKeyDown(Keys.D) && timer >= timerlimit)
@@ -240,7 +240,7 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.UnreliableSequenced);
                 }
                 if (input.newKey.IsKeyDown(Keys.A) && timer >= timerlimit)
                 {
@@ -259,7 +259,7 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.UnreliableSequenced);
                 }
                 #endregion
 
