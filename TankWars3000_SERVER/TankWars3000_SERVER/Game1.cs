@@ -262,7 +262,7 @@ namespace TankWars3000_SERVER
                             readyCount++;
                     if (tanks.Count > 0 && (float)Decimal.Divide(readyCount, tanks.Count) > 0.7f) // > 1 !!!
                     {
-
+                        ingameTime = DateTime.Now;
                         gameState = GameStates.Ingame; //Spelet lämnar lobby och startar
                         Debug.WriteLine("Sv-Sending ingame message");
                         NetOutgoingMessage outmsg = Server.CreateMessage();
