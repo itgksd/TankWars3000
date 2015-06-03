@@ -185,13 +185,6 @@ namespace TankWars3000_SERVER
 
                                     // skapa ny Tank och lägg det i en lista
                                     tanks.Add(name, new Tank(name));
-
-                                    //Debug.WriteLine("Sv-Sending test message");
-                                    //// Skicka ett test paket för att låta klienten veta att anslutningen fungerar.. "Ni" kan nog ta bort den senare om den inte behövs längre
-                                    //NetOutgoingMessage testMsg = Server.CreateMessage();
-                                    //testMsg.Write((byte)PacketTypes.TEST);
-                                    //testMsg.Write("Test string");
-                                    //Server.SendMessage(testMsg, incomingMessage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
                                 }
                                 break;
                             case NetIncomingMessageType.Data:

@@ -178,7 +178,7 @@ namespace TankWars3000
 
 
                 #region Movment
-                if (input.newKey.IsKeyDown(Keys.W)/* && timer >= timerlimit*/)
+                if (input.newKey.IsKeyDown(Keys.W) && timer >= timerlimit)
                 {
 
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -186,8 +186,8 @@ namespace TankWars3000
                     tanks[name].position = position;
                     //update position, then send it to the server
 
-                    if (timer >= timerlimit)
-                    {
+                    //if (timer >= timerlimit)
+                    //{
                         outmsg = Game1.Client.CreateMessage();
                         outmsg.Write((byte)PacketTypes.MOVE);
                         outmsg.Write(name);
@@ -195,18 +195,18 @@ namespace TankWars3000
                         outmsg.Write(position.Y);
                         outmsg.Write(angle);
                         Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
-                    }
+                    //}
                 }
 
-                if (input.newKey.IsKeyDown(Keys.S)/* && timer >= timerlimit*/)
+                if (input.newKey.IsKeyDown(Keys.S) && timer >= timerlimit)
                 {
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     position -= direction * speed;
                     tanks[name].position = position;
                     //update position, then send it to the server
 
-                    if (timer >= timerlimit)
-                    {
+                    //if (timer >= timerlimit)
+                    //{
                         outmsg = Game1.Client.CreateMessage();
                         outmsg.Write((byte)PacketTypes.MOVE);
                         outmsg.Write(name);
@@ -214,10 +214,10 @@ namespace TankWars3000
                         outmsg.Write(position.Y);
                         outmsg.Write(angle);
                         Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
-                    }
+                    //}
                 }
 
-                if (input.newKey.IsKeyDown(Keys.D)/* && timer >= timerlimit*/)
+                if (input.newKey.IsKeyDown(Keys.D) && timer >= timerlimit)
                 {
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     angle += MathHelper.Pi / 50;
@@ -230,8 +230,8 @@ namespace TankWars3000
 
                     tanks[name].direction = direction;
 
-                    if (timer >= timerlimit)
-                    {
+                    //if (timer >= timerlimit)
+                    //{
                         outmsg = Game1.Client.CreateMessage();
                         outmsg.Write((byte)PacketTypes.MOVE);
                         outmsg.Write(name);
@@ -239,9 +239,9 @@ namespace TankWars3000
                         outmsg.Write(position.Y);
                         outmsg.Write(angle);
                         Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
-                    }
+                    //}
                 }
-                if (input.newKey.IsKeyDown(Keys.A)/* && timer >= timerlimit*/)
+                if (input.newKey.IsKeyDown(Keys.A) && timer >= timerlimit)
                 {
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     angle -= MathHelper.Pi / 50;
@@ -254,8 +254,8 @@ namespace TankWars3000
 
                     tanks[name].direction = direction;
 
-                    if (timer >= timerlimit)
-                    {
+                    //if (timer >= timerlimit)
+                    //{
                         outmsg = Game1.Client.CreateMessage();
                         outmsg.Write((byte)PacketTypes.MOVE);
                         outmsg.Write(name);
@@ -263,7 +263,7 @@ namespace TankWars3000
                         outmsg.Write(position.Y);
                         outmsg.Write(angle);
                         Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
-                    }
+                    //}
                 }
                 #endregion
 
