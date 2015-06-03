@@ -47,12 +47,14 @@ namespace TankWars3000_SERVER
         int tankWidth = 136;
         int tankHeight = 76;
 
+        int counter = 0;
         // Server object
         static NetServer Server;
         // Configuration object
         static NetPeerConfiguration Config;
         NetIncomingMessage incomingMessage;
         DateTime nextUpdate;
+        DateTime ingameTime;
         int amountOfPlayers = 8;
         int connectionAmount = 0;
 
@@ -261,6 +263,7 @@ namespace TankWars3000_SERVER
                             readyCount++;
                     if (tanks.Count > 0 && (float)Decimal.Divide(readyCount, tanks.Count) > 0.7f) // > 1 !!!
                     {
+                        ingameTime = DateTime.Now;
                         gameState = GameStates.Ingame; //Spelet lämnar lobby och startar
                         Debug.WriteLine("Sv-Sending ingame message");
                         NetOutgoingMessage outmsg = Server.CreateMessage();
@@ -341,8 +344,11 @@ namespace TankWars3000_SERVER
                             Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                         }
                     }
+                    
                     if ((incomingMessage = Server.ReadMessage()) != null) //Ta emot meddelanden och hantering av dessa
                     {
+                        counter++;
+                        Debug.WriteLine(counter);
                         switch (incomingMessage.MessageType)
                         {
 
@@ -390,12 +396,9 @@ namespace TankWars3000_SERVER
                                                 outmsg.Write(explosionPosition.Y);
                                             }
 
+                                            //Skicka alla värden till alla Clients
                                             Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                                         }
-
-                                        //Skicka alla värden till alla Clients
-                                      
-                                        
                                         break;
 
                                     case (byte)PacketTypes.SHOOT: //INformation om en tank sköt
