@@ -32,7 +32,8 @@ namespace TankWars3000
         //
         float timer;
 
-        Rectangle collisionRect = new Rectangle();
+        float timerlimit = 12;
+        //the limit is so that you need only update one float instead of everywhere it is used
 
         NetIncomingMessage incmsg;
 
@@ -168,7 +169,7 @@ namespace TankWars3000
 
 
                 #region Movment
-                if (input.newKey.IsKeyDown(Keys.W) && timer >= 12)
+                if (input.newKey.IsKeyDown(Keys.W) && timer >= timerlimit)
                 {
                     outmsg = Game1.Client.CreateMessage();
 
@@ -184,7 +185,7 @@ namespace TankWars3000
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
-                if (input.newKey.IsKeyDown(Keys.S) && timer >= 12)
+                if (input.newKey.IsKeyDown(Keys.S) && timer >= timerlimit)
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -199,7 +200,7 @@ namespace TankWars3000
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
-                if (input.newKey.IsKeyDown(Keys.D) && timer >= 12)
+                if (input.newKey.IsKeyDown(Keys.D) && timer >= timerlimit)
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -218,7 +219,7 @@ namespace TankWars3000
                     outmsg.Write(angle);
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
-                if (input.newKey.IsKeyDown(Keys.A) && timer >= 12)
+                if (input.newKey.IsKeyDown(Keys.A) && timer >= timerlimit)
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -240,7 +241,7 @@ namespace TankWars3000
                 #endregion
 
                 #region shoot
-                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space) && timer >= 12)
+                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space) && timer >= timerlimit)
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -252,7 +253,7 @@ namespace TankWars3000
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
                 //Reset timer
-                if (timer > 12)
+                if (timer > timerlimit)
                 {
                     timer = 0;
                 }
