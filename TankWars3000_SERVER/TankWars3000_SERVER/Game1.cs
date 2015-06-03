@@ -59,7 +59,7 @@ namespace TankWars3000_SERVER
 
         bool canCountTime = true;
         bool sendStartPos = true;
-
+        int counter = 0;
         List<bullet> bullets = new List<bullet>();
         Dictionary<string, Tank> tanks;
         System.Timers.Timer timer;
@@ -346,7 +346,8 @@ namespace TankWars3000_SERVER
 
                     if ((incomingMessage = Server.ReadMessage()) != null) //Ta emot meddelanden och hantering av dessa
                     {
-
+                        counter++;
+                        Debug.WriteLine(counter);
                         switch (incomingMessage.MessageType)
                         {
 
@@ -419,7 +420,7 @@ namespace TankWars3000_SERVER
                         }
 
                         //Spelet kollar om servern har varit i ingame i 5 minuter och ifall det är sant byter denna till scoreboard
-                        if (ingameTime.AddSeconds(10) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
+                        if (ingameTime.AddSeconds(1000) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
                         {
                             gameState = GameStates.Scoreboard;
                         }
