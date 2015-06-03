@@ -420,7 +420,7 @@ namespace TankWars3000_SERVER
                                 break;
                         }
                     }
-                    NetOutgoingMessage outtmsg = Server.CreateMessage();
+                    /*NetOutgoingMessage outtmsg = Server.CreateMessage();
                     outtmsg.Write((byte)PacketTypes.FINALSCOREBOARD);
                     outtmsg.Write(tanks.Count);
                     foreach (KeyValuePair<string, Tank> tank in tanks)
@@ -433,7 +433,7 @@ namespace TankWars3000_SERVER
                         outtmsg.Write(tank.Value.TankColor.B);
                     }
                     Server.SendToAll(outtmsg, NetDeliveryMethod.ReliableOrdered);
-                    Debug.WriteLine("Sv-Sending final scoreboard from ingame");
+                    Debug.WriteLine("Sv-Sending final scoreboard from ingame");*/
                 }
 
                 //Spelet slutar och clienten hamnar på Scoreboard
