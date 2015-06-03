@@ -29,6 +29,7 @@ namespace TankWars3000
         Color tankcolor         = new Color();
 
         TimeSpan reloadTime     = new TimeSpan(0, 0, 4);
+        float timer;
 
         Rectangle collisionRect = new Rectangle();
 
@@ -152,12 +153,12 @@ namespace TankWars3000
                 #endregion
         }
 
-        public void Input(OldNewInput input, ContentManager content, List<Tank> tanks)
+        public void Input(OldNewInput input, ContentManager content, List<Tank> tanks, GameTime gametime)
         {
             if (IsAlive == true)
             {
                 NetOutgoingMessage outmsg;
-
+                timer += gametime.ElapsedGameTime.Milliseconds;
                 for (int i = 0; i < tanks.Count; i++ )
                 {
                     if (name == tanks[i].name)
@@ -166,7 +167,7 @@ namespace TankWars3000
 
 
                 #region Movment
-                if (input.newKey.IsKeyDown(Keys.W) && input.oldKey.IsKeyUp(Keys.W))
+                if (input.newKey.IsKeyDown(Keys.W) && timer >= 12)
                 {
                     outmsg = Game1.Client.CreateMessage();
 
@@ -182,7 +183,7 @@ namespace TankWars3000
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
-                if (input.newKey.IsKeyDown(Keys.S))
+                if (input.newKey.IsKeyDown(Keys.S) && timer >= 12)
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -197,7 +198,7 @@ namespace TankWars3000
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
 
-                if (input.newKey.IsKeyDown(Keys.D) /*&& input.oldKey.IsKeyUp(Keys.D) && input.newKey.IsKeyUp(Keys.A)bortkommenterat för test*/)
+                if (input.newKey.IsKeyDown(Keys.D) && timer >= 12)
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -216,7 +217,7 @@ namespace TankWars3000
                     outmsg.Write(angle);
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
-                if (input.newKey.IsKeyDown(Keys.A) /*&& input.oldKey.IsKeyUp(Keys.A) && input.newKey.IsKeyUp(Keys.D) bortkommenterat för test*/)
+                if (input.newKey.IsKeyDown(Keys.A) && timer >= 12)
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -238,7 +239,7 @@ namespace TankWars3000
                 #endregion
 
                 #region shoot
-                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
+                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space) && timer >= 12)
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -249,6 +250,11 @@ namespace TankWars3000
                     outmsg.Write(angle);
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
+                //Reset timer
+                if (timer > 12)
+                {
+                    timer = 0;
+                }
                 #endregion
             }
         }
@@ -257,7 +263,6 @@ namespace TankWars3000
         {
             foreach (Tank tank in tanks)
             {
-                //give values to the rectangle here because it needs to be up-to-date every time the tank is drawn
                 spriteBatch.Draw(tank.Texture, tank.position, null, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None,0f);
                 
                 //writes the value of the tanks vector2 position, the spritefonts' position has an offset of 200 on the x-axis

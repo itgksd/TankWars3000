@@ -262,7 +262,7 @@ namespace TankWars3000_SERVER
                             readyCount++;
                     if (tanks.Count > 0 && (float)Decimal.Divide(readyCount, tanks.Count) > 0.7f) // > 1 !!!
                     {
-
+                        ingameTime = DateTime.Now;
                         gameState = GameStates.Ingame; //Spelet lämnar lobby och startar
                         Debug.WriteLine("Sv-Sending ingame message");
                         NetOutgoingMessage outmsg = Server.CreateMessage();
@@ -418,20 +418,26 @@ namespace TankWars3000_SERVER
                                 break;
                         }
                     }
-                    NetOutgoingMessage outtmsg = Server.CreateMessage();
-                    outtmsg.Write((byte)PacketTypes.FINALSCOREBOARD);
-                    outtmsg.Write(tanks.Count);
-                    foreach (KeyValuePair<string, Tank> tank in tanks)
+                    
+                    //Spelet kollar om servern har varit i ingame i 5 minuter och ifall det är sant byter denna till scoreboard
+                    if (ingameTime.AddSeconds(10) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
                     {
-                        outtmsg.Write(tank.Value.Name);
-                        outtmsg.Write(tank.Value.Kills);
-                        outtmsg.Write(tank.Value.Deaths);
-                        outtmsg.Write(tank.Value.TankColor.R);
-                        outtmsg.Write(tank.Value.TankColor.G);
-                        outtmsg.Write(tank.Value.TankColor.B);
+                        gameState = GameStates.Scoreboard;
+                        NetOutgoingMessage outtmsg = Server.CreateMessage();
+                        outtmsg.Write((byte)PacketTypes.FINALSCOREBOARD);
+                        outtmsg.Write(tanks.Count);
+                        foreach (KeyValuePair<string, Tank> tank in tanks)
+                        {
+                            outtmsg.Write(tank.Value.Name);
+                            outtmsg.Write(tank.Value.Kills);
+                            outtmsg.Write(tank.Value.Deaths);
+                            outtmsg.Write(tank.Value.TankColor.R);
+                            outtmsg.Write(tank.Value.TankColor.G);
+                            outtmsg.Write(tank.Value.TankColor.B);
+                        }
+                        Server.SendToAll(outtmsg, NetDeliveryMethod.ReliableOrdered);
+                        Debug.WriteLine("Sv-Sending final scoreboard from ingame");
                     }
-                    Server.SendToAll(outtmsg, NetDeliveryMethod.ReliableOrdered);
-                    Debug.WriteLine("Sv-Sending final scoreboard from ingame");
                 }
 
                 //Spelet slutar och clienten hamnar på Scoreboard
