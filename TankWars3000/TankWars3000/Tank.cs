@@ -33,7 +33,7 @@ namespace TankWars3000
         //
         float timer;
 
-        float timerlimit = 20;
+        float timerlimit = 50;
         //the limit is so that you need only update one float instead of everywhere it is used
 
         NetIncomingMessage incmsg;
