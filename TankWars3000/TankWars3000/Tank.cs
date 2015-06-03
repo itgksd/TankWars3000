@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -145,6 +146,28 @@ namespace TankWars3000
                         case (byte)PacketTypes.SHOOT:
                             Bullet bullet = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat()));
                             bullets.Add(bullet);
+                            break;
+
+
+
+                        case (byte)PacketTypes.GAMESTATE:
+                            Debug.WriteLine("Cl-Reveiced gamestate change");
+                            Game1.gameState = (GameStates)incmsg.ReadByte();
+                            break;
+
+                        case (byte)PacketTypes.HEARTBEAT:
+                            // Respond to the Heartbeat request of the server
+                            Debug.WriteLine("Cl-Received heartbeat, responding");
+                            NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
+                            outmsg.Write((byte)PacketTypes.HEARTBEAT);
+                            outmsg.Write(Game1.tankname);
+                            Game1.Client.SendMessage(outmsg, incmsg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+                            break;
+
+                        case (byte)PacketTypes.DISCONNECTREASON:
+                            Debug.WriteLine("Cl-Kicked by server");
+                            Notify.NewMessage("Kick reason: " + incmsg.ReadString(), Color.Purple);
+                            Game1.gameState = GameStates.Lobby;
                             break;
                         default:
                             break;
