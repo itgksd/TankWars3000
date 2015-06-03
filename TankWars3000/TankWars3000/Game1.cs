@@ -135,7 +135,7 @@ namespace TankWars3000
                 // The player
                 tank_startpos.Update(incmsg, tanks);
                 tank.Update(Content, graphics, tanks, tracks);
-                tank.Input(input, Content, tanks);
+                tank.Input(input, Content, tanks, gameTime);
 
                 // TankTrack
                 for (int i = 0; i < tracks.Count; i++)
