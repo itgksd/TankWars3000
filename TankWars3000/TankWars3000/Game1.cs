@@ -50,7 +50,7 @@ namespace TankWars3000
         // The Player
         Tank_startpos tank_startpos;
         Tank tank;
-        List<Tank> tanks       = new List<Tank>();
+        Dictionary<string, Tank> tanks       = new Dictionary<string,Tank>();
 
         static public string tankname;
 

@@ -74,6 +74,7 @@ namespace TankWars3000_SERVER
 
         protected override void Initialize()
         {
+            this.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 120.0f);
             // TODO: Add your initialization logic here
             gameState = GameStates.Lobby;
 
@@ -133,8 +134,9 @@ namespace TankWars3000_SERVER
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            while (true)
-            {
+            SuppressDraw();
+            //while (true)
+            //{
                 if (gameState == GameStates.Lobby)
                 {
                     // så att Ingame bara skickar startpos en gång
@@ -468,7 +470,7 @@ namespace TankWars3000_SERVER
                     }
                 }
                 base.Update(gameTime);
-            }
+            //}
         }
 
         public void UpdateAndSendBullets()

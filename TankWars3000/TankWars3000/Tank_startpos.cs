@@ -12,7 +12,7 @@ namespace TankWars3000
         string incmsg_name;
         bool startposbool = true;
         int count = 0;
-        public void Update(NetIncomingMessage incmsg, List<Tank> tanks)
+        public void Update(NetIncomingMessage incmsg, Dictionary<string, Tank> tanks)
         {
             while (startposbool)
             {
@@ -21,16 +21,9 @@ namespace TankWars3000
                         if (incmsg.ReadByte() == (byte)PacketTypes.STARTPOS)
                         {
                             incmsg_name = incmsg.ReadString();
-                            for (int i = 0; i < tanks.Count; i++)
-                            {
-                                if (tanks[i].Name == incmsg_name)
-                                {
-                                    tanks[i].Angle = incmsg.ReadFloat();
-                                    tanks[i].Position = new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat());
-                                    count++;
-                                }
-
-                            }
+                            tanks[incmsg_name].Angle = incmsg.ReadFloat();
+                            tanks[incmsg_name].Position = new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat());
+                            count++;
                         }
                  }
                 if(count == tanks.Count)
