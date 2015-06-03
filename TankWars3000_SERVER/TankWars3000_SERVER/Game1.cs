@@ -422,6 +422,11 @@ namespace TankWars3000_SERVER
                         if (ingameTime.AddSeconds(10) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
                         {
                             gameState = GameStates.Scoreboard;
+
+                            NetOutgoingMessage outmsg = Server.CreateMessage();
+                            outmsg.Write((byte)PacketTypes.GAMESTATE);
+                            outmsg.Write((byte)GameStates.Scoreboard);
+                            Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                         }
                     }
 
@@ -442,6 +447,7 @@ namespace TankWars3000_SERVER
                         }
                         Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                         Debug.WriteLine("Sv-Sending final scoreboard");
+                        gameState = GameStates.Lobby;
                     }
 
 
