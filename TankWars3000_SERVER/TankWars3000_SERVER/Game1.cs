@@ -221,7 +221,7 @@ namespace TankWars3000_SERVER
                                         tanks[name].LastBeat = DateTime.Now;
                                         Debug.WriteLine("Sv-HeartBeat respons for " + name);
                                         break;
-                                        
+
                                     case (byte)PacketTypes.DISCONNECT:
                                         name = incomingMessage.ReadString(); // Get name
                                         tanks.Remove(name); // Remove its tank
@@ -315,7 +315,7 @@ namespace TankWars3000_SERVER
                         UpdateAndSendBullets();
 
                     }
-                    
+
                     // kolla om någon är död
                     foreach (KeyValuePair<string, Tank> tank in tanks)
                     {
@@ -343,7 +343,7 @@ namespace TankWars3000_SERVER
                             Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                         }
                     }
-                    
+
                     if ((incomingMessage = Server.ReadMessage()) != null) //Ta emot meddelanden och hantering av dessa
                     {
 
@@ -417,50 +417,50 @@ namespace TankWars3000_SERVER
                                 }
                                 break;
                         }
-                    
-                    //Spelet kollar om servern har varit i ingame i 5 minuter och ifall det är sant byter denna till scoreboard
-                    if (ingameTime.AddSeconds(10) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
-                    {
-                        gameState = GameStates.Scoreboard;
-                    }
-                }
 
-                //Spelet slutar och clienten hamnar på Scoreboard
-                if (gameState == GameStates.Scoreboard)
-                {
-                    NetOutgoingMessage outmsg = Server.CreateMessage();
-                    outmsg.Write((byte)PacketTypes.FINALSCOREBOARD);
-                    outmsg.Write(tanks.Count);
+                        //Spelet kollar om servern har varit i ingame i 5 minuter och ifall det är sant byter denna till scoreboard
+                        if (ingameTime.AddSeconds(10) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
+                        {
+                            gameState = GameStates.Scoreboard;
+                        }
+                    }
+
+                    //Spelet slutar och clienten hamnar på Scoreboard
+                    if (gameState == GameStates.Scoreboard)
+                    {
+                        NetOutgoingMessage outmsg = Server.CreateMessage();
+                        outmsg.Write((byte)PacketTypes.FINALSCOREBOARD);
+                        outmsg.Write(tanks.Count);
+                        foreach (KeyValuePair<string, Tank> tank in tanks)
+                        {
+                            outmsg.Write(tank.Value.Name);
+                            outmsg.Write(tank.Value.Kills);
+                            outmsg.Write(tank.Value.Deaths);
+                            outmsg.Write(tank.Value.TankColor.R);
+                            outmsg.Write(tank.Value.TankColor.G);
+                            outmsg.Write(tank.Value.TankColor.B);
+                        }
+                        Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+                        Debug.WriteLine("Sv-Sending final scoreboard");
+                    }
+
+
+                    // Ta bort gammla anslutningar
+                    List<string> tmpKeys = new List<string>();
                     foreach (KeyValuePair<string, Tank> tank in tanks)
                     {
-                        outmsg.Write(tank.Value.Name);
-                        outmsg.Write(tank.Value.Kills);
-                        outmsg.Write(tank.Value.Deaths);
-                        outmsg.Write(tank.Value.TankColor.R);
-                        outmsg.Write(tank.Value.TankColor.G);
-                        outmsg.Write(tank.Value.TankColor.B);
+                        if ((DateTime.Now - tank.Value.LastBeat).TotalSeconds >= 31)
+                        {
+                            tmpKeys.Add(tank.Value.Name);
+                        }
                     }
-                    Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
-                    Debug.WriteLine("Sv-Sending final scoreboard");
-                }
-
-
-                // Ta bort gammla anslutningar
-                List<string> tmpKeys = new List<string>();
-                foreach (KeyValuePair<string, Tank> tank in tanks)
-                {
-                    if ((DateTime.Now - tank.Value.LastBeat).TotalSeconds >= 31)
+                    foreach (string item in tmpKeys)
                     {
-                        tmpKeys.Add(tank.Value.Name);
+                        tanks.Remove(item);
                     }
                 }
-                foreach (string item in tmpKeys)
-                {
-                    tanks.Remove(item);
-                }
+                base.Update(gameTime);
             }
-            base.Update(gameTime);
-        }
         }
 
         public void UpdateAndSendBullets()
