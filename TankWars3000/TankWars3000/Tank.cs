@@ -20,7 +20,9 @@ namespace TankWars3000
 
         static Texture2D texture;
 
-        Vector2 position, direction, explositionPos;
+        Vector2 position, explositionPos;
+
+        Vector2 direction       = new Vector2(1, 0);
         
         Vector2 speed           = new Vector2(5, 5);
 
@@ -154,7 +156,7 @@ namespace TankWars3000
         {
             if (IsAlive == true)
             {
-                NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
+                NetOutgoingMessage outmsg;
 
                 for (int i = 0; i < tanks.Count; i++ )
                 {
@@ -164,7 +166,7 @@ namespace TankWars3000
 
 
                 #region Movment
-                if (input.newKey.IsKeyDown(Keys.W))
+                if (input.newKey.IsKeyDown(Keys.W) && input.oldKey.IsKeyUp(Keys.W))
                 {
                     outmsg = Game1.Client.CreateMessage();
 
@@ -182,7 +184,7 @@ namespace TankWars3000
 
                 if (input.newKey.IsKeyDown(Keys.S))
                 {
-                    //TEMP outmsg = Game1.Client.CreateMessage();
+                    outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     position -= direction * speed;
                     //update position, then send it to the server
@@ -255,14 +257,11 @@ namespace TankWars3000
         {
             foreach (Tank tank in tanks)
             {
-                tank.collisionRect = new Rectangle((int)tank.position.X, (int)tank.position.Y, tank.Texture.Width, tank.Texture.Height);
-                
                 //give values to the rectangle here because it needs to be up-to-date every time the tank is drawn
-                spriteBatch.Draw(tank.Texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None,1f);
+                spriteBatch.Draw(tank.Texture, tank.position, null, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None,0f);
                 
                 //writes the value of the tanks vector2 position, the spritefonts' position has an offset of 200 on the x-axis
                 spriteBatch.DrawString(tank.TestFont, tank.position.ToString(), new Vector2(tank.position.X + 200, tank.position.Y), Color.Wheat);
-            
             }
             
             foreach (Bullet bullet in bullets)
@@ -273,7 +272,6 @@ namespace TankWars3000
         {
             texture       = content.Load<Texture2D>("Tank/Tank");
             testfont      = content.Load<SpriteFont>("Testfont");
-            direction     = new Vector2(1, 0);
             textureOrigin = new Vector2(texture.Width / 2, texture.Height / 2);
             this.name = name;
             tankcolor = color;

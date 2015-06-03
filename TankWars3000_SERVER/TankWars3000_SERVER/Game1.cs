@@ -362,8 +362,8 @@ namespace TankWars3000_SERVER
                                     case (byte)PacketTypes.MOVE: //Kolla om en tank rör sig
                                         //Spara värden Server fick från client
                                         name = incomingMessage.ReadString();
-                                        int x = incomingMessage.ReadInt32();
-                                        int y = incomingMessage.ReadInt32();
+                                        float x = incomingMessage.ReadFloat();
+                                        float y = incomingMessage.ReadFloat();
                                         float angle = incomingMessage.ReadFloat();
                                         NetOutgoingMessage outmsg = Server.CreateMessage();
 
@@ -371,7 +371,7 @@ namespace TankWars3000_SERVER
                                         {
                                             if (tank.Key == name)
                                             {
-                                                tank.Value.Tankrect = new Rectangle(x, y, tankWidth, tankHeight);
+                                                tank.Value.Tankrect = new Rectangle((int) x, (int) y, tankWidth, tankHeight);
                                                 tank.Value.Angle = angle;
                                                 tank.Value.Position = new Vector2(x, y);
                                             }
@@ -406,7 +406,7 @@ namespace TankWars3000_SERVER
                                         y = incomingMessage.ReadInt32();
                                         angle = incomingMessage.ReadFloat();
 
-                                        bullets.Add(new bullet(x, y, angle, name)); //Skapa bullet
+                                        bullets.Add(new bullet((int) x,(int) y, angle, name)); //Skapa bullet
 
                                         NetOutgoingMessage outmsg2 = Server.CreateMessage();
                                         outmsg2.Write((byte)PacketTypes.SHOOT);
