@@ -130,18 +130,14 @@ namespace TankWars3000
                                     tanks[i].Angle    = incmsg.ReadFloat();
                                     tanks[i].Position = new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat());
                                     bool tempcollisionbool = incmsg.ReadBoolean();
-                                    try     //Server will not always send position for explosion so try to read it
+                                    if (tempcollisionbool)
                                     {
                                         tanks[i].explositionPos.X = incmsg.ReadFloat();
                                         tanks[i].explositionPos.Y = incmsg.ReadFloat();
 
                                         Track(tracks, content);
                                     }
-                                    catch (Exception ex)
-                                    { }
                                }
-                            
-                                
                             }
                             break;
 
