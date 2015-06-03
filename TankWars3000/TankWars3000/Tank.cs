@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -32,7 +33,8 @@ namespace TankWars3000
         //
         float timer;
 
-        Rectangle collisionRect = new Rectangle();
+        float timerlimit = 500;
+        //the limit is so that you need only update one float instead of everywhere it is used
 
         NetIncomingMessage incmsg;
 
@@ -147,6 +149,28 @@ namespace TankWars3000
                             Bullet bullet = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat()));
                             bullets.Add(bullet);
                             break;
+
+
+
+                        case (byte)PacketTypes.GAMESTATE:
+                            Debug.WriteLine("Cl-Reveiced gamestate change");
+                            Game1.gameState = (GameStates)incmsg.ReadByte();
+                            break;
+
+                        case (byte)PacketTypes.HEARTBEAT:
+                            // Respond to the Heartbeat request of the server
+                            Debug.WriteLine("Cl-Received heartbeat, responding");
+                            NetOutgoingMessage outmsg = Game1.Client.CreateMessage();
+                            outmsg.Write((byte)PacketTypes.HEARTBEAT);
+                            outmsg.Write(Game1.tankname);
+                            Game1.Client.SendMessage(outmsg, incmsg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+                            break;
+
+                        case (byte)PacketTypes.DISCONNECTREASON:
+                            Debug.WriteLine("Cl-Kicked by server");
+                            Notify.NewMessage("Kick reason: " + incmsg.ReadString(), Color.Purple);
+                            Game1.gameState = GameStates.Lobby;
+                            break;
                         default:
                             break;
                     }
@@ -168,7 +192,7 @@ namespace TankWars3000
 
 
                 #region Movment
-                if (input.newKey.IsKeyDown(Keys.W) && timer >= 12)
+                if (input.newKey.IsKeyDown(Keys.W) && timer >= timerlimit)
                 {
                     outmsg = Game1.Client.CreateMessage();
 
@@ -181,10 +205,10 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
 
-                if (input.newKey.IsKeyDown(Keys.S) && timer >= 12)
+                if (input.newKey.IsKeyDown(Keys.S) && timer >= timerlimit)
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -196,10 +220,10 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
 
-                if (input.newKey.IsKeyDown(Keys.D) && timer >= 12)
+                if (input.newKey.IsKeyDown(Keys.D) && timer >= timerlimit)
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -216,9 +240,9 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
-                if (input.newKey.IsKeyDown(Keys.A) && timer >= 12)
+                if (input.newKey.IsKeyDown(Keys.A) && timer >= timerlimit)
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -235,12 +259,12 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
                 #endregion
 
                 #region shoot
-                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space) && timer >= 12)
+                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space) && timer >= timerlimit)
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -252,7 +276,7 @@ namespace TankWars3000
                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
                 //Reset timer
-                if (timer > 12)
+                if (timer > timerlimit)
                 {
                     timer = 0;
                 }
