@@ -166,7 +166,7 @@ namespace TankWars3000
 
 
                 #region Movment
-                if (input.newKey.IsKeyDown(Keys.W))
+                if (input.newKey.IsKeyDown(Keys.W) && input.oldKey.IsKeyUp(Keys.W))
                 {
                     outmsg = Game1.Client.CreateMessage();
 
@@ -257,14 +257,14 @@ namespace TankWars3000
         {
             foreach (Tank tank in tanks)
             {
-                tank.collisionRect = new Rectangle((int)tank.position.X, (int)tank.position.Y, tank.Texture.Width, tank.Texture.Height);
+                //adding this rectangle messes things up for some reason
+                // tank.collisionRect = new Rectangle((int)tank.position.X, (int)tank.position.Y, tank.Texture.Width, tank.Texture.Height);
                 
                 //give values to the rectangle here because it needs to be up-to-date every time the tank is drawn
-                spriteBatch.Draw(tank.Texture, tank.position, tank.collisionRect, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None,1f);
+                spriteBatch.Draw(tank.Texture, tank.position, null, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None,0f);
                 
                 //writes the value of the tanks vector2 position, the spritefonts' position has an offset of 200 on the x-axis
                 spriteBatch.DrawString(tank.TestFont, tank.position.ToString(), new Vector2(tank.position.X + 200, tank.position.Y), Color.Wheat);
-            
             }
             
             foreach (Bullet bullet in bullets)
