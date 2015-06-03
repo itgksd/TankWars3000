@@ -205,7 +205,7 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.UnreliableSequenced);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
 
                 if (input.newKey.IsKeyDown(Keys.S) && timer >= timerlimit)
@@ -220,7 +220,7 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.UnreliableSequenced);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
 
                 if (input.newKey.IsKeyDown(Keys.D) && timer >= timerlimit)
@@ -240,7 +240,7 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.UnreliableSequenced);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
                 if (input.newKey.IsKeyDown(Keys.A) && timer >= timerlimit)
                 {
@@ -259,7 +259,7 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.UnreliableSequenced);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
                 #endregion
 
