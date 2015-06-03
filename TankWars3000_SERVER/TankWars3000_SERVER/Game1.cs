@@ -47,7 +47,6 @@ namespace TankWars3000_SERVER
         int tankWidth = 136;
         int tankHeight = 76;
 
-        int counter = 0;
         // Server object
         static NetServer Server;
         // Configuration object
@@ -297,7 +296,7 @@ namespace TankWars3000_SERVER
 
                             float angle = (float)(deg + Math.PI);
 
-                            tank.Value.Tankrect = new Rectangle((int) x,(int) y, tankWidth, tankHeight);
+                            tank.Value.Tankrect = new Rectangle((int)x, (int)y, tankWidth, tankHeight);
                             tank.Value.Angle = angle;
 
                             outmsg.Write(tank.Value.Name);
@@ -347,8 +346,7 @@ namespace TankWars3000_SERVER
                     
                     if ((incomingMessage = Server.ReadMessage()) != null) //Ta emot meddelanden och hantering av dessa
                     {
-                        counter++;
-                        Debug.WriteLine(counter);
+
                         switch (incomingMessage.MessageType)
                         {
 
@@ -375,7 +373,7 @@ namespace TankWars3000_SERVER
                                         {
                                             if (tank.Key == name)
                                             {
-                                                tank.Value.Tankrect = new Rectangle((int) x, (int) y, tankWidth, tankHeight);
+                                                tank.Value.Tankrect = new Rectangle((int)x, (int)y, tankWidth, tankHeight);
                                                 tank.Value.Angle = angle;
                                                 tank.Value.Position = new Vector2(x, y);
                                             }
@@ -407,7 +405,7 @@ namespace TankWars3000_SERVER
                                         y = incomingMessage.ReadInt32();
                                         angle = incomingMessage.ReadFloat();
 
-                                        bullets.Add(new bullet((int) x,(int) y, angle, name)); //Skapa bullet
+                                        bullets.Add(new bullet((int)x, (int)y, angle, name)); //Skapa bullet
 
                                         NetOutgoingMessage outmsg2 = Server.CreateMessage();
                                         outmsg2.Write((byte)PacketTypes.SHOOT);
@@ -419,7 +417,6 @@ namespace TankWars3000_SERVER
                                 }
                                 break;
                         }
-                    }
                     
                     //Spelet kollar om servern har varit i ingame i 5 minuter och ifall det är sant byter denna till scoreboard
                     if (ingameTime.AddSeconds(10) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
@@ -463,6 +460,7 @@ namespace TankWars3000_SERVER
                 }
             }
             base.Update(gameTime);
+        }
         }
 
         public void UpdateAndSendBullets()
