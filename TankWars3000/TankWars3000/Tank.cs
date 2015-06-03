@@ -30,6 +30,7 @@ namespace TankWars3000
         Color tankcolor         = new Color();
 
         TimeSpan reloadTime     = new TimeSpan(0, 0, 4);
+        //
         float timer;
 
         Rectangle collisionRect = new Rectangle();
