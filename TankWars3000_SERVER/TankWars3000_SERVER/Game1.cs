@@ -47,6 +47,7 @@ namespace TankWars3000_SERVER
         int tankWidth = 136;
         int tankHeight = 76;
 
+        int counter = 0;
         // Server object
         static NetServer Server;
         // Configuration object
@@ -341,8 +342,11 @@ namespace TankWars3000_SERVER
                             Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                         }
                     }
+                    
                     if ((incomingMessage = Server.ReadMessage()) != null) //Ta emot meddelanden och hantering av dessa
                     {
+                        counter++;
+                        Debug.WriteLine(counter);
                         switch (incomingMessage.MessageType)
                         {
 
@@ -390,12 +394,9 @@ namespace TankWars3000_SERVER
                                                 outmsg.Write(explosionPosition.Y);
                                             }
 
+                                            //Skicka alla värden till alla Clients
                                             Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                                         }
-
-                                        //Skicka alla värden till alla Clients
-                                      
-                                        
                                         break;
 
                                     case (byte)PacketTypes.SHOOT: //INformation om en tank sköt
