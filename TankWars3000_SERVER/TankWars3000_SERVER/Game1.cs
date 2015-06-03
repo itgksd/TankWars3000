@@ -47,7 +47,6 @@ namespace TankWars3000_SERVER
         int tankWidth = 136;
         int tankHeight = 76;
 
-        int counter = 0;
         // Server object
         static NetServer Server;
         // Configuration object
@@ -347,8 +346,7 @@ namespace TankWars3000_SERVER
                     
                     if ((incomingMessage = Server.ReadMessage()) != null) //Ta emot meddelanden och hantering av dessa
                     {
-                        counter++;
-                        Debug.WriteLine(counter);
+
                         switch (incomingMessage.MessageType)
                         {
 
