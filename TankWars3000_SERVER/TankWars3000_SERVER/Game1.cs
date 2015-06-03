@@ -347,7 +347,7 @@ namespace TankWars3000_SERVER
                     if ((incomingMessage = Server.ReadMessage()) != null) //Ta emot meddelanden och hantering av dessa
                     {
                         counter++;
-                        Debug.WriteLine(counter);
+                        Debug.WriteLine("Sv-" + counter);
                         switch (incomingMessage.MessageType)
                         {
 
@@ -358,8 +358,15 @@ namespace TankWars3000_SERVER
 
                                     case (byte)PacketTypes.HEARTBEAT:
                                         string name = incomingMessage.ReadString();
-                                        tanks[name].LastBeat = DateTime.Now;
-                                        Debug.WriteLine("Sv-HeartBeat respons for " + name);
+                                        if (tanks.ContainsKey(name))
+                                        {
+                                            tanks[name].LastBeat = DateTime.Now;
+                                            Debug.WriteLine("Sv-HeartBeat respons for " + name);
+                                        }
+                                        else
+                                        {
+                                            Debug.WriteLine("Sv-Received heartbeat for a non-existing tank: " + name);
+                                        }
                                         break;
 
                                     case (byte)PacketTypes.MOVE: //Kolla om en tank rör sig
@@ -370,15 +377,9 @@ namespace TankWars3000_SERVER
                                         float angle = incomingMessage.ReadFloat();
                                         NetOutgoingMessage outmsg = Server.CreateMessage();
 
-                                        foreach (KeyValuePair<string, Tank> tank in tanks)
-                                        {
-                                            if (tank.Key == name)
-                                            {
-                                                tank.Value.Tankrect = new Rectangle((int)x, (int)y, tankWidth, tankHeight);
-                                                tank.Value.Angle = angle;
-                                                tank.Value.Position = new Vector2(x, y);
-                                            }
-                                        }
+                                        tanks[name].Tankrect = new Rectangle((int)x, (int)y, tankWidth, tankHeight);
+                                        tanks[name].Angle = angle;
+                                        tanks[name].Position = new Vector2(x, y);
 
                                         // kollision här tack
                                         if (!Collision())
