@@ -422,21 +422,6 @@ namespace TankWars3000_SERVER
                         if (ingameTime.AddSeconds(10) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
                         {
                             gameState = GameStates.Scoreboard;
-                            NetOutgoingMessage outtmsg = Server.CreateMessage();
-                            /*NetOutgoingMessage outtmsg = Server.CreateMessage();
-                            outtmsg.Write((byte)PacketTypes.FINALSCOREBOARD);
-                            outtmsg.Write(tanks.Count);
-                            foreach (KeyValuePair<string, Tank> tank in tanks)
-                            {
-                                outtmsg.Write(tank.Value.Name);
-                                outtmsg.Write(tank.Value.Kills);
-                                outtmsg.Write(tank.Value.Deaths);
-                                outtmsg.Write(tank.Value.TankColor.R);
-                                outtmsg.Write(tank.Value.TankColor.G);
-                                outtmsg.Write(tank.Value.TankColor.B);
-                            }
-                            Server.SendToAll(outtmsg, NetDeliveryMethod.ReliableOrdered);
-                            Debug.WriteLine("Sv-Sending final scoreboard from ingame");*/
                         }
                     }
 
