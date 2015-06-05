@@ -17,11 +17,11 @@ namespace TankWars3000
 
         static SpriteFont testfont;
 
-        static Vector2 textureOrigin;
+        static Vector2    textureOrigin;
 
-        static Texture2D texture;
+        static Texture2D   texture;
 
-        Vector2 position, explositionPos;
+        Vector2 position,  explositionPos;
 
         Vector2 direction       = new Vector2(1, 0);
         
@@ -30,6 +30,13 @@ namespace TankWars3000
         Color tankcolor         = new Color();
 
         TimeSpan reloadTime     = new TimeSpan(0, 0, 4);
+
+        // Respawn
+        float  r_timer;
+        float  r_intervall = 1;
+        int    r_time      = 5;
+        string r_string;
+
         //
         float timer;
 
@@ -84,7 +91,7 @@ namespace TankWars3000
 
         #region Methods
 
-        public void Update(ContentManager content, GraphicsDeviceManager graphics, Dictionary<string, Tank> tanks, List<TankTrack> tracks)
+        public void Update(ContentManager content, GraphicsDeviceManager graphics, Dictionary<string, Tank> tanks, List<TankTrack> tracks, GameTime gametime)
         {
                 #region Bullet
                 foreach (Bullet bullet in bullets)
@@ -135,6 +142,11 @@ namespace TankWars3000
                             }
                             break;
 
+                        case (byte)PacketTypes.DEATH:
+                                health = 0;
+                                position = new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat());
+                            break;
+
                         case (byte)PacketTypes.SHOOT:
                             Bullet bullet = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat()));
                             bullets.Add(bullet);
@@ -164,6 +176,21 @@ namespace TankWars3000
                     }
                 }
                 #endregion
+
+            if (health == 0)
+            {
+                r_timer += gametime.ElapsedGameTime.Milliseconds;
+
+                r_string = r_time.ToString();
+
+                if (r_timer == r_intervall)
+                    r_time--;
+                if (r_time == 0)
+                {
+                    health   = 3;
+                    r_time   = 5;
+                }
+            }
         }
 
         public void Input(OldNewInput input, ContentManager content, Dictionary<string, Tank> tanks, GameTime gametime)
@@ -173,7 +200,6 @@ namespace TankWars3000
                 NetOutgoingMessage outmsg;
                 timer += gametime.ElapsedGameTime.Milliseconds;
                 position = tanks[name].position;
-
 
                 #region Movment
                 if (input.newKey.IsKeyDown(Keys.W) && timer >= timerlimit)
@@ -288,16 +314,19 @@ namespace TankWars3000
 
         public void Draw(SpriteBatch spriteBatch, Dictionary<string, Tank> tanks)
         {
-            foreach (KeyValuePair<string, Tank> tank in tanks)
+            if (health > 0)
             {
-                spriteBatch.Draw(tank.Value.Texture, tank.Value.position, null, tank.Value.tankcolor, tank.Value.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
-                
-                //writes the value of the tanks vector2 position, the spritefonts' position has an offset of 200 on the x-axis
-                spriteBatch.DrawString(tank.Value.TestFont, tank.Value.position.ToString(), new Vector2(tank.Value.position.X + 200, tank.Value.position.Y), Color.Wheat);
-            }
-            
-            foreach (Bullet bullet in bullets)
-                bullet.Draw(spriteBatch);
+                foreach (KeyValuePair<string, Tank> tank in tanks)
+                {
+                    spriteBatch.Draw(tank.Value.Texture, tank.Value.position, null, tank.Value.tankcolor, tank.Value.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+
+                    //writes the value of the tanks vector2 position, the spritefonts' position has an offset of 200 on the x-axis
+                    spriteBatch.DrawString(testfont, r_string, new Vector2(0, 0), Color.Black);
+                }
+
+                foreach (Bullet bullet in bullets)
+                    bullet.Draw(spriteBatch);
+            } 
         }
 
         public Tank(ContentManager content, string name, Color color)
