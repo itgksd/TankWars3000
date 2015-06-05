@@ -26,6 +26,7 @@ namespace TankWars3000
                             count++;
                         }
                  }
+                //get out of the loop once every tank has recieved their startpos
                 if(count == tanks.Count)
                     startposbool = false;
              }
