@@ -183,7 +183,7 @@ namespace TankWars3000
 
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     position += direction * speed;
-                    tanks[name].position = position;
+                    //tanks[name].position = position;
                     //update position, then send it to the server
 
                     //if (timer >= timerlimit)
@@ -202,7 +202,7 @@ namespace TankWars3000
                 {
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     position -= direction * speed;
-                    tanks[name].position = position;
+                    //tanks[name].position = position;
                     //update position, then send it to the server
 
                     //if (timer >= timerlimit)
@@ -228,7 +228,7 @@ namespace TankWars3000
                     direction.X = (float)Math.Cos(angle);
                     direction.Y = (float)Math.Sin(angle);
 
-                    tanks[name].direction = direction;
+                    //tanks[name].direction = direction;
 
                     //if (timer >= timerlimit)
                     //{
@@ -252,7 +252,7 @@ namespace TankWars3000
                     direction.X = (float)Math.Cos(angle);
                     direction.Y = (float)Math.Sin(angle);
 
-                    tanks[name].direction = direction;
+                    //tanks[name].direction = direction;
 
                     //if (timer >= timerlimit)
                     //{
