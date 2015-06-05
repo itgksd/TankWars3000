@@ -94,7 +94,7 @@ namespace TankWars3000
         public void Update(ContentManager content, GraphicsDeviceManager graphics, Dictionary<string, Tank> tanks, List<TankTrack> tracks, GameTime gametime)
         {
                 #region recieve action from server
-                if ((incmsg = Game1.Client.ReadMessage()) != null)
+                while ((incmsg = Game1.Client.ReadMessage()) != null)
                 {
                     switch (incmsg.ReadByte())
                     {
