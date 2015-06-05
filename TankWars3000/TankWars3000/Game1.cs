@@ -119,7 +119,7 @@ namespace TankWars3000
             Notify.LoadContent(Content);
             
             background = Content.Load<Texture2D>("images/Background Image");
-            font = Content.Load<SpriteFont>("Testfont");
+            font = Content.Load<SpriteFont>("fpsFont");
         }
 
         protected override void UnloadContent()
