@@ -412,8 +412,8 @@ namespace TankWars3000_SERVER
 
                                     case (byte)PacketTypes.SHOOT: //INformation om en tank sköt
                                         name = incomingMessage.ReadString();
-                                        x = incomingMessage.ReadInt32();
-                                        y = incomingMessage.ReadInt32();
+                                        x = incomingMessage.ReadFloat();
+                                        y = incomingMessage.ReadFloat();
                                         angle = incomingMessage.ReadFloat();
 
                                         bullets.Add(new bullet((int)x, (int)y, angle, name)); //Skapa bullet

@@ -14,12 +14,12 @@ namespace TankWars3000_SERVER
         private Rectangle rect;
         private Vector2 velocity;
 
-        public bullet(int x, int y, float a, string n)
+        public bullet(float x, float y, float a, string n)
         {
-            rect = new Rectangle(x, y, 10, 6);
+            rect = new Rectangle((int)x, (int) y, 10, 10);
             pos = new Vector2(x, y);
             name = n;
-            velocity = new Vector2((float)Math.Cos(a), (float)Math.Cos(a));
+            velocity = new Vector2((float)Math.Cos(a) * 5, (float)Math.Cos(a)) * 5;
             angle = a;
         }
         public void Update()
