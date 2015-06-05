@@ -19,7 +19,7 @@ namespace TankWars3000_SERVER
             rect = new Rectangle(x, y, 10, 6);
             pos = new Vector2(x, y);
             name = n;
-            velocity = new Vector2((float)Math.Cos(a), (float)Math.Cos(a))
+            velocity = new Vector2((float)Math.Cos(a), (float)Math.Cos(a));
             angle = a;
         }
         public void Update()
