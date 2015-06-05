@@ -425,7 +425,7 @@ namespace TankWars3000_SERVER
                         }
 
                         //Spelet kollar om servern har varit i ingame i 5 minuter och ifall det är sant byter denna till scoreboard
-                        if (ingameTime.AddMinutes(5) <= DateTime.Now)
+                        if (/*ingameTime.AddMinutes(5)*/ingameTime.AddSeconds(10) <= DateTime.Now)
                         {
                             gameState = GameStates.Scoreboard;
 
@@ -455,6 +455,14 @@ namespace TankWars3000_SERVER
                         Debug.WriteLine("Sv-Sending final scoreboard");
 
                         gameState = GameStates.Lobby;
+
+                        // Ta bort alla tanks
+                        tanks.Clear();
+
+                        foreach (NetConnection connection in Server.Connections)
+                        {
+                            connection.Disconnect("End of game disconnect");
+                        }
                     }
 
 
