@@ -342,7 +342,7 @@ namespace TankWars3000_SERVER
                     if ((incomingMessage = Server.ReadMessage()) != null) //Ta emot meddelanden och hantering av dessa
                     {
                         counter++;
-                        Debug.WriteLine("Sv-" + counter);
+                        //Debug.WriteLine("Sv-" + counter);
                         switch (incomingMessage.MessageType)
                         {
 
