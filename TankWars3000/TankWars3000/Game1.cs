@@ -63,6 +63,10 @@ namespace TankWars3000
         Lobby lobby;
         ScoreBoard scoreboard;
 
+        int fps, drawFps;
+        SpriteFont font;
+        float fpsTimer;
+
         static bool fullscreen = false;
         static public bool Fullscreen
         {
@@ -110,7 +114,8 @@ namespace TankWars3000
             lobby = new Lobby(Content);
             scoreboard = new ScoreBoard(Content);
             Notify.LoadContent(Content);
-            
+
+            font = Content.Load<SpriteFont>("Testfont");
         }
 
         protected override void UnloadContent()
@@ -123,6 +128,14 @@ namespace TankWars3000
 
             input.newKey   = Keyboard.GetState();
             input.newMouse = Mouse.GetState();
+
+            fpsTimer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (fpsTimer >= 1000)
+            {
+                drawFps = fps;
+                fps = 0;
+                fpsTimer = 0;
+            }
 
             if (gameState  == GameStates.Lobby)
             {
@@ -171,6 +184,7 @@ namespace TankWars3000
         protected override void Draw(GameTime gameTime)
         {
                 GraphicsDevice.Clear(Color.Black);
+                fps++;
 
                 if (gameState == GameStates.Lobby)
                 {
@@ -188,6 +202,8 @@ namespace TankWars3000
                     tracks.ForEach(f => f.Draw(spriteBatch));
 
                     Notify.Draw(spriteBatch);
+
+                    spriteBatch.DrawString(font, ""+drawFps, Vector2.Zero, Color.Yellow);
 
                     spriteBatch.End();
                 }
