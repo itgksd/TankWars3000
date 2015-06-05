@@ -418,13 +418,14 @@ namespace TankWars3000_SERVER
 
                                         bullets.Add(new bullet((int)x, (int)y, angle, name)); //Skapa bullet
 
+
                                         break;
                                 }
                                 break;
                         }
 
                         //Spelet kollar om servern har varit i ingame i 5 minuter och ifall det är sant byter denna till scoreboard
-                        if (ingameTime.AddSeconds(1000) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
+                        if (ingameTime.AddMinutes(5) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
                         {
                             gameState = GameStates.Scoreboard;
 
@@ -483,9 +484,9 @@ namespace TankWars3000_SERVER
                 outmsg.Write((byte)PacketTypes.SHOOT);
                 outmsg.Write(bullets.Count);
 
-                foreach (bullet bullet in bullets)
-                {
-                    // update bullet pos and send
+            foreach (bullet bullet in bullets)
+            {
+                // update bullet pos and send
                     bullet.Update();
                     outmsg.Write(bullet.Pos.X);
                     outmsg.Write(bullet.Pos.Y);
@@ -595,6 +596,35 @@ namespace TankWars3000_SERVER
                 }
             }
             return false;
+        }
+
+        private void BulletOutOfBounds()
+        {
+            for (int tmp = 0; bullets.Count > tmp;)
+            {
+                if(bullets[tmp].Pos.X > 2000 || bullets[tmp].Pos.X < 0
+                    || bullets[tmp].Pos.Y > 1600 || bullets[tmp].Pos.Y < 0)
+                {
+                    bullets.RemoveAt(tmp);
+                }
+                else
+                {
+                    tmp++;
+                }
+            }
+        }
+
+        private void TankOutofBounds()
+        {
+            foreach (Tank tank in tanks.Values)
+            {
+                if (tank.Position.X + tank.Tankrect.Width > 1366 || tank.Position.X < 0
+                    || tank.Position.Y + tank.Tankrect.Height > 768 || tank.Position.Y < 0)
+                {
+                    Vector2 outofBounds = new Vector2(1366 / 2, 768 / 2);
+                    tank.Position = outofBounds;
+                }
+            }
         }
     }
 }
