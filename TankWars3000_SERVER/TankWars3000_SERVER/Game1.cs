@@ -477,19 +477,23 @@ namespace TankWars3000_SERVER
 
         public void UpdateAndSendBullets()
         {
-            NetOutgoingMessage outmsg = Server.CreateMessage();
-            outmsg.Write((byte)PacketTypes.SHOOT);
-            outmsg.Write(bullets.Count);
-
-            foreach (bullet bullet in bullets)
+            if (bullets.Count > 0)
             {
-                // update bullet pos and send
-                bullet.Update();
-                outmsg.Write(bullet.Pos.X);
-                outmsg.Write(bullet.Pos.Y);
+                NetOutgoingMessage outmsg = Server.CreateMessage();
+                outmsg.Write((byte)PacketTypes.SHOOT);
+                outmsg.Write(bullets.Count);
 
+                foreach (bullet bullet in bullets)
+                {
+                    // update bullet pos and send
+                    bullet.Update();
+                    outmsg.Write(bullet.Pos.X);
+                    outmsg.Write(bullet.Pos.Y);
+
+                }
+                Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
             }
-            Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+           
         }
 
         protected override void Draw(GameTime gameTime)
