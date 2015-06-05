@@ -153,7 +153,7 @@ namespace TankWars3000
                     tank.Name = tankname;
                 // The player
                 tank_startpos.Update(incmsg, tanks);
-                tank.Update(Content, graphics, tanks, tracks);
+                tank.Update(Content, graphics, tanks, tracks, gameTime);
                 tank.Input(input, Content, tanks, gameTime);
 
                 // TankTrack
