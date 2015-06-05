@@ -622,8 +622,23 @@ namespace TankWars3000_SERVER
                 if (tank.Position.X + tank.Tankrect.Width > 1366 || tank.Position.X < 0
                     || tank.Position.Y + tank.Tankrect.Height > 768 || tank.Position.Y < 0)
                 {
-                    Vector2 outofBounds = new Vector2(1366 / 2, 768 / 2);
-                    tank.Position = outofBounds;
+                    Random r = new Random();
+                    NetOutgoingMessage outmsg = Server.CreateMessage();
+                    outmsg.Write((byte)(PacketTypes.MOVE));
+                    outmsg.Write(tank.Name);
+                    outmsg.Write((float)( (2*Math.PI)/ r.Next()));
+                    outmsg.Write((float)(1366 / 2));
+                    outmsg.Write((float)(768 / 2));
+                    outmsg.Write(bulletCollision());
+                    if (bulletCollision() == true) //Kolla om en tank blev träffad och då skicka positionen om vad som hände
+                    {
+                        outmsg.Write(explosionPosition.X);
+                        outmsg.Write(explosionPosition.Y);
+                    }
+                    Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
+
+
+
                 }
             }
         }
