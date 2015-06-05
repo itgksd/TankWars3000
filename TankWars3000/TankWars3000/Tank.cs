@@ -126,7 +126,7 @@ namespace TankWars3000
                             tanks[incmsg_name].Angle = incmsg.ReadFloat();
                             tanks[incmsg_name].Position = new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat());
                             bool tempcollisionbool = incmsg.ReadBoolean();
-                            if (tempcollisionbool)
+                            if (tempcollisionbool)  //if bullets hits tanks
                             {
                                 tanks[incmsg_name].explositionPos.X = incmsg.ReadFloat();
                                 tanks[incmsg_name].explositionPos.Y = incmsg.ReadFloat();
