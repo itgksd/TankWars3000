@@ -66,7 +66,7 @@ namespace TankWars3000
         Lobby lobby;
         ScoreBoard scoreboard;
 
-        int fps, drawFps;
+        int fps = 0, drawFps = 0;
         SpriteFont font;
         float fpsTimer;
 
@@ -119,7 +119,7 @@ namespace TankWars3000
             Notify.LoadContent(Content);
             
             background = Content.Load<Texture2D>("images/Background Image");
-            
+            font = Content.Load<SpriteFont>("Testfont");
         }
 
         protected override void UnloadContent()
