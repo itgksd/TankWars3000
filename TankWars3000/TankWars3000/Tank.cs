@@ -179,46 +179,36 @@ namespace TankWars3000
                 #region Movment
                 if (input.newKey.IsKeyDown(Keys.W) && timer >= timerlimit)
                 {
-
-                    //needs to CreateMessage() every time a button is pressed, which means more than once some updates
-                    position += direction * speed;
-                    //tanks[name].position = position;
                     //update position, then send it to the server
-
-                    //if (timer >= timerlimit)
-                    //{
-                        outmsg = Game1.Client.CreateMessage();
-                        outmsg.Write((byte)PacketTypes.MOVE);
-                        outmsg.Write(name);
-                        outmsg.Write(position.X);
-                        outmsg.Write(position.Y);
-                        outmsg.Write(angle);
-                        Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
-                    //}
+                    position += direction * speed;
+                    
+                    //needs to CreateMessage() every time a button is pressed, which means more than once some updates
+                    outmsg = Game1.Client.CreateMessage();
+                    outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
 
                 if (input.newKey.IsKeyDown(Keys.S) && timer >= timerlimit)
                 {
-                    //needs to CreateMessage() every time a button is pressed, which means more than once some updates
-                    position -= direction * speed;
-                    //tanks[name].position = position;
                     //update position, then send it to the server
-
-                    //if (timer >= timerlimit)
-                    //{
-                        outmsg = Game1.Client.CreateMessage();
-                        outmsg.Write((byte)PacketTypes.MOVE);
-                        outmsg.Write(name);
-                        outmsg.Write(position.X);
-                        outmsg.Write(position.Y);
-                        outmsg.Write(angle);
-                        Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
-                    //}
+                    position -= direction * speed;
+                    
+                    //needs to CreateMessage() every time a button is pressed, which means more than once some updates
+                    outmsg = Game1.Client.CreateMessage();
+                    outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
 
                 if (input.newKey.IsKeyDown(Keys.D) && timer >= timerlimit)
                 {
-                    //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     angle += MathHelper.Pi / 50;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
@@ -226,23 +216,18 @@ namespace TankWars3000
 
                     direction.X = (float)Math.Cos(angle);
                     direction.Y = (float)Math.Sin(angle);
-
-                    //tanks[name].direction = direction;
-
-                    //if (timer >= timerlimit)
-                    //{
-                        outmsg = Game1.Client.CreateMessage();
-                        outmsg.Write((byte)PacketTypes.MOVE);
-                        outmsg.Write(name);
-                        outmsg.Write(position.X);
-                        outmsg.Write(position.Y);
-                        outmsg.Write(angle);
-                        Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
-                    //}
+                    
+                    //needs to CreateMessage() every time a button is pressed, which means more than once some updates
+                    outmsg = Game1.Client.CreateMessage();
+                    outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
                 if (input.newKey.IsKeyDown(Keys.A) && timer >= timerlimit)
                 {
-                    //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     angle -= MathHelper.Pi / 50;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
@@ -250,27 +235,23 @@ namespace TankWars3000
 
                     direction.X = (float)Math.Cos(angle);
                     direction.Y = (float)Math.Sin(angle);
-
-                    //tanks[name].direction = direction;
-
-                    //if (timer >= timerlimit)
-                    //{
-                        outmsg = Game1.Client.CreateMessage();
-                        outmsg.Write((byte)PacketTypes.MOVE);
-                        outmsg.Write(name);
-                        outmsg.Write(position.X);
-                        outmsg.Write(position.Y);
-                        outmsg.Write(angle);
-                        Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
-                    //}
+                    
+                    //needs to CreateMessage() every time a button is pressed, which means more than once some updates
+                    outmsg = Game1.Client.CreateMessage();
+                    outmsg.Write((byte)PacketTypes.MOVE);
+                    outmsg.Write(name);
+                    outmsg.Write(position.X);
+                    outmsg.Write(position.Y);
+                    outmsg.Write(angle);
+                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
                 #endregion
 
                 #region shoot
                 if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
                 {
-                    outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
+                    outmsg = Game1.Client.CreateMessage();
                     outmsg.Write((byte)PacketTypes.SHOOT);
                     outmsg.Write(name);
                     outmsg.Write(position.X);
