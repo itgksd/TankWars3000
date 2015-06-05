@@ -189,30 +189,30 @@ namespace TankWars3000
                 {
                     //update position, then send it to the server
                     position += direction * speed;
-                    
+
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
-                    outmsg = Game1.Client.CreateMessage();
-                    outmsg.Write((byte)PacketTypes.MOVE);
-                    outmsg.Write(name);
-                    outmsg.Write(position.X);
-                    outmsg.Write(position.Y);
-                    outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
+                        outmsg = Game1.Client.CreateMessage();
+                        outmsg.Write((byte)PacketTypes.MOVE);
+                        outmsg.Write(name);
+                        outmsg.Write(position.X);
+                        outmsg.Write(position.Y);
+                        outmsg.Write(angle);
+                        Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
 
                 if (input.newKey.IsKeyDown(Keys.S) && timer >= timerlimit)
                 {
                     //update position, then send it to the server
                     position -= direction * speed;
-                    
+
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
-                    outmsg = Game1.Client.CreateMessage();
-                    outmsg.Write((byte)PacketTypes.MOVE);
-                    outmsg.Write(name);
-                    outmsg.Write(position.X);
-                    outmsg.Write(position.Y);
-                    outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
+                        outmsg = Game1.Client.CreateMessage();
+                        outmsg.Write((byte)PacketTypes.MOVE);
+                        outmsg.Write(name);
+                        outmsg.Write(position.X);
+                        outmsg.Write(position.Y);
+                        outmsg.Write(angle);
+                        Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
 
                 if (input.newKey.IsKeyDown(Keys.D) && timer >= timerlimit)
@@ -224,15 +224,15 @@ namespace TankWars3000
 
                     direction.X = (float)Math.Cos(angle);
                     direction.Y = (float)Math.Sin(angle);
-                    
+
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
-                    outmsg = Game1.Client.CreateMessage();
-                    outmsg.Write((byte)PacketTypes.MOVE);
-                    outmsg.Write(name);
-                    outmsg.Write(position.X);
-                    outmsg.Write(position.Y);
-                    outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
+                        outmsg = Game1.Client.CreateMessage();
+                        outmsg.Write((byte)PacketTypes.MOVE);
+                        outmsg.Write(name);
+                        outmsg.Write(position.X);
+                        outmsg.Write(position.Y);
+                        outmsg.Write(angle);
+                        Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
                 if (input.newKey.IsKeyDown(Keys.A) && timer >= timerlimit)
                 {
@@ -243,15 +243,15 @@ namespace TankWars3000
 
                     direction.X = (float)Math.Cos(angle);
                     direction.Y = (float)Math.Sin(angle);
-                    
+
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
-                    outmsg = Game1.Client.CreateMessage();
-                    outmsg.Write((byte)PacketTypes.MOVE);
-                    outmsg.Write(name);
-                    outmsg.Write(position.X);
-                    outmsg.Write(position.Y);
-                    outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
+                        outmsg = Game1.Client.CreateMessage();
+                        outmsg.Write((byte)PacketTypes.MOVE);
+                        outmsg.Write(name);
+                        outmsg.Write(position.X);
+                        outmsg.Write(position.Y);
+                        outmsg.Write(angle);
+                        Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
                 }
                 #endregion
 
@@ -284,11 +284,14 @@ namespace TankWars3000
                 foreach (KeyValuePair<string, Tank> tank in tanks)
                 {
                     spriteBatch.Draw(tank.Value.Texture, tank.Value.position, null, tank.Value.tankcolor, tank.Value.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+
+                    //writes the value of the tanks vector2 position, the spritefonts' position has an offset of 200 on the x-axis
+                  //  spriteBatch.DrawString(testfont, r_string, new Vector2(0, 0), Color.Black);
                 }
                 // Draw the bullets in the list if there are any
                 foreach (Bullet bullet in bullets)
                     bullet.Draw(spriteBatch);
-            }
+            } 
             else
                 // Draws the respawn timer i fthe tank is dead
                 spriteBatch.DrawString(testfont, r_string, new Vector2(200, 200), Color.Black);

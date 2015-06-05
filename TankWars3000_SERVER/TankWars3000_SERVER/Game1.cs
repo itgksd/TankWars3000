@@ -417,7 +417,7 @@ namespace TankWars3000_SERVER
                                         angle = incomingMessage.ReadFloat();
 
                                         bullets.Add(new bullet((int)x, (int)y, angle, name)); //Skapa bullet
-
+                                        Debug.WriteLine(angle);
 
                                         break;
                                 }
@@ -455,6 +455,14 @@ namespace TankWars3000_SERVER
                         Debug.WriteLine("Sv-Sending final scoreboard");
 
                         gameState = GameStates.Lobby;
+
+                        // Ta bort alla tanks
+                        tanks.Clear();
+
+                        foreach (NetConnection connection in Server.Connections)
+                        {
+                            connection.Disconnect("End of game disconnect");
+                        }
                     }
 
 
