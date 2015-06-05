@@ -404,12 +404,6 @@ namespace TankWars3000_SERVER
 
                                         bullets.Add(new bullet((int)x, (int)y, angle, name)); //Skapa bullet
 
-                                        NetOutgoingMessage outmsg2 = Server.CreateMessage();
-                                        outmsg2.Write((byte)PacketTypes.SHOOT);
-                                        outmsg2.Write(name);
-                                        outmsg2.Write(x);
-                                        outmsg2.Write(y);
-                                        Server.SendToAll(outmsg2, NetDeliveryMethod.ReliableOrdered);
                                         break;
                                 }
                                 break;
@@ -468,16 +462,19 @@ namespace TankWars3000_SERVER
 
         public void UpdateAndSendBullets()
         {
+            NetOutgoingMessage outmsg = Server.CreateMessage();
+            outmsg.Write((byte)PacketTypes.SHOOT);
+            outmsg.Write(bullets.Count);
+
             foreach (bullet bullet in bullets)
             {
                 // update bullet pos and send
-                Vector2 bulletPos = new Vector2(bullet.XPos, bullet.YPos);
-                float x = (float)Math.Cos((double)(bullet.Angle));
-                float y = (float)Math.Sin((double)(bullet.Angle));
+                bullet.Update();
+                outmsg.Write(bullet.Pos.X);
+                outmsg.Write(bullet.Pos.Y);
 
-                Vector2 velocity = new Vector2(x * 5, y * 5);
-                bulletPos += velocity;
             }
+            Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
         }
 
         protected override void Draw(GameTime gameTime)
