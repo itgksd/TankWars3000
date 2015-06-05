@@ -602,8 +602,8 @@ namespace TankWars3000_SERVER
         {
             for (int tmp = 0; bullets.Count > tmp;)
             {
-                if(bullets[tmp].XPos > 2000 || bullets[tmp].XPos < 0
-                    || bullets[tmp].YPos > 1600 || bullets[tmp].YPos < 0)
+                if(bullets[tmp].Pos.X > 2000 || bullets[tmp].Pos.X < 0
+                    || bullets[tmp].Pos.Y > 1600 || bullets[tmp].Pos.Y < 0)
                 {
                     bullets.RemoveAt(tmp);
                 }
