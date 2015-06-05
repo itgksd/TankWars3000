@@ -404,12 +404,7 @@ namespace TankWars3000_SERVER
 
                                         bullets.Add(new bullet((int)x, (int)y, angle, name)); //Skapa bullet
 
-                                        NetOutgoingMessage outmsg2 = Server.CreateMessage();
-                                        outmsg2.Write((byte)PacketTypes.SHOOT);
-                                        outmsg2.Write(name);
-                                        outmsg2.Write(x);
-                                        outmsg2.Write(y);
-                                        Server.SendToAll(outmsg2, NetDeliveryMethod.ReliableOrdered);
+
                                         break;
                                 }
                                 break;
@@ -580,6 +575,35 @@ namespace TankWars3000_SERVER
                 }
             }
             return false;
+        }
+
+        private void BulletOutOfBounds()
+        {
+            for (int tmp = 0; bullets.Count > tmp;)
+            {
+                if(bullets[tmp].XPos > 2000 || bullets[tmp].XPos < 0
+                    || bullets[tmp].YPos > 1600 || bullets[tmp].YPos < 0)
+                {
+                    bullets.RemoveAt(tmp);
+                }
+                else
+                {
+                    tmp++;
+                }
+            }
+        }
+
+        private void TankOutofBounds()
+        {
+            foreach (Tank tank in tanks.Values)
+            {
+                if (tank.Position.X + tank.Tankrect.Width > 1366 || tank.Position.X < 0
+                    || tank.Position.Y + tank.Tankrect.Height > 768 || tank.Position.Y < 0)
+                {
+                    Vector2 outofBounds = new Vector2(1366 / 2, 768 / 2);
+                    tank.Position = outofBounds;
+                }
+            }
         }
     }
 }
