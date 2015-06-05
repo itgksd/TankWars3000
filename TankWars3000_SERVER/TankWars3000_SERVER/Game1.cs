@@ -425,7 +425,7 @@ namespace TankWars3000_SERVER
                         }
 
                         //Spelet kollar om servern har varit i ingame i 5 minuter och ifall det är sant byter denna till scoreboard
-                        if (ingameTime.AddSeconds(1000) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
+                        if (ingameTime.AddMinutes(5) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
                         {
                             gameState = GameStates.Scoreboard;
 
