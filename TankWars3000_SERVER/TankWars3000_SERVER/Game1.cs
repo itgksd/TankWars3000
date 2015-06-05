@@ -135,8 +135,8 @@ namespace TankWars3000_SERVER
                 this.Exit();
 
             SuppressDraw();
-            while (true)
-            {
+            //while (true)
+            //{
                 if (gameState == GameStates.Lobby)
                 {
                     // så att Ingame bara skickar startpos en gång
@@ -444,6 +444,7 @@ namespace TankWars3000_SERVER
                         }
                         Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                         Debug.WriteLine("Sv-Sending final scoreboard");
+
                         gameState = GameStates.Lobby;
                     }
 
@@ -463,7 +464,7 @@ namespace TankWars3000_SERVER
                     }
                 }
                 base.Update(gameTime);
-            }
+            //}
         }
 
         public void UpdateAndSendBullets()
