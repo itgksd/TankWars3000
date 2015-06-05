@@ -132,6 +132,8 @@ namespace TankWars3000
             if (gameState  == GameStates.Lobby)
             {
                 lobby.Update(input, tanks);
+                if (tank_startpos.Startposbool == false)
+                    tank_startpos.Startposbool = true;
             }
             else if (gameState  == GameStates.Ingame)
             {

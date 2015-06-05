@@ -86,20 +86,6 @@ namespace TankWars3000
 
         public void Update(ContentManager content, GraphicsDeviceManager graphics, Dictionary<string, Tank> tanks, List<TankTrack> tracks)
         {
-                #region Window update
-                if (position.X >= graphics.GraphicsDevice.Viewport.Width)
-                    position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
-
-                if (position.Y >= graphics.GraphicsDevice.Viewport.Height)
-                    position.Y = graphics.GraphicsDevice.Viewport.Height - texture.Height;
-
-                if (position.X < 0)
-                    position.X = 0;
-
-                if (position.Y < 0)
-                    position.Y = 0;
-                #endregion
-            
                 #region recieve action from server
                 if ((incmsg = Game1.Client.ReadMessage()) != null)
                 {
