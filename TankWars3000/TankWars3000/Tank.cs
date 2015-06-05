@@ -268,7 +268,7 @@ namespace TankWars3000
                 #endregion
 
                 #region shoot
-                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space) && timer >= timerlimit)
+                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -277,7 +277,7 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
                 //Reset timer
                 if (timer > timerlimit)
