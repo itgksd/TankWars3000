@@ -417,7 +417,7 @@ namespace TankWars3000_SERVER
                                         angle = incomingMessage.ReadFloat();
 
                                         bullets.Add(new bullet((int)x, (int)y, angle, name)); //Skapa bullet
-
+                                        Debug.WriteLine(angle);
 
                                         break;
                                 }
