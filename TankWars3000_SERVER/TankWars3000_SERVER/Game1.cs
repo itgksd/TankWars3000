@@ -60,9 +60,10 @@ namespace TankWars3000_SERVER
         bool canCountTime = true;
         bool sendStartPos = true;
         int counter = 0;
+        int tps = 0, drawTps = 0;
         List<bullet> bullets = new List<bullet>();
         Dictionary<string, Tank> tanks;
-        System.Timers.Timer timer;
+        System.Timers.Timer timer, tpsTimer;
         Vector2 explosionPosition;
 
         public Game1()
@@ -104,6 +105,16 @@ namespace TankWars3000_SERVER
             timer = new System.Timers.Timer(5000);
             timer.Elapsed += timer_Elapsed;
             timer.Enabled = true;
+
+            tpsTimer = new System.Timers.Timer(1000);
+            tpsTimer.Elapsed += tpstimer_Elapsed;
+            tpsTimer.Enabled = true;
+        }
+
+        void tpstimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            drawTps = tps;
+            tps = 0;
         }
 
         void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -113,6 +124,8 @@ namespace TankWars3000_SERVER
             outmsg.Write((byte)PacketTypes.HEARTBEAT);
             Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
             //Debug.WriteLine("Sv-Sending heartbeat");
+
+            Debug.WriteLine("Sv-" + drawTps + "tps");
         }
 
         protected override void LoadContent()
@@ -137,6 +150,7 @@ namespace TankWars3000_SERVER
             SuppressDraw();
             //while (true)
             //{
+                tps++;
                 if (gameState == GameStates.Lobby)
                 {
                     // så att Ingame bara skickar startpos en gång
