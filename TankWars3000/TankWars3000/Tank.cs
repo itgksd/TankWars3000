@@ -129,8 +129,6 @@ namespace TankWars3000
                             }
                             break;
 
-
-
                         case (byte)PacketTypes.GAMESTATE:
                             Debug.WriteLine("Cl-Reveiced gamestate change");
                             Game1.gameState = (GameStates)incmsg.ReadByte();
@@ -306,7 +304,7 @@ namespace TankWars3000
         private void Track(List<TankTrack> tracks ,ContentManager content)
         {
             if (Vector2.Distance(trackpos, position) > 40)
-        {
+            {
                 Vector2 footStepPos;
                 if (lastRightTrack)
                     footStepPos = Vector2.Transform(textureOrigin + /*offset>*/new Vector2(-50, -73), Matrix.CreateRotationZ(angle)) + position;
@@ -318,7 +316,7 @@ namespace TankWars3000
                 tracks.Add(new TankTrack(content, trackpos, angle)); // Add
 
                 trackpos = position;
-            }
+              }
         }
         #endregion
     }
