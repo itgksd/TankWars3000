@@ -301,7 +301,7 @@ namespace TankWars3000
             }
             else
                 // Draws the respawn timer
-                spriteBatch.DrawString(testfont, r_string, new Vector2(0, 0), Color.Black);
+                spriteBatch.DrawString(testfont, r_string, Vector2.Zero, Color.Black);
         }
 
         public Tank(ContentManager content, string name, Color color)
