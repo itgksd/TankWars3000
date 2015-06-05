@@ -48,7 +48,7 @@ namespace TankWars3000
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(texture, position, collisionRect, Color.White, angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(texture, position, Color.White);
         }
 
         //need direction to make it move the right way, don't need angle anymore because of the texture
