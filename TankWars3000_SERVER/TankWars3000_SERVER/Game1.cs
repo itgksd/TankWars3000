@@ -390,7 +390,7 @@ namespace TankWars3000_SERVER
                                         tanks[name].Angle = angle;
                                         tanks[name].Position = new Vector2(x, y);
 
-                                        // kollision här tack
+                                        TankOutofBounds();
                                         if (!Collision())
                                         {
                                             outmsg.Write((byte)PacketTypes.MOVE);
@@ -425,7 +425,7 @@ namespace TankWars3000_SERVER
                         }
 
                         //Spelet kollar om servern har varit i ingame i 5 minuter och ifall det är sant byter denna till scoreboard
-                        if (ingameTime.AddMinutes(5) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
+                        if (ingameTime.AddMinutes(5) <= DateTime.Now)
                         {
                             gameState = GameStates.Scoreboard;
 
@@ -478,6 +478,7 @@ namespace TankWars3000_SERVER
 
         public void UpdateAndSendBullets()
         {
+            BulletOutOfBounds();
             if (bullets.Count > 0)
             {
                 NetOutgoingMessage outmsg = Server.CreateMessage();
