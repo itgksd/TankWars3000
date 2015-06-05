@@ -12,6 +12,13 @@ namespace TankWars3000
         string incmsg_name;
         bool startposbool = true;
         int count = 0;
+
+        public bool Startposbool
+        {
+            get { return startposbool; }
+            set { startposbool = value; }
+        }
+
         public void Update(NetIncomingMessage incmsg, Dictionary<string, Tank> tanks)
         {
             while (startposbool)
@@ -26,6 +33,7 @@ namespace TankWars3000
                             count++;
                         }
                  }
+                //get out of the loop once every tank has recieved their startpos
                 if(count == tanks.Count)
                     startposbool = false;
              }

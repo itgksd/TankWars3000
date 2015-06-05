@@ -86,36 +86,6 @@ namespace TankWars3000
 
         public void Update(ContentManager content, GraphicsDeviceManager graphics, Dictionary<string, Tank> tanks, List<TankTrack> tracks)
         {
-                #region Bullet
-                foreach (Bullet bullet in bullets)
-                    bullet.Update(graphics);
-
-                // Remove bullet
-                for (int i = 0; i < bullets.Count; i++)
-                {
-                    bullets[i].Update(graphics);     // Update
-                    if (bullets[i].IsAlive == false) // Remove if dead
-                    {
-                        bullets.RemoveAt(i);
-                        i--; // Fix index
-                    }
-                }
-                #endregion
-            
-                #region Window update
-                if (position.X >= graphics.GraphicsDevice.Viewport.Width)
-                    position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
-
-                if (position.Y >= graphics.GraphicsDevice.Viewport.Height)
-                    position.Y = graphics.GraphicsDevice.Viewport.Height - texture.Height;
-
-                if (position.X < 0)
-                    position.X = 0;
-
-                if (position.Y < 0)
-                    position.Y = 0;
-                #endregion
-            
                 #region recieve action from server
                 if ((incmsg = Game1.Client.ReadMessage()) != null)
                 {
@@ -126,7 +96,7 @@ namespace TankWars3000
                             tanks[incmsg_name].Angle = incmsg.ReadFloat();
                             tanks[incmsg_name].Position = new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat());
                             bool tempcollisionbool = incmsg.ReadBoolean();
-                            if (tempcollisionbool)
+                            if (tempcollisionbool)  //if bullets hits tanks
                             {
                                 tanks[incmsg_name].explositionPos.X = incmsg.ReadFloat();
                                 tanks[incmsg_name].explositionPos.Y = incmsg.ReadFloat();
@@ -136,11 +106,14 @@ namespace TankWars3000
                             break;
 
                         case (byte)PacketTypes.SHOOT:
-                            Bullet bullet = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat()));
-                            bullets.Add(bullet);
+                            bullets = new List<Bullet>();
+                            int j = incmsg.ReadInt32();
+                            for (int i = 0; i < j; i++ )
+                            {
+                                Bullet bullet = new Bullet(content, new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat()));
+                                bullets.Add(bullet); 
+                            }
                             break;
-
-
 
                         case (byte)PacketTypes.GAMESTATE:
                             Debug.WriteLine("Cl-Reveiced gamestate change");
@@ -268,7 +241,7 @@ namespace TankWars3000
                 #endregion
 
                 #region shoot
-                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space) && timer >= timerlimit)
+                if (input.newKey.IsKeyDown(Keys.Space) && input.oldKey.IsKeyUp(Keys.Space))
                 {
                     outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
@@ -277,7 +250,7 @@ namespace TankWars3000
                     outmsg.Write(position.X);
                     outmsg.Write(position.Y);
                     outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                     Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
                 }
                 //Reset timer
                 if (timer > timerlimit)
@@ -317,7 +290,7 @@ namespace TankWars3000
         private void Track(List<TankTrack> tracks ,ContentManager content)
         {
             if (Vector2.Distance(trackpos, position) > 40)
-        {
+            {
                 Vector2 footStepPos;
                 if (lastRightTrack)
                     footStepPos = Vector2.Transform(textureOrigin + /*offset>*/new Vector2(-50, -73), Matrix.CreateRotationZ(angle)) + position;
@@ -329,7 +302,7 @@ namespace TankWars3000
                 tracks.Add(new TankTrack(content, trackpos, angle)); // Add
 
                 trackpos = position;
-            }
+              }
         }
         #endregion
     }
