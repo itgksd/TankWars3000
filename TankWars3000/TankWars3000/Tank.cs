@@ -294,14 +294,14 @@ namespace TankWars3000
                 foreach (KeyValuePair<string, Tank> tank in tanks)
                 {
                     spriteBatch.Draw(tank.Value.Texture, tank.Value.position, null, tank.Value.tankcolor, tank.Value.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
-
-                    //writes the value of the tanks vector2 position, the spritefonts' position has an offset of 200 on the x-axis
-                    spriteBatch.DrawString(testfont, r_string, new Vector2(0, 0), Color.Black);
                 }
 
                 foreach (Bullet bullet in bullets)
                     bullet.Draw(spriteBatch);
-            } 
+            }
+            else
+                // Draws the respawn timer
+                spriteBatch.DrawString(testfont, r_string, new Vector2(0, 0), Color.Black);
         }
 
         public Tank(ContentManager content, string name, Color color)
