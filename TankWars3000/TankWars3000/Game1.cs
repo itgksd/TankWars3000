@@ -50,7 +50,7 @@ namespace TankWars3000
         // The Player
         Tank_startpos tank_startpos;
         Tank tank;
-        List<Tank> tanks       = new List<Tank>();
+        Dictionary<string, Tank> tanks       = new Dictionary<string,Tank>();
 
         static public string tankname;
 
@@ -151,13 +151,6 @@ namespace TankWars3000
             else if (gameState == GameStates.Scoreboard)
             {
                 scoreboard.Update(input);
-            }
-
-            // TEMP
-            if (input.SingleKey(Keys.O))
-            {
-                gameState = GameStates.Scoreboard;
-                Notify.NewMessage("End of game! Scoreboard below!", Color.LightBlue);
             }
 
             Notify.Update(gameTime);

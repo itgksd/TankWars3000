@@ -175,7 +175,7 @@ namespace TankWars3000
 			Game1.Fullscreen = Game1.Fullscreen ? false : true;
 		}
 
-		public void Update(OldNewInput input, List<Tank> tanks)
+		public void Update(OldNewInput input, Dictionary<string, Tank> tanks)
 		{
 			background.Update();
 
@@ -234,7 +234,7 @@ namespace TankWars3000
 							foreach (PlayerListItem player in playerList)
 							{
 								if (player.Name != "")
-									tanks.Add(new Tank(content, player.Name, player.TankColor));
+									tanks.Add(player.Name, new Tank(content, player.Name, player.TankColor));
 							}
 
 							ConfirmConnection();

@@ -59,7 +59,7 @@ namespace TankWars3000_SERVER
 
         bool canCountTime = true;
         bool sendStartPos = true;
-
+        int counter = 0;
         List<bullet> bullets = new List<bullet>();
         Dictionary<string, Tank> tanks;
         System.Timers.Timer timer;
@@ -74,6 +74,7 @@ namespace TankWars3000_SERVER
 
         protected override void Initialize()
         {
+            this.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 480.0f);
             // TODO: Add your initialization logic here
             gameState = GameStates.Lobby;
 
@@ -133,6 +134,7 @@ namespace TankWars3000_SERVER
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+            SuppressDraw();
             while (true)
             {
                 if (gameState == GameStates.Lobby)
@@ -183,13 +185,6 @@ namespace TankWars3000_SERVER
 
                                     // skapa ny Tank och lägg det i en lista
                                     tanks.Add(name, new Tank(name));
-
-                                    //Debug.WriteLine("Sv-Sending test message");
-                                    //// Skicka ett test paket för att låta klienten veta att anslutningen fungerar.. "Ni" kan nog ta bort den senare om den inte behövs längre
-                                    //NetOutgoingMessage testMsg = Server.CreateMessage();
-                                    //testMsg.Write((byte)PacketTypes.TEST);
-                                    //testMsg.Write("Test string");
-                                    //Server.SendMessage(testMsg, incomingMessage.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
                                 }
                                 break;
                             case NetIncomingMessageType.Data:
@@ -346,7 +341,8 @@ namespace TankWars3000_SERVER
 
                     if ((incomingMessage = Server.ReadMessage()) != null) //Ta emot meddelanden och hantering av dessa
                     {
-
+                        counter++;
+                        //Debug.WriteLine("Sv-" + counter);
                         switch (incomingMessage.MessageType)
                         {
 
@@ -357,8 +353,15 @@ namespace TankWars3000_SERVER
 
                                     case (byte)PacketTypes.HEARTBEAT:
                                         string name = incomingMessage.ReadString();
-                                        tanks[name].LastBeat = DateTime.Now;
-                                        Debug.WriteLine("Sv-HeartBeat respons for " + name);
+                                        if (tanks.ContainsKey(name))
+                                        {
+                                            tanks[name].LastBeat = DateTime.Now;
+                                            Debug.WriteLine("Sv-HeartBeat respons for " + name);
+                                        }
+                                        else
+                                        {
+                                            Debug.WriteLine("Sv-Received heartbeat for a non-existing tank: " + name);
+                                        }
                                         break;
 
                                     case (byte)PacketTypes.MOVE: //Kolla om en tank rör sig
@@ -369,15 +372,9 @@ namespace TankWars3000_SERVER
                                         float angle = incomingMessage.ReadFloat();
                                         NetOutgoingMessage outmsg = Server.CreateMessage();
 
-                                        foreach (KeyValuePair<string, Tank> tank in tanks)
-                                        {
-                                            if (tank.Key == name)
-                                            {
-                                                tank.Value.Tankrect = new Rectangle((int)x, (int)y, tankWidth, tankHeight);
-                                                tank.Value.Angle = angle;
-                                                tank.Value.Position = new Vector2(x, y);
-                                            }
-                                        }
+                                        tanks[name].Tankrect = new Rectangle((int)x, (int)y, tankWidth, tankHeight);
+                                        tanks[name].Angle = angle;
+                                        tanks[name].Position = new Vector2(x, y);
 
                                         // kollision här tack
                                         if (!Collision())
@@ -419,7 +416,7 @@ namespace TankWars3000_SERVER
                         }
 
                         //Spelet kollar om servern har varit i ingame i 5 minuter och ifall det är sant byter denna till scoreboard
-                        if (ingameTime.AddSeconds(10) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
+                        if (ingameTime.AddSeconds(1000) <= DateTime.Now) // BYT TILL .AddMinutes(5) Det här är bara ett test!
                         {
                             gameState = GameStates.Scoreboard;
 

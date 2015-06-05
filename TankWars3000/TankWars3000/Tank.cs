@@ -33,7 +33,7 @@ namespace TankWars3000
         //
         float timer;
 
-        float timerlimit = 500;
+        float timerlimit = 50;
         //the limit is so that you need only update one float instead of everywhere it is used
 
         NetIncomingMessage incmsg;
@@ -84,7 +84,7 @@ namespace TankWars3000
 
         #region Methods
 
-        public void Update(ContentManager content, GraphicsDeviceManager graphics, List<Tank> tanks, List<TankTrack> tracks)
+        public void Update(ContentManager content, GraphicsDeviceManager graphics, Dictionary<string, Tank> tanks, List<TankTrack> tracks)
         {
                 #region Bullet
                 foreach (Bullet bullet in bullets)
@@ -123,25 +123,15 @@ namespace TankWars3000
                     {
                         case (byte)PacketTypes.MOVE:
                             string incmsg_name = incmsg.ReadString();
-                            for (int i  = 0; i < tanks.Count; i++ )
+                            tanks[incmsg_name].Angle = incmsg.ReadFloat();
+                            tanks[incmsg_name].Position = new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat());
+                            bool tempcollisionbool = incmsg.ReadBoolean();
+                            if (tempcollisionbool)  //if bullets hits tanks
                             {
-                                if (tanks[i].Name == incmsg_name)
-                               {
-                                    tanks[i].Angle    = incmsg.ReadFloat();
-                                    tanks[i].Position = new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat());
-                                    bool tempcollisionbool = incmsg.ReadBoolean();
-                                    try     //Server will not always send position for explosion so try to read it
-                                    {
-                                        tanks[i].explositionPos.X = incmsg.ReadFloat();
-                                        tanks[i].explositionPos.Y = incmsg.ReadFloat();
+                                tanks[incmsg_name].explositionPos.X = incmsg.ReadFloat();
+                                tanks[incmsg_name].explositionPos.Y = incmsg.ReadFloat();
 
-                                        Track(tracks, content);
-                                    }
-                                    catch (Exception ex)
-                                    { }
-                               }
-                            
-                                
+                                Track(tracks, content);
                             }
                             break;
 
@@ -178,56 +168,59 @@ namespace TankWars3000
                 #endregion
         }
 
-        public void Input(OldNewInput input, ContentManager content, List<Tank> tanks, GameTime gametime)
+        public void Input(OldNewInput input, ContentManager content, Dictionary<string, Tank> tanks, GameTime gametime)
         {
             if (IsAlive == true)
             {
                 NetOutgoingMessage outmsg;
                 timer += gametime.ElapsedGameTime.Milliseconds;
-                for (int i = 0; i < tanks.Count; i++ )
-                {
-                    if (name == tanks[i].name)
-                        position = tanks[i].position;
-                }
+                position = tanks[name].position;
 
 
                 #region Movment
                 if (input.newKey.IsKeyDown(Keys.W) && timer >= timerlimit)
                 {
-                    outmsg = Game1.Client.CreateMessage();
 
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     position += direction * speed;
+                    //tanks[name].position = position;
                     //update position, then send it to the server
 
-                    outmsg.Write((byte)PacketTypes.MOVE);
-                    outmsg.Write(name);
-                    outmsg.Write(position.X);
-                    outmsg.Write(position.Y);
-                    outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
+                    //if (timer >= timerlimit)
+                    //{
+                        outmsg = Game1.Client.CreateMessage();
+                        outmsg.Write((byte)PacketTypes.MOVE);
+                        outmsg.Write(name);
+                        outmsg.Write(position.X);
+                        outmsg.Write(position.Y);
+                        outmsg.Write(angle);
+                        Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
+                    //}
                 }
 
                 if (input.newKey.IsKeyDown(Keys.S) && timer >= timerlimit)
                 {
-                    outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
                     position -= direction * speed;
+                    //tanks[name].position = position;
                     //update position, then send it to the server
 
-                    outmsg.Write((byte)PacketTypes.MOVE);
-                    outmsg.Write(name);
-                    outmsg.Write(position.X);
-                    outmsg.Write(position.Y);
-                    outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
+                    //if (timer >= timerlimit)
+                    //{
+                        outmsg = Game1.Client.CreateMessage();
+                        outmsg.Write((byte)PacketTypes.MOVE);
+                        outmsg.Write(name);
+                        outmsg.Write(position.X);
+                        outmsg.Write(position.Y);
+                        outmsg.Write(angle);
+                        Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
+                    //}
                 }
 
                 if (input.newKey.IsKeyDown(Keys.D) && timer >= timerlimit)
                 {
-                    outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
-                    angle += MathHelper.Pi / 20;
+                    angle += MathHelper.Pi / 50;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
                     // divide to smaller pieces for less turn each button press
@@ -235,18 +228,23 @@ namespace TankWars3000
                     direction.X = (float)Math.Cos(angle);
                     direction.Y = (float)Math.Sin(angle);
 
-                    outmsg.Write((byte)PacketTypes.MOVE);
-                    outmsg.Write(name);
-                    outmsg.Write(position.X);
-                    outmsg.Write(position.Y);
-                    outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
+                    //tanks[name].direction = direction;
+
+                    //if (timer >= timerlimit)
+                    //{
+                        outmsg = Game1.Client.CreateMessage();
+                        outmsg.Write((byte)PacketTypes.MOVE);
+                        outmsg.Write(name);
+                        outmsg.Write(position.X);
+                        outmsg.Write(position.Y);
+                        outmsg.Write(angle);
+                        Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
+                    //}
                 }
                 if (input.newKey.IsKeyDown(Keys.A) && timer >= timerlimit)
                 {
-                    outmsg = Game1.Client.CreateMessage();
                     //needs to CreateMessage() every time a button is pressed, which means more than once some updates
-                    angle -= MathHelper.Pi / 20;
+                    angle -= MathHelper.Pi / 50;
                     //MathHelper.Pi * 2 is a full turn
                     // / 2 is 90 degrees
                     // divide to smaller pieces for less turn each button press
@@ -254,12 +252,18 @@ namespace TankWars3000
                     direction.X = (float)Math.Cos(angle);
                     direction.Y = (float)Math.Sin(angle);
 
-                    outmsg.Write((byte)PacketTypes.MOVE);
-                    outmsg.Write(name);
-                    outmsg.Write(position.X);
-                    outmsg.Write(position.Y);
-                    outmsg.Write(angle);
-                    Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
+                    //tanks[name].direction = direction;
+
+                    //if (timer >= timerlimit)
+                    //{
+                        outmsg = Game1.Client.CreateMessage();
+                        outmsg.Write((byte)PacketTypes.MOVE);
+                        outmsg.Write(name);
+                        outmsg.Write(position.X);
+                        outmsg.Write(position.Y);
+                        outmsg.Write(angle);
+                        Game1.Client.SendMessage(outmsg, NetDeliveryMethod.ReliableUnordered);
+                    //}
                 }
                 #endregion
 
@@ -284,14 +288,14 @@ namespace TankWars3000
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, List<Tank> tanks)
+        public void Draw(SpriteBatch spriteBatch, Dictionary<string, Tank> tanks)
         {
-            foreach (Tank tank in tanks)
+            foreach (KeyValuePair<string, Tank> tank in tanks)
             {
-                spriteBatch.Draw(tank.Texture, tank.position, null, tank.tankcolor, tank.angle, textureOrigin, 1.0f, SpriteEffects.None,0f);
+                spriteBatch.Draw(tank.Value.Texture, tank.Value.position, null, tank.Value.tankcolor, tank.Value.angle, textureOrigin, 1.0f, SpriteEffects.None, 0f);
                 
                 //writes the value of the tanks vector2 position, the spritefonts' position has an offset of 200 on the x-axis
-                spriteBatch.DrawString(tank.TestFont, tank.position.ToString(), new Vector2(tank.position.X + 200, tank.position.Y), Color.Wheat);
+                spriteBatch.DrawString(tank.Value.TestFont, tank.Value.position.ToString(), new Vector2(tank.Value.position.X + 200, tank.Value.position.Y), Color.Wheat);
             }
             
             foreach (Bullet bullet in bullets)
