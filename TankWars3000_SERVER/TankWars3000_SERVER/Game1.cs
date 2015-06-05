@@ -60,9 +60,10 @@ namespace TankWars3000_SERVER
         bool canCountTime = true;
         bool sendStartPos = true;
         int counter = 0;
+        int tps = 0, drawTps = 0;
         List<bullet> bullets = new List<bullet>();
         Dictionary<string, Tank> tanks;
-        System.Timers.Timer timer;
+        System.Timers.Timer timer, tpsTimer;
         Vector2 explosionPosition;
 
         public Game1()
@@ -104,6 +105,16 @@ namespace TankWars3000_SERVER
             timer = new System.Timers.Timer(5000);
             timer.Elapsed += timer_Elapsed;
             timer.Enabled = true;
+
+            tpsTimer = new System.Timers.Timer(1000);
+            tpsTimer.Elapsed += tpstimer_Elapsed;
+            tpsTimer.Enabled = true;
+        }
+
+        void tpstimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            drawTps = tps;
+            tps = 0;
         }
 
         void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -113,6 +124,8 @@ namespace TankWars3000_SERVER
             outmsg.Write((byte)PacketTypes.HEARTBEAT);
             Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
             //Debug.WriteLine("Sv-Sending heartbeat");
+
+            Debug.WriteLine("Sv-" + drawTps + "tps");
         }
 
         protected override void LoadContent()
@@ -135,8 +148,9 @@ namespace TankWars3000_SERVER
                 this.Exit();
 
             SuppressDraw();
-            while (true)
-            {
+            //while (true)
+            //{
+                tps++;
                 if (gameState == GameStates.Lobby)
                 {
                     // så att Ingame bara skickar startpos en gång
@@ -459,21 +473,28 @@ namespace TankWars3000_SERVER
                     }
                 }
                 base.Update(gameTime);
-            }
+            //}
         }
 
         public void UpdateAndSendBullets()
         {
+            if (bullets.Count > 0)
+            {
+                NetOutgoingMessage outmsg = Server.CreateMessage();
+                outmsg.Write((byte)PacketTypes.SHOOT);
+                outmsg.Write(bullets.Count);
+
             foreach (bullet bullet in bullets)
             {
                 // update bullet pos and send
-                Vector2 bulletPos = new Vector2(bullet.XPos, bullet.YPos);
-                float x = (float)Math.Cos((double)(bullet.Angle));
-                float y = (float)Math.Sin((double)(bullet.Angle));
+                    bullet.Update();
+                    outmsg.Write(bullet.Pos.X);
+                    outmsg.Write(bullet.Pos.Y);
 
-                Vector2 velocity = new Vector2(x * 5, y * 5);
-                bulletPos += velocity;
+                }
+                Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
             }
+           
         }
 
         protected override void Draw(GameTime gameTime)
