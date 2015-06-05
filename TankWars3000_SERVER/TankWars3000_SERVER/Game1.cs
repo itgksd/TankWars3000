@@ -447,6 +447,7 @@ namespace TankWars3000_SERVER
                         }
                         Server.SendToAll(outmsg, NetDeliveryMethod.ReliableOrdered);
                         Debug.WriteLine("Sv-Sending final scoreboard");
+
                         gameState = GameStates.Lobby;
                     }
 
