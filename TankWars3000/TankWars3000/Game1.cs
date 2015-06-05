@@ -52,6 +52,9 @@ namespace TankWars3000
         Tank tank;
         Dictionary<string, Tank> tanks       = new Dictionary<string,Tank>();
 
+        // Background
+        Texture2D background;
+
         static public string tankname;
 
         NetIncomingMessage incmsg;
@@ -111,11 +114,12 @@ namespace TankWars3000
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            lobby = new Lobby(Content);
+            lobby      = new Lobby(Content);
             scoreboard = new ScoreBoard(Content);
             Notify.LoadContent(Content);
-
-            font = Content.Load<SpriteFont>("Testfont");
+            
+            background = Content.Load<Texture2D>("images/Background Image");
+            
         }
 
         protected override void UnloadContent()
@@ -196,6 +200,8 @@ namespace TankWars3000
                 else if (gameState == GameStates.Ingame)
                 {
                     spriteBatch.Begin();
+
+                    spriteBatch.Draw(background, Vector2.Zero, Color.White);
 
                     tank.Draw(spriteBatch, tanks);
 
