@@ -93,36 +93,6 @@ namespace TankWars3000
 
         public void Update(ContentManager content, GraphicsDeviceManager graphics, Dictionary<string, Tank> tanks, List<TankTrack> tracks, GameTime gametime)
         {
-                #region Bullet
-                foreach (Bullet bullet in bullets)
-                    bullet.Update(graphics);
-
-                // Remove bullet
-                for (int i = 0; i < bullets.Count; i++)
-                {
-                    bullets[i].Update(graphics);     // Update
-                    if (bullets[i].IsAlive == false) // Remove if dead
-                    {
-                        bullets.RemoveAt(i);
-                        i--; // Fix index
-                    }
-                }
-                #endregion
-            
-                #region Window update
-                if (position.X >= graphics.GraphicsDevice.Viewport.Width)
-                    position.X = graphics.GraphicsDevice.Viewport.Width - texture.Width;
-
-                if (position.Y >= graphics.GraphicsDevice.Viewport.Height)
-                    position.Y = graphics.GraphicsDevice.Viewport.Height - texture.Height;
-
-                if (position.X < 0)
-                    position.X = 0;
-
-                if (position.Y < 0)
-                    position.Y = 0;
-                #endregion
-            
                 #region recieve action from server
                 if ((incmsg = Game1.Client.ReadMessage()) != null)
                 {
@@ -148,8 +118,13 @@ namespace TankWars3000
                             break;
 
                         case (byte)PacketTypes.SHOOT:
-                            Bullet bullet = new Bullet(content, incmsg.ReadString(), new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat()));
-                            bullets.Add(bullet);
+                            bullets = new List<Bullet>();
+                            int j = incmsg.ReadInt32();
+                            for (int i = 0; i < j; i++ )
+                            {
+                                Bullet bullet = new Bullet(content, new Vector2(incmsg.ReadFloat(), incmsg.ReadFloat()));
+                                bullets.Add(bullet); 
+                            }
                             break;
 
                         case (byte)PacketTypes.GAMESTATE:
