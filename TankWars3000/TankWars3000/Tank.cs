@@ -40,7 +40,7 @@ namespace TankWars3000
         //
         float timer;
 
-        float timerlimit = 50; // 50 = 20tps, 33,33 = 30tps, 16,66 & 0 = 60tps // tps = hur många gånger den uppdaterar per sekund
+        float timerlimit = 0; // 50 = 20tps, 33,33 = 30tps, 16,66 & 0 = 60tps // tps = hur många gånger den uppdaterar per sekund
         //the limit is so that you need only update one float instead of everywhere it is used
 
         NetIncomingMessage incmsg;

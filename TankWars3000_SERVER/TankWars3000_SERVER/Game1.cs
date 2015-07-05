@@ -155,7 +155,7 @@ namespace TankWars3000_SERVER
                 {
                     // så att Ingame bara skickar startpos en gång
                     sendStartPos = true;
-                    if ((incomingMessage = Server.ReadMessage()) != null)
+                    while ((incomingMessage = Server.ReadMessage()) != null)
                     {
                         switch (incomingMessage.MessageType)
                         {
